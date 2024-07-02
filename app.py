@@ -6,7 +6,7 @@ app.secret_key = 'your_secret_key'
 
 login_manager = LoginManager()
 login_manager.init_app(app)
-login_manager.login_view = 'base'
+login_manager.login_view = 'login'
 
 # 사용자 데이터베이스 시뮬레이션
 users = {'ddd': {'password': 'password'}}
@@ -14,6 +14,9 @@ users = {'ddd': {'password': 'password'}}
 class User(UserMixin):
     def __init__(self, id):
         self.id = id
+
+    def get_id(self):
+        return self.id
 
 @login_manager.user_loader
 def load_user(user_id):
@@ -25,15 +28,21 @@ def base():
         return redirect(url_for('home'))
     return render_template('base.html')
 
-@app.route('/login', methods=['POST'])
+@app.route('/login', methods=['GET', 'POST'])
 def login():
-    username = request.form['username']
-    password = request.form['password']
-    if username in users and users[username]['password'] == password:
-        user = User(username)
-        login_user(user)
-        return redirect(url_for('home'))
-    return redirect(url_for('base'))
+    if request.method == 'POST':
+        username = request.form['username']
+        password = request.form['password']
+        
+        if username in users and users[username]['password'] == password:
+            user = User(username)
+            login_user(user)
+            return redirect(url_for('home'))
+        
+        # flash('Invalid username or password')
+        return redirect(url_for('login'))
+    
+    return render_template('login.html')
 
 @app.route('/home')
 @login_required
@@ -75,11 +84,12 @@ def db_food():
 def db_nutri():
     return render_template('db_nutri.html')
 
+# 로그아웃
 @app.route('/logout')
 @login_required
 def logout():
     logout_user()
-    return redirect(url_for('base'))
+    return redirect(url_for('login'))
 
 if __name__ == '__main__':
     app.run(debug=True)

@@ -3,7 +3,7 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Login</title>
+    <title>{% block title %}HOME{% endblock %}</title>
     <link rel="stylesheet" href="{{ url_for('static', filename='style.css') }}">
 </head>
 <body>
@@ -12,17 +12,24 @@
             <h1>로고</h1>
         </div>
     </header>
+    <!-- 네비게이션 바 -->
+    <nav>
+        <ul>
+            <li><a href="{{ url_for('m_group') }}">그룹 관리</a></li>
+            <li><a href="{{ url_for('m_person') }}">사용자 관리</a></li>
+            <li><a href="{{ url_for('tfh') }}">24시간 회상법</a></li>
+            <li><a href="{{ url_for('tfh_stas') }}">통계 생성</a></li>
+            <li><a href="{{ url_for('tfh_excel') }}">엑셀 변환</a></li>
+            <li><a href="{{ url_for('db_food') }}">음식 DB 편집</a></li>
+            <li><a href="{{ url_for('db_nutri') }}">식품 DB 편집</a></li>
+        </ul>
+        <ul>
+            <li><a href="{{ url_for('logout') }}">로그아웃</a></li>
+        </ul>
+    </nav>
     <main>
-        <h2>로그인</h2>
-        <form method="POST" action="{{ url_for('login') }}">
-            <label for="username">사용자 이름:</label>
-            <input type="text" id="username" name="username" required>
-            <br>
-            <label for="password">비밀번호:</label>
-            <input type="password" id="password" name="password" required>
-            <br>
-            <button type="submit">로그인</button>
-        </form>
+        {% block content %}
+        {% endblock %}
     </main>
 </body>
 </html>
