@@ -1,0 +1,84 @@
+.person-search {
+    display: flex;
+    align-items: center;
+    gap: 10px;
+    flex-wrap: wrap; /* Ensure items wrap correctly */
+}
+
+.form-group {
+    display: flex;
+    flex-direction: row;
+    align-items: center;
+    margin-right: 10px;
+}
+
+.form-group label {
+    margin-right: 5px;
+}
+
+.person-search button {
+    margin-left: 10px;
+}
+
+.search-options {
+    display: flex;
+    align-items: center;
+    gap: 10px;
+    flex-wrap: wrap; /* Ensure items wrap correctly */
+}
+
+.search-options label {
+    display: flex;
+    align-items: center;
+}
+
+.search-options input[type="text"] {
+    margin-left: 5px;
+    margin-right: 10px;
+}
+
+button {
+    white-space: nowrap;
+}
+
+.section-container {
+    display: flex;
+    justify-content: space-between;
+}
+
+.food-search, .food-data, .food-details {
+    flex: 1;
+    margin: 0 10px;
+}
+
+.food-table {
+    width: 100%;
+    border-collapse: collapse;
+    margin-top: 20px;
+    min-height: 200px; /* Minimum height for the table */
+}
+
+.food-table th, .food-table td {
+    border: 1px solid #ddd;
+    padding: 8px;
+    text-align: left;
+}
+
+.food-table th {
+    background-color: #f2f2f2;
+}
+
+.pagination {
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    margin-top: 10px;
+}
+
+.pagination button, .pagination select {
+    margin: 0 5px;
+}
+
+.food-search button:last-of-type {
+    margin-top: 10px;
+}
