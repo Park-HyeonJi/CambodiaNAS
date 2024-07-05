@@ -1,0 +1,62 @@
+h2 {
+    white-space: nowrap; /* 줄 바꿈 방지 */
+    font-size: 24px; /* 원하는 글꼴 크기로 조정 */
+    margin-bottom: 0; /* 아래 여백 제거 */
+}
+
+.container {
+    display: flex;
+    justify-content: center; /* 수평 가운데 정렬 */
+    align-items: flex-start; /* 수직 위쪽 정렬 */
+    margin-top: 20px; /* 위쪽 여백 추가 */
+}
+
+.group-management {
+    display: flex;
+    justify-content: space-around; /* 요소들 사이의 여백을 동일하게 배분 */
+    width: 100%;
+}
+
+.group-list {
+    width: 40%; /* 그룹 목록 컨테이너 너비 설정 */
+    padding: 20px;
+    border-radius: 8px; /* 모서리 둥글게 */
+    background-color: #fffacd; /* 연노랑 배경색 */
+    margin-right: 10px; /* 우측 여백 추가 */
+    height: 250; /* 그룹 목록 컨테이너 높이 설정 */
+}
+
+.group-details {
+    width: 40%; /* 그룹 상세 정보 컨테이너 너비 설정 */
+    padding: 20px;
+    border-radius: 8px; /* 모서리 둥글게 */
+    background-color: #e0ffe0; /* 연초록 배경색 */
+}
+
+.group-list table {
+    width: 100%; /* 테이블 너비 100% 설정 */
+    border-collapse: collapse;
+}
+
+.group-table {
+    background-color: white;
+    max-height: 340px; /* tbody의 최대 높이 설정 */
+    overflow-y: auto; /* tbody가 넘칠 경우 스크롤 설정 */
+    margin-bottom: 10px;
+}
+
+.group-list th, .group-list td {
+    border: 1px solid #ddd;
+    padding: 8px;
+    text-align: left;
+}
+
+.group-list tr.selected {
+    background-color: #f0f8ff; /* 선택된 행의 배경색 */
+}
+
+.action-btn {
+    margin-top: 10px; /* 버튼 위쪽 여백 추가 */
+    display: block; /* 블록 요소로 설정하여 한 줄에 하나씩 배치 */
+    width: 100%; /* 너비 100% 설정 */
+}

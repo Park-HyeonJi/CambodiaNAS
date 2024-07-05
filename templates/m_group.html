@@ -1,4 +1,54 @@
 {% extends 'base.html' %}
 {% block content %}
-    <h2>그룹 관리 페이지</h2>
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <title>Group Management</title>
+    <link rel="stylesheet" href="{{ url_for('static', filename='style.css') }}">
+    <link rel="stylesheet" href="{{ url_for('static', filename='m_group.css') }}">
+</head>
+<body>
+    <h2>그룹 관리</h2>
+    <div class="container">
+        <div class="group-management">
+            <div class="group-list">
+                <h3>그룹 목록</h3>
+                <div class = "group-table">
+                <table>
+                    <thead>
+                        <tr>
+                            <th>그룹명</th>
+                        </tr>
+                    </thead>
+                    <tbody id="group-list">
+                        <!-- Group names will be inserted here dynamically -->
+                    </tbody>
+                </table>
+            </div>
+            <div>
+                <button onclick="addGroup()">신규 그룹 추가</button>
+                <button onclick="deleteGroup()">삭제</button>
+            </div>
+            </div>
+            
+            <div class="group-details">
+                <h3>그룹 상세 정보</h3>
+                <form id="group-form">
+                    <div>
+                        <label for="group-name">그룹 명:</label>
+                        <input type="text" id="group-name" name="group-name">
+                    </div>
+                    <div>
+                        <label for="group-desc">그룹 설명:</label>
+                        <input type="text" id="group-desc" name="group-desc">
+                    </div>
+                    <button type="button" onclick="saveGroup()">현재 그룹 정보 저장</button>
+                </form>
+            </div>
+        </div>
+    </div>
+    <script src="{{ url_for('static', filename='m_group.js') }}"></script>
+</body>
+</html>
 {% endblock %}
