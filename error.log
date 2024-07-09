@@ -26,3 +26,8 @@ Error in get_nutrition: 'Food Code'
 Error in get_nutrition: 'Food Code'
 Error in get_nutrition: only list-like objects are allowed to be passed to isin(), you passed a `int`
 Error in get_ingredients: 'Ingredient Code'
+Error in get_ingredients: int() argument must be a string, a bytes-like object or a real number, not 'list'
+Error in get_ingredients: int() argument must be a string, a bytes-like object or a real number, not 'list'
+Error in get_ingredients: int() argument must be a string, a bytes-like object or a real number, not 'list'
+Error in get_ingredients: int() argument must be a string, a bytes-like object or a real number, not 'list'
+Error in get_ingredients: 'int' object is not iterable

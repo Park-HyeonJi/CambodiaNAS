@@ -152,9 +152,11 @@ function loadFoodList() {
                 tableBody.appendChild(tr);
             }
         });
+        calculateCurrentMeal()
     });
 }
 
+// 영양 성분 테이블 - Current Food
 function loadNutrition(foodCode) {
     fetch('/get_ingredients', {
         method: 'POST',
@@ -200,7 +202,7 @@ function loadNutrition(foodCode) {
                         var element = document.getElementById(elementId);
                         if (element) {
                             element.textContent = nutrientTotals[key].toFixed(2);
-                            console.log(`Updated ${elementId} with value: ${nutrientTotals[key].toFixed(2)}`);
+                            // console.log(`Updated ${elementId} with value: ${nutrientTotals[key].toFixed(2)}`);
                         } else {
                             console.error(`Element with ID ${elementId} not found`);
                         }
@@ -214,6 +216,69 @@ function loadNutrition(foodCode) {
     })
     .catch(error => {
         console.error('Error fetching ingredient codes:', error);
+    });
+}
+
+// 영양성분 테이블 - Current Meal
+function calculateCurrentMeal() {
+    var activeCategory = document.querySelector('.time-categories button.active').dataset.category;
+    var tableBody = document.querySelector(`.food-items tbody[data-category='${activeCategory}']`);
+
+    var foodCodes = [];
+    tableBody.querySelectorAll('tr').forEach(tr => {
+        var foodCode = tr.cells[0].textContent;
+        foodCodes.push(foodCode);
+    });
+
+    console.log("foodCodes: ", foodCodes)
+
+    fetch('/get_ingredients', {
+        method: 'POST',
+        headers: {
+            'Content-Type': 'application/json'
+        },
+        body: JSON.stringify({ foodCode: foodCodes })
+    })
+    .then(response => response.json())
+    .then(ingredientCodes => {
+        console.log('영양 성분 테이블:', ingredientCodes);
+        fetch('/get_nutrition', {
+            method: 'POST',
+            headers: {
+                'Content-Type': 'application/json'
+            },
+            body: JSON.stringify({ ingredientCodes: ingredientCodes })
+        })
+        .then(response => response.json())
+        .then(data => {
+            console.log('Received nutrition data:', data);
+            if (data.length > 0) {
+                var nutrientTotals = {
+                    'ENERC (kcal)': 0, 'ENERC (kJ)': 0, 'WATER (g)': 0, 'PROTCNT (g)': 0, 'FAT (g)': 0, 
+                    'CHOAVLDF (g)': 0, 'FIBTG (g)': 0, 'ASH (g)': 0, 'CA (mg)': 0, 'FE (mg)': 0, 
+                    'ZN (mg)': 0, 'VITA_RAE (mcg)': 0, 'VITD (mcg)': 0, 'THIA (mg)': 0, 'RIBF (mg)': 0, 
+                    'NIA (mg)': 0, 'PANTAC (mg)': 0, 'VITB6 (mg)': 0, 'FOL (mcg)': 0
+                };
+
+                data.forEach(nutrient => {
+                    for (var key in nutrientTotals) {
+                        if (nutrient.hasOwnProperty(key)) {
+                            nutrientTotals[key] += parseFloat(nutrient[key]) || 0;
+                        }
+                    }
+                });
+
+                for (var key in nutrientTotals) {
+                    var elementId = `current-meal-${key.replace(/[^a-z0-9]/gi, '').toLowerCase()}`;
+                    var element = document.getElementById(elementId);
+                    if (element) {
+                        element.textContent = nutrientTotals[key].toFixed(2);
+                    } else {
+                        console.error(`Element with ID ${elementId} not found`);
+                    }
+                }
+            }
+        });
     });
 }
 

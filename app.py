@@ -176,14 +176,21 @@ def load_user_data(user_group, user_id, view_date):
 def get_ingredients():
     try:
         data = request.get_json()
-        food_code = data['foodCode']
+        food_codes = data['foodCode']
+
+        if not isinstance(food_codes, list):
+            food_codes = [food_codes]
         
         food_data_path = 'data/CambodiaFood_test.xlsx'
         food_data = pd.read_excel(food_data_path)
         
-        ingredients = food_data[food_data['Food Code'] == int(food_code)]['Ingredient Code'].tolist()
+        ingredient_codes = []
+        for food_code in food_codes:
+            ingredients = food_data[food_data['Food Code'] == int(food_code)]['Ingredient Code'].tolist()
+            ingredient_codes.extend(ingredients)
+        # ingredients = food_data[food_data['Food Code'] == int(food_codes)]['Ingredient Code'].tolist()
         
-        return jsonify(ingredients)
+        return jsonify(ingredient_codes)
     except Exception as e:
         app.logger.error(f"Error in get_ingredients: {e}")
         return jsonify({'status': 'error', 'message': str(e)}), 500
