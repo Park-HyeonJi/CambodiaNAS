@@ -41,7 +41,7 @@ function loadUsers() {
     });
 
     document.getElementById('user-details').classList.add('hidden'); // 상세 정보 폼 숨기기
-    selectedUserId = null; // 선택된 사용자 ID 초기화
+    selectedUserId = null;
 }
 
 let selectedRow = null;
@@ -65,7 +65,7 @@ function showUserDetails(user) {
     document.getElementById('user-age').value = user.age;
     document.getElementById('user-height').value = user.height;
     document.getElementById('user-weight').value = user.weight;
-    document.getElementById('user-details').classList.remove('hidden'); // 상세 정보 폼 보이기
+    document.getElementById('user-details').classList.remove('hidden');
 }
 
 function saveUser() {
@@ -82,21 +82,21 @@ function saveUser() {
 
     // Check if any field is empty
     if (!newUser.id || !newUser.name || !newUser.gender || !newUser.age || !newUser.height || !newUser.weight) {
-        alert('모든 정보를 입력하세요.');
+        alert('Please Enter All Information.');
         return;
     }
 
     if (selectedUserId === null) {
         // Check for duplicate ID when adding a new user
         if (users.some(user => user.id === newUser.id)) {
-            alert('이미 존재하는 ID입니다.');
+            alert('This ID Already Exists.');
             return;
         }
         users.push(newUser);
     } else {
         // Check for duplicate ID when editing a user, excluding the current user being edited
         if (newUser.id !== selectedUserId && users.some(user => user.id === newUser.id)) {
-            alert('이미 존재하는 ID입니다.');
+            alert('This ID already Exists.');
             return;
         }
         users = users.map(user => user.id === selectedUserId ? newUser : user);
@@ -111,7 +111,7 @@ function saveUser() {
 function addUser() {
     selectedUserId = null;
     clearUserDetails();
-    document.getElementById('user-details').classList.remove('hidden'); // 상세 정보 폼 보이기
+    document.getElementById('user-details').classList.remove('hidden');
 }
 
 function deleteUser() {
@@ -123,7 +123,7 @@ function deleteUser() {
         loadUsers();
         clearUserDetails();
     } else {
-        alert('삭제할 사용자를 선택하세요.');
+        alert('Select The User You Want To Delete.');
     }
 }
 
@@ -136,8 +136,8 @@ function clearUserDetails() {
     document.getElementById('user-age').value = '';
     document.getElementById('user-height').value = '';
     document.getElementById('user-weight').value = '';
-    document.getElementById('user-details').classList.add('hidden'); // 상세 정보 폼 숨기기
-    selectedUserId = null; // 선택된 사용자 ID 초기화
+    document.getElementById('user-details').classList.add('hidden'); 
+    selectedUserId = null;
 }
 
 function searchUser() {
