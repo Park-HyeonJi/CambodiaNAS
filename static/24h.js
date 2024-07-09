@@ -131,14 +131,83 @@ function loadFoodList() {
 
         var tableBody = document.querySelector(`.food-items tbody[data-category='${activeCategory}']`);
         var uniqueFoods = [];
+
         data[activeCategory].forEach(food => {
             if (!uniqueFoods.some(item => item['Food Name'] === food['Food Name'])) {
                 uniqueFoods.push(food);
                 var tr = document.createElement("tr");
                 tr.innerHTML = `<td>${food['Food Code']}</td><td>${food['Food Name']}</td>`;
+                tr.onclick = function() {
+                    tableBody.querySelectorAll('tr').forEach(r => r.style.backgroundColor = '');
+                    tr.style.backgroundColor = 'lightgray';
+                    console.log('Loading nutrition for Food Code:', food['Food Code']);
+                    loadNutrition(food['Food Code']); // 셀을 클릭하면 loadNutrition 함수 호출
+                };
                 tableBody.appendChild(tr);
             }
         });
+    });
+}
+
+function loadNutrition(foodCode) {
+    fetch('/get_ingredients', {
+        method: 'POST',
+        headers: {
+            'Content-Type': 'application/json'
+        },
+        body: JSON.stringify({ foodCode: foodCode })
+    })
+    .then(response => response.json())
+    .then(ingredientCodes => {
+        console.log('Received ingredient codes:', ingredientCodes);
+        fetch('/get_nutrition', {
+            method: 'POST',
+            headers: {
+                'Content-Type': 'application/json'
+            },
+            body: JSON.stringify({ ingredientCodes: ingredientCodes })
+        })
+        .then(response => response.json())
+        .then(data => {
+            console.log('Received nutrition data:', data);
+            if (data.length > 0) {
+                var nutrientTotals = {
+                    'ENERC (kcal)': 0, 'ENERC (kJ)': 0, 'WATER (g)': 0, 'PROTCNT (g)': 0, 'FAT (g)': 0, 
+                    'CHOAVLDF (g)': 0, 'FIBTG (g)': 0, 'ASH (g)': 0, 'CA (mg)': 0, 'FE (mg)': 0, 
+                    'ZN (mg)': 0, 'VITA_RAE (mcg)': 0, 'VITD (mcg)': 0, 'THIA (mg)': 0, 'RIBF (mg)': 0, 
+                    'NIA (mg)': 0, 'PANTAC (mg)': 0, 'VITB6 (mg)': 0, 'FOL (mcg)': 0
+                };
+
+                data.forEach(nutrient => {
+                    for (var key in nutrientTotals) {
+                        if (nutrient.hasOwnProperty(key)) {
+                            nutrientTotals[key] += parseFloat(nutrient[key]) || 0;
+                        }
+                    }
+                });
+
+                console.log('Nutrient Totals:', nutrientTotals);
+
+                for (var key in nutrientTotals) {
+                    if (nutrientTotals.hasOwnProperty(key)) {
+                        var elementId = `current-food-${key.replace(/[^a-z0-9]/gi, '').toLowerCase()}`;
+                        var element = document.getElementById(elementId);
+                        if (element) {
+                            element.textContent = nutrientTotals[key].toFixed(2);
+                            console.log(`Updated ${elementId} with value: ${nutrientTotals[key].toFixed(2)}`);
+                        } else {
+                            console.error(`Element with ID ${elementId} not found`);
+                        }
+                    }
+                }
+            }
+        })
+        .catch(error => {
+            console.error('Error fetching nutrition data:', error);
+        });
+    })
+    .catch(error => {
+        console.error('Error fetching ingredient codes:', error);
     });
 }
 
@@ -149,3 +218,5 @@ function loadData() {
 function copyData() {
     // Copy data functionality
 }
+
+

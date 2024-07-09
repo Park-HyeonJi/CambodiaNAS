@@ -1,0 +1,28 @@
+Error in search_food: Missing optional dependency 'openpyxl'.  Use pip or conda to install openpyxl.
+Error in search_food: Missing optional dependency 'openpyxl'.  Use pip or conda to install openpyxl.
+Error in search_food: Missing optional dependency 'openpyxl'.  Use pip or conda to install openpyxl.
+Error in search_food: Missing optional dependency 'openpyxl'.  Use pip or conda to install openpyxl.
+Error in get_nutrition: [Errno 2] No such file or directory: 'data/FoodIngredient.xlsx'
+Error in get_nutrition: [Errno 2] No such file or directory: 'data/FoodIngredient.xlsx'
+Error in get_nutrition: [Errno 2] No such file or directory: 'data/FoodIngredient.xlsx'
+Error in get_nutrition: [Errno 2] No such file or directory: 'data/FoodIngredient.xlsx'
+Error in get_nutrition: [Errno 2] No such file or directory: 'data/FoodIngredient.xlsx'
+Error in get_nutrition: [Errno 2] No such file or directory: 'data/FoodIngredient.xlsx'
+Error in get_nutrition: [Errno 2] No such file or directory: 'data/FoodIngredient.xlsx'
+Error in get_nutrition: [Errno 2] No such file or directory: 'data/FoodIngredient.xlsx'
+Error in get_nutrition: [Errno 2] No such file or directory: 'data/FoodIngredient.xlsx'
+Error in get_nutrition: [Errno 2] No such file or directory: 'data/FoodIngredient.xlsx'
+Error in get_nutrition: [Errno 2] No such file or directory: 'data/FoodIngredient.xlsx'
+Error in get_nutrition: [Errno 2] No such file or directory: 'data/FoodIngredient.xlsx'
+Error in get_nutrition: [Errno 2] No such file or directory: 'data/FoodIngredient.xlsx'
+Error in get_nutrition: [Errno 2] No such file or directory: 'data/FoodIngredient.xlsx'
+Error in get_nutrition: [Errno 2] No such file or directory: 'data/FoodIngredient.xlsx'
+Error in get_nutrition: 'Food Code'
+Error in get_nutrition: 'Food Code'
+Error in get_nutrition: 'Food Code'
+Error in get_nutrition: 'Food Code'
+Error in get_nutrition: 'Food Code'
+Error in get_nutrition: 'Food Code'
+Error in get_nutrition: 'Food Code'
+Error in get_nutrition: only list-like objects are allowed to be passed to isin(), you passed a `int`
+Error in get_ingredients: 'Ingredient Code'

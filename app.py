@@ -1,6 +1,7 @@
 from flask import Flask, render_template, redirect, url_for, request, jsonify
 from flask_login import LoginManager, UserMixin, login_user, login_required, logout_user, current_user
 import pandas as pd
+import numpy as np
 import os
 import logging
 from logging.handlers import RotatingFileHandler
@@ -102,8 +103,8 @@ def search_food():
         else:
             results = food_data[food_data['Food Name'].str.contains(search_value, na=False, case=False)]
         
-        results = results.drop_duplicates(subset=['Food Code', 'Food Name'])
-        results = results[['Food Code', 'Food Name']]
+        results = results.drop_duplicates(subset=['Food Code', 'Food Name', 'Ingredient Code'])
+        results = results[['Food Code', 'Food Name', 'Ingredient Code']]
         
         return jsonify(results.to_dict(orient='records'))
     except Exception as e:
@@ -168,6 +169,51 @@ def load_user_data(user_group, user_id, view_date):
             'Midnight Snack': []
         }
     return user_data
+
+# 재료 코드
+@app.route('/get_ingredients', methods=['POST'])
+@login_required
+def get_ingredients():
+    try:
+        data = request.get_json()
+        food_code = data['foodCode']
+        
+        food_data_path = 'data/CambodiaFood_test.xlsx'
+        food_data = pd.read_excel(food_data_path)
+        
+        ingredients = food_data[food_data['Food Code'] == int(food_code)]['Ingredient Code'].tolist()
+        
+        return jsonify(ingredients)
+    except Exception as e:
+        app.logger.error(f"Error in get_ingredients: {e}")
+        return jsonify({'status': 'error', 'message': str(e)}), 500
+
+# 영양 성분
+@app.route('/get_nutrition', methods=['POST'])
+@login_required
+def get_nutrition():
+    try:
+        data = request.get_json()
+        ingredient_codes = data['ingredientCodes']
+
+        # ingredient_codes가 리스트인지 확인하고, 아니면 리스트로 변환
+        if isinstance(ingredient_codes, int):
+            ingredient_codes = [ingredient_codes]
+        elif not isinstance(ingredient_codes, list):
+            ingredient_codes = list(ingredient_codes)
+        
+        nutrition_data_path = 'data/FoodIngredient_test.xlsx'
+        nutrition_data = pd.read_excel(nutrition_data_path)
+        
+        nutrition_info = nutrition_data[nutrition_data['ID Code'].isin(ingredient_codes)]
+        nutrition_info = nutrition_info.replace({np.nan: 0})
+        nutrition_info = nutrition_info.to_dict(orient='records')
+        
+        return jsonify(nutrition_info)
+    except Exception as e:
+        app.logger.error(f"Error in get_nutrition: {e}")
+        return jsonify({'status': 'error', 'message': str(e)}), 500
+
 
 def save_user_data(user_group, user_id, view_date, data):
     file_path = f'data/{user_group}_{user_id}_{view_date}.xlsx'
