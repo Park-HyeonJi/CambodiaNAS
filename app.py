@@ -24,8 +24,8 @@ def load_user(user_id):
 @app.route('/')
 def base():
     if current_user.is_authenticated:
-        return redirect(url_for('home'))
-    return render_template('login.html')
+        return redirect(url_for('m_group'))
+    return redirect(url_for('login'))
 
 @app.route('/login', methods=['GET', 'POST'])
 def login():
@@ -36,17 +36,11 @@ def login():
         if username in users and users[username]['password'] == password:
             user = User(username)
             login_user(user)
-            return redirect(url_for('home'))
-        
-        # flash('Invalid username or password')
-        return redirect(url_for('login.html'))
+            return redirect(url_for('m_group'))
+
+        return redirect(url_for('login'))
     
     return render_template('login.html')
-
-@app.route('/home')
-@login_required
-def home():
-    return render_template('home.html')
 
 @app.route('/m-group')
 @login_required
