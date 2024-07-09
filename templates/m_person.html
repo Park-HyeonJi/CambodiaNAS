@@ -9,10 +9,10 @@
     <link rel="stylesheet" href="{{ url_for('static', filename='m_person.css') }}">
 </head>
 <body>
-    <h2>사용자 관리</h2>
+    <h2>User Management</h2>
     <div class="container">
         <div class="group-selection">
-            <h3>그룹 선택</h3>
+            <h3>Group Select</h3>
             <select id="group-select" onchange="loadUsers()">
                 <!-- Group options will be inserted here dynamically -->
             </select>
@@ -20,9 +20,9 @@
     </div>
     <div class="user-management">
         <div class="user-list">
-            <h3>현재 그룹의 사용자 목록</h3>
+            <h3>List Of Users In The Current Group</h3>
             <div class="search-container">
-                <label for="search-id">ID 검색:</label>
+                <label for="search-id">ID Search:</label>
                 <input type="text" id="search-id" oninput="searchUser()">
             </div>
             <div class="user-table-container">
@@ -30,11 +30,11 @@
                     <thead>
                         <tr>
                             <th>ID</th>
-                            <th>성명</th>
-                            <th>성별</th>
-                            <th>나이(만)</th>
-                            <th>신장</th>
-                            <th>체중(Kg)</th>
+                            <th>Name</th>
+                            <th>Gender</th>
+                            <th>Age</th>
+                            <th>Height(cm)</th>
+                            <th>Weight(Kg)</th>
                         </tr>
                     </thead>
                     <tbody id="user-list">
@@ -42,40 +42,40 @@
                     </tbody>
                 </table>
             </div>
-            <button class="action-btn" onclick="addUser()">신규 사용자 추가</button>
-            <button class="action-btn" onclick="deleteUser()">삭제</button>
+            <button class="action-btn" onclick="addUser()">Add User</button>
+            <button class="action-btn" onclick="deleteUser()">Delete</button>
         </div>
         <div class="user-details hidden" id="user-details">
-            <h3>사용자 상세 정보</h3>
+            <h3>User Information</h3>
             <form id="user-form">
                 <div>
                     <label for="user-id">ID:</label>
                     <input type="text" id="user-id" name="user-id">
                 </div>
                 <div>
-                    <label for="user-name">성명:</label>
+                    <label for="user-name">Name:</label>
                     <input type="text" id="user-name" name="user-name">
                 </div>
                 <div>
-                    <label for="user-gender">성별:</label>
+                    <label for="user-gender">Gender:</label>
                     <select id="user-gender" name="user-gender">
-                        <option value="남">남</option>
-                        <option value="여">여</option>
+                        <option value="male">male</option>
+                        <option value="female">female</option>
                     </select>
                 </div>
                 <div>
-                    <label for="user-age">나이(만):</label>
+                    <label for="user-age">Age:</label>
                     <input type="number" id="user-age" name="user-age">
                 </div>
                 <div>
-                    <label for="user-height">키:</label>
+                    <label for="user-height">Height:</label>
                     <input type="number" id="user-height" name="user-height">
                 </div>
                 <div>
-                    <label for="user-weight">체중:</label>
+                    <label for="user-weight">Weight:</label>
                     <input type="number" id="user-weight" name="user-weight">
                 </div>
-                <button type="button" onclick="saveUser()">적용</button>
+                <button type="button" onclick="saveUser()">Apply</button>
             </form>
         </div>
     </div>

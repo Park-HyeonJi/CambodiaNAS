@@ -8,7 +8,6 @@ login_manager = LoginManager()
 login_manager.init_app(app)
 login_manager.login_view = 'login'
 
-# 사용자 데이터베이스 시뮬레이션
 users = {'ddd': {'password': 'password'}}
 
 class User(UserMixin):

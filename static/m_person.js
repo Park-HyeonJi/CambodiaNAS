@@ -132,7 +132,7 @@ function clearUserDetails() {
     document.querySelectorAll('tr.selected').forEach(row => row.classList.remove('selected'));
     document.getElementById('user-id').value = '';
     document.getElementById('user-name').value = '';
-    document.getElementById('user-gender').value = '남';
+    document.getElementById('user-gender').value = 'male';
     document.getElementById('user-age').value = '';
     document.getElementById('user-height').value = '';
     document.getElementById('user-weight').value = '';

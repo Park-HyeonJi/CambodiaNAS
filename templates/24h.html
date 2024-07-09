@@ -4,67 +4,67 @@
 <html lang="en">
 <head>
     <meta charset="UTF-8">
-    <title>24시간 회상법</title>
+    <title>24Hour Recall Method</title>
     <link rel="stylesheet" href="{{ url_for('static', filename='style.css') }}">
     <link rel="stylesheet" href="{{ url_for('static', filename='24h.css') }}">
 </head>
 <body>
-    <h2>24시간 회상법</h2>
+    <h2>24Hour Recall Method</h2>
     <div class="container">
         <div class="24h-main">
             <div class="person-search">
                 <div class="form-group">
-                    <label for="userGroup">사용자 그룹:</label>
+                    <label for="userGroup">User Group:</label>
                     <select id="userGroup" name="userGroup">
-                        <option value="group1">그룹 1</option>
-                        <option value="group2">그룹 2</option>
-                        <option value="group3">그룹 3</option>
+                        <option value="group1">Group 1</option>
+                        <option value="group2">Group 2</option>
+                        <option value="group3">Group 3</option>
                     </select>
                 </div>
                 <div class="form-group">
-                    <label for="userID">사용자:</label>
+                    <label for="userID">User:</label>
                     <select id="userID" name="userID">
-                        <option value="user1">사용자 1</option>
-                        <option value="user2">사용자 2</option>
-                        <option value="user3">사용자 3</option>
+                        <option value="user1">User 1</option>
+                        <option value="user2">User 2</option>
+                        <option value="user3">User 3</option>
                     </select>
                 </div>
                 <div class="form-group">
-                    <label for="date">조회일:</label>
+                    <label for="date">View Date:</label>
                     <input type="date" id="date" name="date" value="2024-01-30">
                 </div>
-                <button type="button">자료 불러오기</button>
-                <button type="button">데이터 복사</button>
+                <button type="button">Load Data</button>
+                <button type="button">Copy Data</button>
             </div>
             <div class="section-container">
                 <div class="food-search">
-                    <h3>섭취 음식 검색</h3>
+                    <h3>Food Intake Search</h3>
                     <div class="search-options">
                         <div class="form-group">
-                            <label for="foodCategory">대분류:</label>
+                            <label for="foodCategory">Main Category:</label>
                             <select id="foodCategory" name="foodCategory">
-                                <option value="category1">밥류</option>
-                                <option value="category2">면류</option>
-                                <option value="category3">국류</option>
+                                <option value="category1">Rice</option>
+                                <option value="category2">Noodles</option>
+                                <option value="category3">Soup</option>
                             </select>
                         </div>
                         <label>
                             <input type="radio" name="searchType" value="code" checked onclick="toggleInputFields()">
-                            음식코드
+                            Food Code
                         </label>
                         <input type="text" id="codeInput">
                         <label>
                             <input type="radio" name="searchType" value="name" onclick="toggleInputFields()">
-                            음식명
+                            Food Name
                         </label>
                         <input type="text" id="nameInput" disabled>
-                        <button type="button">검색</button>
+                        <button type="button">Search</button>
                     </div>
                     <table id="foodTable" class="food-table">
                         <thead>
                             <tr>
-                                <th>식품코드</th>
-                                <th>식품명</th>
+                                <th>Food Ingredient Code</th>
+                                <th>Food Ingredient Name</th>
                             </tr>
                         </thead>
                         <tbody>
@@ -85,24 +85,24 @@
                             <option value="100">100</option>
                         </select>
                     </div>
-                    <button type="button">섭취음식 목록에 추가</button>
+                    <button type="button">Add To Food List</button>
                 </div>
                 <div class="food-data">
-                    <h3>섭취 음식 목록</h3>
+                    <h3>List Of Foods Consumed</h3>
                     <div class="time-categories">
-                        <button type="button">아침</button>
-                        <button type="button">오전 간식</button>
-                        <button type="button">점심</button>
-                        <button type="button">오후 간식</button>
-                        <button type="button">저녁</button>
-                        <button type="button">야식</button>
+                        <button type="button">Breakfast</button>
+                        <button type="button">Morning snack</button>
+                        <button type="button">Lunch</button>
+                        <button type="button">Afternoon Snack</button>
+                        <button type="button">Dinner</button>
+                        <button type="button">Midnight Snack</button>
                     </div>
                     <div class="food-items">
                         <table class="food-table">
                             <thead>
                                 <tr>
-                                    <th>음식코드</th>
-                                    <th>음식명</th>
+                                    <th>Food Code</th>
+                                    <th>Food Name</th>
                                 </tr>
                             </thead>
                             <tbody>
@@ -112,31 +112,31 @@
                             </tbody>
                         </table>
                     </div>
-                    <button type="button">음식 추가</button>
-                    <button type="button">음식 복제</button>
-                    <button type="button">음식 삭제</button>
+                    <button type="button">Add Food</button>
+                    <button type="button">Copy Food</button>
+                    <button type="button">Delete Food</button>
                 </div>
                 <div class="food-details">
-                    <h3>섭취 음식별 식품 목록</h3>
+                    <h3>List Of Food Ingredients By Food Intake</h3>
                     <div class="form-group">
-                        <label for="foodIntake">음식섭취율(%):</label>
+                        <label for="foodIntake">Food Intake Rate(%):</label>
                         <input type="text" id="foodIntake" name="foodIntake" value="100">
                     </div>
                     <table class="food-table">
                         <thead>
                             <tr>
-                                <th>식품코드</th>
-                                <th>식품명</th>
-                                <th>재료량(g)</th>
+                                <th>Food Ingredient Code</th>
+                                <th>Food Ingredient Name</th>
+                                <th>Amount Of Material(g)</th>
                             </tr>
                         </thead>
                         <tbody>
                             <td colspan="3"></td>
                         </tbody>
                     </table>
-                    <button type="button">적용</button>
-                    <button type="button">식품 추가</button>
-                    <button type="button">식품 삭제</button>
+                    <button type="button">Apply</button>
+                    <button type="button">Add Food Ingredient</button>
+                    <button type="button">Delete Food Ingredient</button>
                 </div>
             </div>
         </div>

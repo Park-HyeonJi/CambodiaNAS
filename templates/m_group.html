@@ -9,16 +9,16 @@
     <link rel="stylesheet" href="{{ url_for('static', filename='m_group.css') }}">
 </head>
 <body>
-    <h2>그룹 관리</h2>
+    <h2>Group Management</h2>
     <div class="container">
         <div class="group-management">
             <div class="group-list">
-                <h3>그룹 목록</h3>
+                <h3>Group List</h3>
                 <div class = "group-table">
                 <table>
                     <thead>
                         <tr>
-                            <th>그룹명</th>
+                            <th>Group Name</th>
                         </tr>
                     </thead>
                     <tbody id="group-list">
@@ -27,23 +27,23 @@
                 </table>
             </div>
             <div>
-                <button onclick="addGroup()">신규 그룹 추가</button>
-                <button onclick="deleteGroup()">삭제</button>
+                <button onclick="addGroup()">Add Group</button>
+                <button onclick="deleteGroup()">Delete</button>
             </div>
             </div>
             
             <div class="group-details">
-                <h3>그룹 상세 정보</h3>
+                <h3>Group Information</h3>
                 <form id="group-form">
                     <div>
-                        <label for="group-name">그룹 명:</label>
+                        <label for="group-name">Group Name:</label>
                         <input type="text" id="group-name" name="group-name">
                     </div>
                     <div>
-                        <label for="group-desc">그룹 설명:</label>
+                        <label for="group-desc">Group Description:</label>
                         <input type="text" id="group-desc" name="group-desc">
                     </div>
-                    <button type="button" onclick="saveGroup()">현재 그룹 정보 저장</button>
+                    <button type="button" onclick="saveGroup()">Save Current Group Information</button>
                 </form>
             </div>
         </div>

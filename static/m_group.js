@@ -11,7 +11,7 @@ function loadGroups() {
 
     groups.forEach(group => {
         const row = document.createElement('tr');
-        row.addEventListener('click', () => selectGroup(row, group)); // 클릭 이벤트 리스너 추가
+        row.addEventListener('click', () => selectGroup(row, group));
         const cell = document.createElement('td');
         cell.textContent = group;
         row.appendChild(cell);
@@ -24,13 +24,13 @@ let selectedGroupName = null;
 
 function selectGroup(row, groupName) {
     if (selectedRow) {
-        selectedRow.classList.remove('selected'); // 이전에 선택된 행에서 선택 클래스 제거
+        selectedRow.classList.remove('selected');
     }
 
     selectedRow = row;
-    selectedRow.classList.add('selected'); // 선택된 행에 선택 클래스 추가
+    selectedRow.classList.add('selected');
     
-    showGroupDetails(groupName); // 선택된 그룹의 상세 정보 표시
+    showGroupDetails(groupName);
 }
 
 function showGroupDetails(groupName) {
@@ -42,7 +42,7 @@ function showGroupDetails(groupName) {
 
 function saveGroup() {
     if (!selectedGroupName) {
-        alert('저장할 그룹을 선택하세요.');
+        alert('Select the group you want to save');
         return;
     }
 
@@ -51,7 +51,7 @@ function saveGroup() {
 
     let groups = JSON.parse(localStorage.getItem('groups')) || [];
     if (newGroupName !== selectedGroupName && groups.includes(newGroupName)) {
-        alert('이미 존재하는 그룹명입니다.');
+        alert('This group name already exists.');
         return;
     }
 
@@ -61,13 +61,13 @@ function saveGroup() {
     localStorage.removeItem(selectedGroupName + '_desc');
     localStorage.setItem(newGroupName + '_desc', groupDesc);
 
-    selectedGroupName = newGroupName; // 선택된 그룹명 갱신
-    loadGroups(); // 그룹 목록 다시 불러오기
+    selectedGroupName = newGroupName; 
+    loadGroups();
 }
 
 
 function addGroup() {
-    let groupName = prompt("추가할 그룹명을 입력하세요:");
+    let groupName = prompt("Enter the group name to add:");
     if (groupName) {
         let groups = JSON.parse(localStorage.getItem('groups')) || [];
         if (!groups.includes(groupName)) {
@@ -76,21 +76,21 @@ function addGroup() {
             localStorage.setItem(groupName + '_desc', '');
             loadGroups();
         } else {
-            alert('이미 존재하는 그룹명입니다.');
+            alert('This group name already exists.');
         }
     }
 }
 
 function deleteGroup() {
-    if (selectedGroupName) { // selectedGroupName을 사용하여 삭제할 그룹 확인
+    if (selectedGroupName) { 
         let groups = JSON.parse(localStorage.getItem('groups')) || [];
-        groups = groups.filter(group => group !== selectedGroupName); // selectedGroupName으로 비교
-        localStorage.removeItem(selectedGroupName + '_desc'); // 선택된 그룹의 설명 제거
+        groups = groups.filter(group => group !== selectedGroupName); 
+        localStorage.removeItem(selectedGroupName + '_desc');
         localStorage.setItem('groups', JSON.stringify(groups));
         loadGroups();
         clearGroupDetails();
     } else {
-        alert('삭제할 그룹을 선택하세요.');
+        alert('Select the group you want to delete.');
     }
 }
 
