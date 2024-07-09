@@ -1,11 +1,15 @@
 h2 {
     white-space: nowrap;
     font-size: 24px;
-    margin-bottom: 0;
+    margin-bottom: 50px;
 }
 
 .container {
     display: flex;
+<<<<<<< HEAD
+=======
+
+>>>>>>> 5594e3a02f6cbb6a1ed52571942a0e74ebbeda75
 }
 
 .group-management {

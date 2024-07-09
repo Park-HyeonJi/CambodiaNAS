@@ -1,9 +1,11 @@
 document.addEventListener('DOMContentLoaded', () => {
     loadGroups();
+    clearGroupDetails(); // Hide group details form initially
 });
 
 let selectedGroup = null;
 
+// Load groups from localStorage and populate the group list
 function loadGroups() {
     let groups = JSON.parse(localStorage.getItem('groups')) || [];
     const groupList = document.getElementById('group-list');
@@ -17,11 +19,14 @@ function loadGroups() {
         row.appendChild(cell);
         groupList.appendChild(row);
     });
+
+    clearGroupDetails(); // Hide group details form after loading groups
 }
 
 let selectedRow = null;
 let selectedGroupName = null;
 
+// Select a group and show its details
 function selectGroup(row, groupName) {
     if (selectedRow) {
         selectedRow.classList.remove('selected');
@@ -33,13 +38,16 @@ function selectGroup(row, groupName) {
     showGroupDetails(groupName);
 }
 
+// Populate the group details form with the selected group's data
 function showGroupDetails(groupName) {
     selectedGroupName = groupName;
     const groupDesc = localStorage.getItem(groupName + '_desc') || '';
     document.getElementById('group-name').value = groupName;
     document.getElementById('group-desc').value = groupDesc;
+    document.getElementById('group-details').classList.remove('hidden'); // Show group details form
 }
 
+// Save the group details to localStorage
 function saveGroup() {
     if (!selectedGroupName) {
         alert('Select the group you want to save');
@@ -65,7 +73,7 @@ function saveGroup() {
     loadGroups();
 }
 
-
+// Add a new group
 function addGroup() {
     let groupName = prompt("Enter the group name to add:");
     if (groupName) {
@@ -81,6 +89,7 @@ function addGroup() {
     }
 }
 
+// Delete the selected group from localStorage
 function deleteGroup() {
     if (selectedGroupName) { 
         let groups = JSON.parse(localStorage.getItem('groups')) || [];
@@ -94,9 +103,10 @@ function deleteGroup() {
     }
 }
 
-
+// Clear the group details form and hide it
 function clearGroupDetails() {
     selectedGroup = null;
     document.getElementById('group-name').value = '';
     document.getElementById('group-desc').value = '';
+    document.getElementById('group-details').classList.add('hidden'); // Hide group details form
 }
