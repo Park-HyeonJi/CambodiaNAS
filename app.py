@@ -1,9 +1,17 @@
 from flask import Flask, render_template, redirect, url_for, request, jsonify
 from flask_login import LoginManager, UserMixin, login_user, login_required, logout_user, current_user
 import pandas as pd
+import os
+import logging
+from logging.handlers import RotatingFileHandler
 
 app = Flask(__name__)
 app.secret_key = 'your_secret_key'
+
+# 로깅 설정
+handler = RotatingFileHandler('error.log', maxBytes=10000, backupCount=1)
+handler.setLevel(logging.ERROR)
+app.logger.addHandler(handler)
 
 login_manager = LoginManager()
 login_manager.init_app(app)
@@ -81,25 +89,92 @@ def db_nutri():
 @app.route('/search_food', methods=['POST'])
 @login_required
 def search_food():
-    data = request.get_json()
-    search_type = data['searchType']
-    search_value = data['searchValue']
-    
-    food_data_path = 'data/CambodiaFood_test.xlsx'
-    food_data = pd.read_excel(food_data_path)
-    
-    if search_type == "code":
-        results = food_data[food_data['Food Code'].astype(str).str.contains(search_value, na=False, case=False)]
+    try:
+        data = request.get_json()
+        search_type = data['searchType']
+        search_value = data['searchValue']
+        
+        food_data_path = 'data/CambodiaFood_test.xlsx'
+        food_data = pd.read_excel(food_data_path)
+        
+        if search_type == "code":
+            results = food_data[food_data['Food Code'].astype(str).str.contains(search_value, na=False, case=False)]
+        else:
+            results = food_data[food_data['Food Name'].str.contains(search_value, na=False, case=False)]
+        
+        results = results.drop_duplicates(subset=['Food Code', 'Food Name'])
+        results = results[['Food Code', 'Food Name']]
+        
+        return jsonify(results.to_dict(orient='records'))
+    except Exception as e:
+        app.logger.error(f"Error in search_food: {e}")
+        return jsonify({'status': 'error', 'message': str(e)}), 500
+
+@app.route('/add_food', methods=['POST'])
+@login_required
+def add_food():
+    try:
+        data = request.get_json()
+        food_code = data['foodCode']
+        food_name = data['foodName']
+        time_category = data['timeCategory']
+        user_group = data['userGroup']
+        user_id = data['userID']
+        view_date = data['viewDate']
+
+        food_data_path = 'data/CambodiaFood_test.xlsx'
+        food_data = pd.read_excel(food_data_path)
+        
+        selected_food_data = food_data[food_data['Food Name'] == food_name]
+
+        user_data = load_user_data(user_group, user_id, view_date)
+        if time_category not in user_data:
+            user_data[time_category] = []
+        
+        user_data[time_category].extend(selected_food_data.to_dict(orient='records'))
+        save_user_data(user_group, user_id, view_date, user_data)
+
+        return jsonify({'status': 'success'})
+    except Exception as e:
+        app.logger.error(f"Error in add_food: {e}")
+        return jsonify({'status': 'error', 'message': str(e)}), 500
+
+@app.route('/get_food_list', methods=['GET'])
+@login_required
+def get_food_list():
+    try:
+        user_group = request.args.get('userGroup')
+        user_id = request.args.get('userID')
+        view_date = request.args.get('viewDate')
+
+        user_data = load_user_data(user_group, user_id, view_date)
+        return jsonify(user_data)
+    except Exception as e:
+        app.logger.error(f"Error in get_food_list: {e}")
+        return jsonify({'status': 'error', 'message': str(e)}), 500
+
+def load_user_data(user_group, user_id, view_date):
+    file_path = f'data/{user_group}_{user_id}_{view_date}.xlsx'
+    if os.path.exists(file_path):
+        xls = pd.ExcelFile(file_path)
+        user_data = {sheet: xls.parse(sheet).to_dict(orient='records') for sheet in xls.sheet_names}
     else:
-        results = food_data[food_data['Food Name'].str.contains(search_value, na=False, case=False)]
-    
-    # 중복 값 제거
-    results = results.drop_duplicates(subset=['Food Code', 'Food Name'])
+        user_data = {
+            'Breakfast': [],
+            'Morning snack': [],
+            'Lunch': [],
+            'Afternoon Snack': [],
+            'Dinner': [],
+            'Midnight Snack': []
+        }
+    return user_data
 
-    # 필요한 열만 선택
-    results = results[['Food Code', 'Food Name']]
-
-    return jsonify(results.to_dict(orient='records'))
+def save_user_data(user_group, user_id, view_date, data):
+    file_path = f'data/{user_group}_{user_id}_{view_date}.xlsx'
+    with pd.ExcelWriter(file_path) as writer:
+        for sheet_name, records in data.items():
+            df = pd.DataFrame(records)
+            df.to_excel(writer, sheet_name=sheet_name, index=False)
 
 # 로그아웃
 @app.route('/logout')

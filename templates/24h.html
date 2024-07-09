@@ -39,14 +39,6 @@
                 <div class="food-search">
                     <h3>Food Intake Search</h3>
                     <div class="search-options">
-                        <!-- <div class="form-group">
-                            <label for="foodCategory">Main Category:</label>
-                            <select id="foodCategory" name="foodCategory">
-                                <option value="category1">Rice</option>
-                                <option value="category2">Noodles</option>
-                                <option value="category3">Soup</option>
-                            </select>
-                        </div> -->
                         <label>
                             <input type="radio" name="searchType" value="code" checked onclick="toggleInputFields()">
                             Food Code
@@ -64,7 +56,6 @@
                             <tr>
                                 <th>Food Code</th>
                                 <th>Food Name</th>
-                                <!-- <th>Category</th> -->
                             </tr>
                         </thead>
                         <tbody>
@@ -83,19 +74,19 @@
                             <option value="100">100</option>
                         </select>
                     </div>
-                    <button type="button">Add To Food List</button>
+                    <button type="button" onclick="addToFoodList()">Add To Food List</button>
                 </div>
 
                 <!-- 2열 -->
                 <div class="food-data">
                     <h3>List Of Foods Consumed</h3>
                     <div class="time-categories">
-                        <button type="button">Breakfast</button>
-                        <button type="button">Morning snack</button>
-                        <button type="button">Lunch</button>
-                        <button type="button">Afternoon Snack</button>
-                        <button type="button">Dinner</button>
-                        <button type="button">Midnight Snack</button>
+                        <button type="button" onclick="setActive(this)" data-category="Breakfast">Breakfast</button>
+                        <button type="button" onclick="setActive(this)" data-category="Morning snack">Morning snack</button>
+                        <button type="button" onclick="setActive(this)" data-category="Lunch">Lunch</button>
+                        <button type="button" onclick="setActive(this)" data-category="Afternoon Snack">Afternoon Snack</button>
+                        <button type="button" onclick="setActive(this)" data-category="Dinner">Dinner</button>
+                        <button type="button" onclick="setActive(this)" data-category="Midnight Snack">Midnight Snack</button>
                     </div>
                     <div class="food-items">
                         <table class="food-table">
@@ -105,7 +96,32 @@
                                     <th>Food Name</th>
                                 </tr>
                             </thead>
-                            <tbody>
+                            <tbody data-category="Breakfast">
+                                <tr>
+                                    <td colspan="2"></td>
+                                </tr>
+                            </tbody>
+                            <tbody data-category="Morning snack">
+                                <tr>
+                                    <td colspan="2"></td>
+                                </tr>
+                            </tbody>
+                            <tbody data-category="Lunch">
+                                <tr>
+                                    <td colspan="2"></td>
+                                </tr>
+                            </tbody>
+                            <tbody data-category="Afternoon Snack">
+                                <tr>
+                                    <td colspan="2"></td>
+                                </tr>
+                            </tbody>
+                            <tbody data-category="Dinner">
+                                <tr>
+                                    <td colspan="2"></td>
+                                </tr>
+                            </tbody>
+                            <tbody data-category="Midnight Snack">
                                 <tr>
                                     <td colspan="2"></td>
                                 </tr>
@@ -116,7 +132,6 @@
                     <button type="button">Copy Food</button>
                     <button type="button">Delete Food</button>
                 </div>
-
                 <!-- 3열 -->
                 <div class="food-details">
                     <h3>List Of Food Ingredients By Food Intake</h3>
@@ -140,7 +155,6 @@
                     <button type="button">Add Food Ingredient</button>
                     <button type="button">Delete Food Ingredient</button>
                 </div>
-                
             </div>
 
             <!-- 3행 : 테이블 -->
@@ -219,7 +233,7 @@
             </div>
         </div>
     </div>
-    <script src="static/24h.js"></script>
+    <script src="{{ url_for('static', filename='24h.js') }}"></script>
     <script>
         function openTab(evt, tabName) {
             var i, tabcontent, tablinks;
@@ -240,4 +254,6 @@
     </script>
 </body>
 </html>
+
+
 {% endblock %}
