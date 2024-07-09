@@ -1,5 +1,6 @@
 document.addEventListener('DOMContentLoaded', () => {
     loadGroupsForUser();
+    toggleInputFields();
 });
 
 function loadGroupsForUser() {
@@ -46,4 +47,35 @@ function toggleInputFields() {
         codeInput.disabled = true;
         nameInput.disabled = false;
     }
+}
+
+function searchFood() {
+    var searchType = document.querySelector('input[name="searchType"]:checked').value;
+    var searchValue = (searchType === "code") ? document.getElementById("codeInput").value : document.getElementById("nameInput").value;
+
+    fetch('/search_food', {
+        method: 'POST',
+        headers: {
+            'Content-Type': 'application/json'
+        },
+        body: JSON.stringify({ searchType: searchType, searchValue: searchValue })
+    })
+    .then(response => response.json())
+    .then(data => {
+        var tableBody = document.querySelector("#foodTable tbody");
+        tableBody.innerHTML = "";
+        data.forEach(row => {
+            var tr = document.createElement("tr");
+            tr.innerHTML = `<td>${row['Food Code']}</td><td>${row['Food Name']}</td>`;
+            tableBody.appendChild(tr);
+        });
+    });
+}
+
+function loadData() {
+    // Load data functionality
+}
+
+function copyData() {
+    // Copy data functionality
 }

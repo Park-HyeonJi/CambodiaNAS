@@ -7,6 +7,7 @@
     <title>24Hour Recall Method</title>
     <link rel="stylesheet" href="{{ url_for('static', filename='style.css') }}">
     <link rel="stylesheet" href="{{ url_for('static', filename='24h.css') }}">
+    <script src="{{ url_for('static', filename='24h.js') }}" defer></script>
 </head>
 <body>
     <h2>24Hour Recall Method</h2>
@@ -28,8 +29,8 @@
                     <label for="date">View Date:</label>
                     <input type="date" id="date" name="date" value="2024-01-30">
                 </div>
-                <button type="button">Load Data</button>
-                <button type="button">Copy Data</button>
+                <button type="button" onclick="loadData()">Load Data</button>
+                <button type="button" onclick="copyData()">Copy Data</button>
             </div>
 
             <!-- 2행 음식 검색 -->
@@ -38,14 +39,14 @@
                 <div class="food-search">
                     <h3>Food Intake Search</h3>
                     <div class="search-options">
-                        <div class="form-group">
+                        <!-- <div class="form-group">
                             <label for="foodCategory">Main Category:</label>
                             <select id="foodCategory" name="foodCategory">
                                 <option value="category1">Rice</option>
                                 <option value="category2">Noodles</option>
                                 <option value="category3">Soup</option>
                             </select>
-                        </div>
+                        </div> -->
                         <label>
                             <input type="radio" name="searchType" value="code" checked onclick="toggleInputFields()">
                             Food Code
@@ -56,19 +57,18 @@
                             Food Name
                         </label>
                         <input type="text" id="nameInput" disabled>
-                        <button type="button">Search</button>
+                        <button type="button" onclick="searchFood()">Search</button>
                     </div>
                     <table id="foodTable" class="food-table">
                         <thead>
                             <tr>
                                 <th>Food Code</th>
                                 <th>Food Name</th>
+                                <!-- <th>Category</th> -->
                             </tr>
                         </thead>
                         <tbody>
-                            <tr>
-                                <td colspan="2"></td>
-                            </tr>
+                            <!-- 검색 결과가 여기에 표시됩니다 -->
                         </tbody>
                     </table>
                     <div class="pagination">
@@ -178,78 +178,12 @@
                         <tbody>
                             <tr>
                                 <td>Current Food</td>
-                                <td>706.000</td>
-                                <td>157.000</td>
-                                <td>0.200</td>
-                                <td>0.200</td>
-                                <td>0.200</td>
-                                <td>157.000</td>
-                                <td>11.400</td>
-                                <td>0.200</td>
-                                <td>11.400</td>
-                                <td>0.200</td>
-                                <td>0.200</td>
-                                <td>11.400</td>
-                                <td>0.200</td>
-                                <td>11.400</td>
-                                <td>0.200</td>
-                                <td>11.400</td>
-                                <td>11.400</td>
-                                <td>0.200</td>
-                                <td>0.200</td>
-                                <td>11.400</td>
-                                <td>11.400</td>
-                                <td>11.400</td>
                             </tr>
                             <tr>
                                 <td>Current Meal</td>
-                                <td>706.000</td>
-                                <td>157.000</td>
-                                <td>0.200</td>
-                                <td>0.200</td>
-                                <td>0.200</td>
-                                <td>157.000</td>
-                                <td>11.400</td>
-                                <td>0.200</td>
-                                <td>11.400</td>
-                                <td>0.200</td>
-                                <td>0.200</td>
-                                <td>11.400</td>
-                                <td>0.200</td>
-                                <td>11.400</td>
-                                <td>0.200</td>
-                                <td>11.400</td>
-                                <td>11.400</td>
-                                <td>0.200</td>
-                                <td>0.200</td>
-                                <td>11.400</td>
-                                <td>11.400</td>
-                                <td>11.400</td>
                             </tr>
                             <tr>
                                 <td>Daily Total</td>
-                                <td>1265.675</td>
-                                <td>233.467</td>
-                                <td>13.968</td>
-                                <td>13.968</td>
-                                <td>13.968</td>
-                                <td>233.467</td>
-                                <td>44.292</td>
-                                <td>13.968</td>
-                                <td>44.292</td>
-                                <td>13.968</td>
-                                <td>13.968</td>
-                                <td>44.292</td>
-                                <td>13.968</td>
-                                <td>44.292</td>
-                                <td>13.968</td>
-                                <td>44.292</td>
-                                <td>44.292</td>
-                                <td>13.968</td>
-                                <td>13.968</td>
-                                <td>44.292</td>
-                                <td>44.292</td>
-                                <td>44.292</td>
                             </tr>
                         </tbody>
                     </table>
