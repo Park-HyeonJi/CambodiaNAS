@@ -40,7 +40,7 @@ function loadUsers() {
         userList.appendChild(row);
     });
 
-    document.getElementById('user-details').classList.add('hidden'); // 상세 정보 폼 숨기기
+    document.getElementById('user-details').classList.add('hidden');
     selectedUserId = null;
 }
 
@@ -80,23 +80,23 @@ function saveUser() {
         weight: parseInt(document.getElementById('user-weight').value)
     };
 
-    // Check if any field is empty
-    if (!newUser.id || !newUser.name || !newUser.gender || !newUser.age || !newUser.height || !newUser.weight) {
-        alert('Please Enter All Information.');
+    // Check if any field is empty or if age, height, weight are negative
+    if (!newUser.id || !newUser.name || !newUser.gender || newUser.age <= 0 || newUser.height <= 0 || newUser.weight <= 0) {
+        alert('Please enter all information and ensure age, height, and weight are positive.');
         return;
     }
 
     if (selectedUserId === null) {
         // Check for duplicate ID when adding a new user
         if (users.some(user => user.id === newUser.id)) {
-            alert('This ID Already Exists.');
+            alert('This ID already exists.');
             return;
         }
         users.push(newUser);
     } else {
         // Check for duplicate ID when editing a user, excluding the current user being edited
         if (newUser.id !== selectedUserId && users.some(user => user.id === newUser.id)) {
-            alert('This ID already Exists.');
+            alert('This ID already exists.');
             return;
         }
         users = users.map(user => user.id === selectedUserId ? newUser : user);
@@ -106,7 +106,6 @@ function saveUser() {
     loadUsers();
     clearUserDetails();
 }
-
 
 function addUser() {
     selectedUserId = null;
@@ -123,7 +122,7 @@ function deleteUser() {
         loadUsers();
         clearUserDetails();
     } else {
-        alert('Select The User You Want To Delete.');
+        alert('Select the user you want to delete.');
     }
 }
 

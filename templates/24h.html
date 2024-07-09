@@ -133,9 +133,164 @@
                     <button type="button">Delete Food Ingredient</button>
                 </div>
             </div>
+            <div class="nutrition-table-container">
+                <h3>Nutritional Information of Consumed Food</h3>
+                <table class="nutrition-table">
+                    <thead>
+                        <tr>
+                            <th>Type</th>
+                            <th>ENERC (kcal)</th>
+                            <th>ENERC (kJ)</th>
+                            <th>WATER (g)</th>
+                            <th>FAT (g)</th>
+                            <th>FAT(g)</th>
+                            <th>CHOAVLDF (g)</th>
+                            <th>FIBTG(g)</th>
+                            <th>ASH (g)</th>
+                            <th>CA (mg)</th>
+                            <th>FE (mg)</th>
+                            <th>ZN (mg)</th>
+                            <th>VITA_RAE(mcg)</th>
+                            <th>VITD(mcg)</th>
+                            <th>THIA (mg)</th>
+                            <th>RIBF (mg)</th>
+                            <th>NIA (mg)</th>
+                            <th>NIATRP(mg)</th>
+                            <th>PANTAC(mg)</th>
+                            <th>VITB6 (mg)</th>
+                            <th>FOL (mcg)</th>
+                            <th>VITB12 (mcg)</th>
+                            <th>VITC (mg)</th>
+                        </tr>
+                    </thead>
+                    <tbody>
+                        <tr>
+                            <td>Current Food</td>
+                            <td>706.000</td>
+                            <td>157.000</td>
+                            <td>0.200</td>
+                            <td>0.200</td>
+                            <td>0.200</td>
+                            <td>157.000</td>
+                            <td>11.400</td>
+                            <td>0.200</td>
+                            <td>11.400</td>
+                            <td>0.200</td>
+                            <td>0.200</td>
+                            <td>11.400</td>
+                            <td>0.200</td>
+                            <td>11.400</td>
+                            <td>0.200</td>
+                            <td>11.400</td>
+                            <td>11.400</td>
+                            <td>0.200</td>
+                            <td>0.200</td>
+                            <td>11.400</td>
+                            <td>11.400</td>
+                            <td>11.400</td>
+                        </tr>
+                        <tr>
+                            <td>Current Meal</td>
+                            <td>706.000</td>
+                            <td>157.000</td>
+                            <td>0.200</td>
+                            <td>0.200</td>
+                            <td>0.200</td>
+                            <td>157.000</td>
+                            <td>11.400</td>
+                            <td>0.200</td>
+                            <td>11.400</td>
+                            <td>0.200</td>
+                            <td>0.200</td>
+                            <td>11.400</td>
+                            <td>0.200</td>
+                            <td>11.400</td>
+                            <td>0.200</td>
+                            <td>11.400</td>
+                            <td>11.400</td>
+                            <td>0.200</td>
+                            <td>0.200</td>
+                            <td>11.400</td>
+                            <td>11.400</td>
+                            <td>11.400</td>
+                        </tr>
+                        <tr>
+                            <td>Daily Total</td>
+                            <td>1265.675</td>
+                            <td>233.467</td>
+                            <td>13.968</td>
+                            <td>13.968</td>
+                            <td>13.968</td>
+                            <td>233.467</td>
+                            <td>44.292</td>
+                            <td>13.968</td>
+                            <td>44.292</td>
+                            <td>13.968</td>
+                            <td>13.968</td>
+                            <td>44.292</td>
+                            <td>13.968</td>
+                            <td>44.292</td>
+                            <td>13.968</td>
+                            <td>44.292</td>
+                            <td>44.292</td>
+                            <td>13.968</td>
+                            <td>13.968</td>
+                            <td>44.292</td>
+                            <td>44.292</td>
+                            <td>44.292</td>
+                        </tr>
+                    </tbody>
+                </table>
+                <div class="nutrition-controls">
+                    <label for="nutrition-group">Select Nutrition Group:</label>
+                    <select id="nutrition-group" name="nutrition-group">
+                        <option value="basic">Basic Nutrition</option>
+                        <!-- Add more options as needed -->
+                    </select>
+                    <button type="button" onclick="exportExcel()">Export to Excel</button>
+                    <button type="button" onclick="showCurrentFood()">Current Food Nutrition</button>
+                    <button type="button" onclick="showTotalNutrition()">Total Daily Nutrition</button>
+                    <button type="button" onclick="generateChart()">Generate Chart</button>
+                </div>
+            </div>
+            <div class="24h-result-container">
+                <h3>24-Hour Recall Method Results</h3>
+                <div class="tab">
+                    <button class="tablinks" onclick="openTab(event, 'NutrientIntake')">Nutrient Intake</button>
+                    <button class="tablinks" onclick="openTab(event, 'FoodGroupIntake')">Food Group Intake</button>
+                </div>
+                
+                <div id="NutrientIntake" class="tabcontent">
+                    <h3>Nutrient Intake</h3>
+                    <img src="{{ url_for('static', filename='image.png') }}" alt="Nutrient Intake Graph">
+                </div>
+
+                <div id="FoodGroupIntake" class="tabcontent">
+                    <h3>Food Group Intake</h3>
+                    <img src="{{ url_for('static', filename='image.png') }}" alt="Food Group Intake Graph">
+                </div>
+            </div>
         </div>
     </div>
-    <script src="{{ url_for('static', filename='24h.js') }}"></script>
+    <script src="static/24h.js"></script>
+    <script>
+        function openTab(evt, tabName) {
+            var i, tabcontent, tablinks;
+            tabcontent = document.getElementsByClassName("tabcontent");
+            for (i = 0; i < tabcontent.length; i++) {
+                tabcontent[i].style.display = "none";
+            }
+            tablinks = document.getElementsByClassName("tablinks");
+            for (i = 0; i < tablinks.length; i++) {
+                tablinks[i].className = tablinks[i].className.replace(" active", "");
+            }
+            document.getElementById(tabName).style.display = "block";
+            evt.currentTarget.className += " active";
+        }
+
+        // Open the first tab by default
+        document.getElementsByClassName("tablinks")[0].click();
+    </script>
 </body>
 </html>
 {% endblock %}
