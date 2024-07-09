@@ -176,6 +176,22 @@ def save_user_data(user_group, user_id, view_date, data):
             df = pd.DataFrame(records)
             df.to_excel(writer, sheet_name=sheet_name, index=False)
 
+@app.route('/get_food_ingredients', methods=['GET'])
+@login_required
+def get_food_ingredients():
+    try:
+        food_code = request.args.get('foodCode')
+        # 데이터 파일에서 음식 재료를 로드합니다.
+        food_data_path = 'data/CambodiaFood_test.xlsx'
+        food_data = pd.read_excel(food_data_path)
+
+        ingredients = food_data[food_data['Food Code'] == int(food_code)].to_dict(orient='records')
+        return jsonify(ingredients)
+    except Exception as e:
+        app.logger.error(f"Error in get_food_ingredients: {e}")
+        return jsonify({'status': 'error', 'message': str(e)}), 500
+
+
 # 로그아웃
 @app.route('/logout')
 @login_required
