@@ -138,10 +138,14 @@ function loadFoodList() {
                 var tr = document.createElement("tr");
                 tr.innerHTML = `<td>${food['Food Code']}</td><td>${food['Food Name']}</td>`;
                 tr.onclick = function() {
+<<<<<<< HEAD
                     tableBody.querySelectorAll('tr').forEach(r => r.style.backgroundColor = '');
                     tr.style.backgroundColor = 'lightgray';
                     console.log('Loading nutrition for Food Code:', food['Food Code']);
                     loadNutrition(food['Food Code']); // 셀을 클릭하면 loadNutrition 함수 호출
+=======
+                    loadIngredients(food); // 행을 클릭할 때 재료 로드
+>>>>>>> beba6bb951456acfcc068ee473fc28e56e2d7ff7
                 };
                 tableBody.appendChild(tr);
             }
@@ -149,6 +153,7 @@ function loadFoodList() {
     });
 }
 
+<<<<<<< HEAD
 function loadNutrition(foodCode) {
     fetch('/get_ingredients', {
         method: 'POST',
@@ -211,6 +216,26 @@ function loadNutrition(foodCode) {
     });
 }
 
+=======
+function loadIngredients(food) {
+    // ingredientTableBody를 초기화합니다.
+    var ingredientTableBody = document.getElementById('ingredientTableBody');
+    ingredientTableBody.innerHTML = "";
+
+    // 음식의 재료 정보를 가져옵니다.
+    fetch(`/get_food_ingredients?foodCode=${food['Food Code']}`)
+    .then(response => response.json())
+    .then(data => {
+        data.forEach(ingredient => {
+            var tr = document.createElement("tr");
+            tr.innerHTML = `<td>${ingredient['Ingrdient Code']}</td><td>${ingredient['Ingrdient']}</td><td>${ingredient['1 person (g)']}</td>`;
+            ingredientTableBody.appendChild(tr);
+        });
+    });
+}
+
+
+>>>>>>> beba6bb951456acfcc068ee473fc28e56e2d7ff7
 function loadData() {
     loadFoodList();
 }
