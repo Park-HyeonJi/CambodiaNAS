@@ -1,5 +1,6 @@
-from flask import Flask, render_template, redirect, url_for, request
+from flask import Flask, render_template, redirect, url_for, request, jsonify
 from flask_login import LoginManager, UserMixin, login_user, login_required, logout_user, current_user
+import pandas as pd
 
 app = Flask(__name__)
 app.secret_key = 'your_secret_key'
@@ -76,6 +77,29 @@ def db_food():
 @login_required
 def db_nutri():
     return render_template('db_nutri.html')
+
+@app.route('/search_food', methods=['POST'])
+@login_required
+def search_food():
+    data = request.get_json()
+    search_type = data['searchType']
+    search_value = data['searchValue']
+    
+    food_data_path = 'data/CambodiaFood_test.xlsx'
+    food_data = pd.read_excel(food_data_path)
+    
+    if search_type == "code":
+        results = food_data[food_data['Food Code'].astype(str).str.contains(search_value, na=False, case=False)]
+    else:
+        results = food_data[food_data['Food Name'].str.contains(search_value, na=False, case=False)]
+    
+    # 중복 값 제거
+    results = results.drop_duplicates(subset=['Food Code', 'Food Name'])
+
+    # 필요한 열만 선택
+    results = results[['Food Code', 'Food Name']]
+
+    return jsonify(results.to_dict(orient='records'))
 
 # 로그아웃
 @app.route('/logout')
