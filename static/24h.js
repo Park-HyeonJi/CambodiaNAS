@@ -64,15 +64,20 @@ function searchFood() {
     .then(data => {
         var tableBody = document.querySelector("#foodTable tbody");
         tableBody.innerHTML = "";
+
+        var uniqueFoods = [];
         data.forEach(row => {
-            var tr = document.createElement("tr");
-            tr.innerHTML = `<td>${row['Food Code']}</td><td>${row['Food Name']}</td>`;
-            tr.onclick = function() {
-                tableBody.querySelectorAll('tr').forEach(r => r.style.backgroundColor = '');
-                tr.style.backgroundColor = 'lightgray';
-                tr.dataset.selected = true;
-            };
-            tableBody.appendChild(tr);
+            if (!uniqueFoods.some(food => food['Food Name'] === row['Food Name'])) {
+                uniqueFoods.push(row);
+                var tr = document.createElement("tr");
+                tr.innerHTML = `<td>${row['Food Code']}</td><td>${row['Food Name']}</td>`;
+                tr.onclick = function() {
+                    tableBody.querySelectorAll('tr').forEach(r => r.style.backgroundColor = '');
+                    tr.style.backgroundColor = 'lightgray';
+                    tr.dataset.selected = true;
+                };
+                tableBody.appendChild(tr);
+            }
         });
     });
 }
@@ -138,14 +143,11 @@ function loadFoodList() {
                 var tr = document.createElement("tr");
                 tr.innerHTML = `<td>${food['Food Code']}</td><td>${food['Food Name']}</td>`;
                 tr.onclick = function() {
-<<<<<<< HEAD
                     tableBody.querySelectorAll('tr').forEach(r => r.style.backgroundColor = '');
                     tr.style.backgroundColor = 'lightgray';
                     console.log('Loading nutrition for Food Code:', food['Food Code']);
                     loadNutrition(food['Food Code']); // 셀을 클릭하면 loadNutrition 함수 호출
-=======
                     loadIngredients(food); // 행을 클릭할 때 재료 로드
->>>>>>> beba6bb951456acfcc068ee473fc28e56e2d7ff7
                 };
                 tableBody.appendChild(tr);
             }
@@ -153,7 +155,6 @@ function loadFoodList() {
     });
 }
 
-<<<<<<< HEAD
 function loadNutrition(foodCode) {
     fetch('/get_ingredients', {
         method: 'POST',
@@ -216,7 +217,6 @@ function loadNutrition(foodCode) {
     });
 }
 
-=======
 function loadIngredients(food) {
     // ingredientTableBody를 초기화합니다.
     var ingredientTableBody = document.getElementById('ingredientTableBody');
@@ -234,8 +234,6 @@ function loadIngredients(food) {
     });
 }
 
-
->>>>>>> beba6bb951456acfcc068ee473fc28e56e2d7ff7
 function loadData() {
     loadFoodList();
 }
