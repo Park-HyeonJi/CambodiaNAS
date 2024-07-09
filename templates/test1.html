@@ -1,0 +1,85 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <title>차트 테스트</title>
+    <script src="https://cdn.anychart.com/releases/v8/js/anychart-base.min.js"></script>
+    <script src="https://cdn.anychart.com/releases/v8/js/anychart-ui.min.js"></script>
+    <script src="https://cdn.anychart.com/releases/v8/js/anychart-exports.min.js"></script>
+    <link href="https://cdn.anychart.com/releases/v8/css/anychart-ui.min.css" type="text/css" rel="stylesheet">
+    <link href="https://cdn.anychart.com/releases/v8/fonts/css/anychart-font.min.css" type="text/css" rel="stylesheet">
+    <style type="text/css">
+        html, body, #container {
+            width: 100%;
+            height: 100%;
+            margin: 0;
+            padding: 0;
+        }
+    </style>
+</head>
+<body>
+    <div id="container"></div>
+
+    <script>
+        anychart.onDocumentReady(function () {
+            var dataSet = anychart.data.set([
+                ['에너지(kcal)', 0, 0, 20, 0, 80, 62.8],
+                ['탄수화물(g)', 0, 20, 20, 0, 60, 68.0],
+                ['단백질(g)', 0, 20, 20, 0, 60, 62.4],
+                ['지방(g)', 0, 0, 20, 0, 80, 22.3],
+                ['총당류(g)', 0, 20, 20, 0, 60, 12.3],
+                ['비타민A(μg RAE)', 0, 0, 20, 0, 80, 15.1],
+                ['리보플라빈(mg)', 0, 0, 20, 0, 80, 14.8],
+                ['칼슘(mg)', 0, 0, 20, 0, 80, 17.4],
+                ['나트륨(mg)', 20, 0, 0, 0, 80, 70.3],
+                ['철(mg)', 0, 0, 20, 0, 80, 28.5],
+                ['엽산(μg)', 0, 0, 20, 0, 80, 15.2],
+                ['요오드(μg)', 0, 0, 20, 0, 80, 18.4],
+                ['아연(mg)', 0, 0, 20, 0, 80, 16.2],
+                ['구리(μg)', 0, 0, 20, 0, 80, 20.3]
+            ]);
+
+            console.log(dataSet);
+
+            var firstSeriesData = dataSet.mapAs({ x: 0, value: 1 });
+            var secondSeriesData = dataSet.mapAs({ x: 0, value: 2 });
+            var thirdSeriesData = dataSet.mapAs({ x: 0, value: 3 });
+            var fourthSeriesData = dataSet.mapAs({ x: 0, value: 4 });
+            var fifthSeriesData = dataSet.mapAs({ x: 0, value: 5 });
+            var sixthSeriesData = dataSet.mapAs({ x: 0, value: 6 });
+
+            var chart = anychart.bar();
+            chart.animation(true);
+            chart.yScale().stackMode('value');
+            chart.title('영양소 섭취 분석');
+            chart.yAxis(0).labels().format('{ %Value }');
+
+            var setupSeriesLabels = function (series, name) {
+                series.name(name).stroke('3 #fff 1');
+                series.hovered().stroke('3 #fff 1');
+            };
+
+            var series;
+            series = chart.bar(firstSeriesData);
+            setupSeriesLabels(series, '부족');
+            series = chart.bar(secondSeriesData);
+            setupSeriesLabels(series, '약간부족');
+            series = chart.bar(thirdSeriesData);
+            setupSeriesLabels(series, '적절');
+            series = chart.bar(fourthSeriesData);
+            setupSeriesLabels(series, '약간과잉');
+            series = chart.bar(fifthSeriesData);
+            setupSeriesLabels(series, '과잉');
+            series = chart.marker(sixthSeriesData);
+            setupSeriesLabels(series, '섭취량');
+            series.type('diamond').size(8).color('black');
+
+            chart.legend().enabled(true).fontSize(14).padding([0, 0, 15, 0]);
+            chart.interactivity().hoverMode('by-x');
+            chart.tooltip().displayMode('union').valuePrefix('$');
+            chart.container('container');
+            chart.draw();
+        });
+    </script>
+</body>
+</html>

@@ -238,6 +238,16 @@ def get_food_ingredients():
         return jsonify({'status': 'error', 'message': str(e)}), 500
 
 
+@app.route('/NutrientIntake')
+@login_required
+def NutrientIntake():
+    return render_template('test1.html')
+
+@app.route('/FoodGroupIntake')
+@login_required
+def FoodGroupIntake():
+    return render_template('test2.html')
+
 # 로그아웃
 @app.route('/logout')
 @login_required

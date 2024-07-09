@@ -238,16 +238,19 @@
                     <button class="tablinks" onclick="openTab(event, 'NutrientIntake')">Nutrient Intake</button>
                     <button class="tablinks" onclick="openTab(event, 'FoodGroupIntake')">Food Group Intake</button>
                 </div>
-                
+
                 <div id="NutrientIntake" class="tabcontent">
-                    <h3>Nutrient Intake</h3>
-                    <img src="{{ url_for('static', filename='image.png') }}" alt="Nutrient Intake Graph">
+                    {% block NutrientIntake %}
+                        {% include 'test1.html' %}
+                    {% endblock %}
                 </div>
 
                 <div id="FoodGroupIntake" class="tabcontent">
-                    <h3>Food Group Intake</h3>
-                    <img src="{{ url_for('static', filename='image.png') }}" alt="Food Group Intake Graph">
+                    {% block FoodGroupIntake %}
+                        {% include 'test2.html' %}
+                    {% endblock %}
                 </div>
+                
             </div>
         </div>
     </div>
