@@ -228,7 +228,7 @@ function loadIngredients(food) {
     .then(data => {
         data.forEach(ingredient => {
             var tr = document.createElement("tr");
-            tr.innerHTML = `<td>${ingredient['Ingrdient Code']}</td><td>${ingredient['Ingrdient']}</td><td>${ingredient['1 person (g)']}</td>`;
+            tr.innerHTML = `<td>${ingredient['Ingredient Code']}</td><td>${ingredient['Ingrdient']}</td><td>${ingredient['1 person (g)']}</td>`;
             ingredientTableBody.appendChild(tr);
         });
     });
