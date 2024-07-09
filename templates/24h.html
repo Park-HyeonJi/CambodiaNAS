@@ -13,6 +13,7 @@
     <h2>24Hour Recall Method</h2>
     <div class="container">
         <div class="24h-main">
+            <!-- 1행 : 그룹, 유저 설정 -->
             <div class="person-search">
                 <div class="form-group">
                     <label for="userGroup">User Group:</label>
@@ -31,7 +32,10 @@
                 <button type="button" onclick="loadData()">Load Data</button>
                 <button type="button" onclick="copyData()">Copy Data</button>
             </div>
+
+            <!-- 2행 음식 검색 -->
             <div class="section-container">
+                <!-- 1열 -->
                 <div class="food-search">
                     <h3>Food Intake Search</h3>
                     <div class="search-options">
@@ -81,6 +85,8 @@
                     </div>
                     <button type="button">Add To Food List</button>
                 </div>
+
+                <!-- 2열 -->
                 <div class="food-data">
                     <h3>List Of Foods Consumed</h3>
                     <div class="time-categories">
@@ -110,6 +116,8 @@
                     <button type="button">Copy Food</button>
                     <button type="button">Delete Food</button>
                 </div>
+
+                <!-- 3열 -->
                 <div class="food-details">
                     <h3>List Of Food Ingredients By Food Intake</h3>
                     <div class="form-group">
@@ -132,9 +140,13 @@
                     <button type="button">Add Food Ingredient</button>
                     <button type="button">Delete Food Ingredient</button>
                 </div>
+                
             </div>
+
+            <!-- 3행 : 테이블 -->
             <div class="nutrition-table-container">
                 <h3>Nutritional Information of Consumed Food</h3>
+<<<<<<< HEAD
                 <table class="nutrition-table">
                     <thead>
                         <tr>
@@ -175,6 +187,116 @@
                         </tr>
                     </tbody>
                 </table>
+=======
+                <div style="overflow-x: auto;">
+                    <table class="nutrition-table">
+                        <thead>
+                            <tr>
+                                <th>Type</th>
+                                <th>ENERC (kcal)</th>
+                                <th>ENERC (kJ)</th>
+                                <th>WATER (g)</th>
+                                <th>FAT (g)</th>
+                                <th>FAT(g)</th>
+                                <th>CHOAVLDF (g)</th>
+                                <th>FIBTG(g)</th>
+                                <th>ASH (g)</th>
+                                <th>CA (mg)</th>
+                                <th>FE (mg)</th>
+                                <th>ZN (mg)</th>
+                                <th>VITA_RAE(mcg)</th>
+                                <th>VITD(mcg)</th>
+                                <th>THIA (mg)</th>
+                                <th>RIBF (mg)</th>
+                                <th>NIA (mg)</th>
+                                <th>NIATRP(mg)</th>
+                                <th>PANTAC(mg)</th>
+                                <th>VITB6 (mg)</th>
+                                <th>FOL (mcg)</th>
+                                <th>VITB12 (mcg)</th>
+                                <th>VITC (mg)</th>
+                            </tr>
+                        </thead>
+                        <tbody>
+                            <tr>
+                                <td>Current Food</td>
+                                <td>706.000</td>
+                                <td>157.000</td>
+                                <td>0.200</td>
+                                <td>0.200</td>
+                                <td>0.200</td>
+                                <td>157.000</td>
+                                <td>11.400</td>
+                                <td>0.200</td>
+                                <td>11.400</td>
+                                <td>0.200</td>
+                                <td>0.200</td>
+                                <td>11.400</td>
+                                <td>0.200</td>
+                                <td>11.400</td>
+                                <td>0.200</td>
+                                <td>11.400</td>
+                                <td>11.400</td>
+                                <td>0.200</td>
+                                <td>0.200</td>
+                                <td>11.400</td>
+                                <td>11.400</td>
+                                <td>11.400</td>
+                            </tr>
+                            <tr>
+                                <td>Current Meal</td>
+                                <td>706.000</td>
+                                <td>157.000</td>
+                                <td>0.200</td>
+                                <td>0.200</td>
+                                <td>0.200</td>
+                                <td>157.000</td>
+                                <td>11.400</td>
+                                <td>0.200</td>
+                                <td>11.400</td>
+                                <td>0.200</td>
+                                <td>0.200</td>
+                                <td>11.400</td>
+                                <td>0.200</td>
+                                <td>11.400</td>
+                                <td>0.200</td>
+                                <td>11.400</td>
+                                <td>11.400</td>
+                                <td>0.200</td>
+                                <td>0.200</td>
+                                <td>11.400</td>
+                                <td>11.400</td>
+                                <td>11.400</td>
+                            </tr>
+                            <tr>
+                                <td>Daily Total</td>
+                                <td>1265.675</td>
+                                <td>233.467</td>
+                                <td>13.968</td>
+                                <td>13.968</td>
+                                <td>13.968</td>
+                                <td>233.467</td>
+                                <td>44.292</td>
+                                <td>13.968</td>
+                                <td>44.292</td>
+                                <td>13.968</td>
+                                <td>13.968</td>
+                                <td>44.292</td>
+                                <td>13.968</td>
+                                <td>44.292</td>
+                                <td>13.968</td>
+                                <td>44.292</td>
+                                <td>44.292</td>
+                                <td>13.968</td>
+                                <td>13.968</td>
+                                <td>44.292</td>
+                                <td>44.292</td>
+                                <td>44.292</td>
+                            </tr>
+                        </tbody>
+                    </table>
+                </div>
+>>>>>>> 53a8f84f39a1c807282cfedecb4ea91868504f16
                 <div class="nutrition-controls">
                     <label for="nutrition-group">Select Nutrition Group:</label>
                     <select id="nutrition-group" name="nutrition-group">
