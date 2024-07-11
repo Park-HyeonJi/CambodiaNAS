@@ -243,6 +243,11 @@ def get_food_ingredients():
     except Exception as e:
         app.logger.error(f"Error in get_food_ingredients: {e}")
         return jsonify({'status': 'error', 'message': str(e)}), 500
+    
+@app.route('/FoodGroupIntake')
+@login_required
+def FoodGroupIntake():
+    return render_template('test2.html')
 
 
 # 로그아웃
@@ -253,4 +258,4 @@ def logout():
     return redirect(url_for('login'))
 
 if __name__ == '__main__':
-    app.run(debug=True)
+    app.run(host='0.0.0.0', debug=True)
