@@ -263,11 +263,30 @@
                 </div> -->
 
                 <div id="FoodGroupIntake" class="tabcontent">
-                    {% block FoodGroupIntake %}
-                        {% include 'test2.html' %}
-                    {% endblock %}
+                    <form id="chartForm" action="/runchart" method="post">
+                        <input type="hidden" id="currentMealEnerckcal" name="currentMealEnerckcal">
+                        <input type="hidden" id="currentMealEnerckj" name="currentMealEnerckj">
+                        <input type="hidden" id="currentMealWaterg" name="currentMealWaterg">
+                        <input type="hidden" id="currentMealProtcntg" name="currentMealProtcntg">
+                        <input type="hidden" id="currentMealFatg" name="currentMealFatg">
+                        <input type="hidden" id="currentMealChoavldfg" name="currentMealChoavldfg">
+                        <input type="hidden" id="currentMealFibtgg" name="currentMealFibtgg">
+                        <input type="hidden" id="currentMealAshg" name="currentMealAshg">
+                        <input type="hidden" id="currentMealCamg" name="currentMealCamg">
+                        <input type="hidden" id="currentMealFemg" name="currentMealFemg">
+                        <input type="hidden" id="currentMealZnmg" name="currentMealZnmg">
+                        <input type="hidden" id="currentMealVitaraemcg" name="currentMealVitaraemcg">
+                        <input type="hidden" id="currentMealVitdmcg" name="currentMealVitdmcg">
+                        <input type="hidden" id="currentMealThiamg" name="currentMealThiamg">
+                        <input type="hidden" id="currentMealRibfmg" name="currentMealRibfmg">
+                        <input type="hidden" id="currentMealNiamg" name="currentMealNiamg">
+                        <input type="hidden" id="currentMealPantacmg" name="currentMealPantacmg">
+                        <input type="hidden" id="currentMealVitb6mg" name="currentMealVitb6mg">
+                        <input type="hidden" id="currentMealFolmcg" name="currentMealFolmcg">
+                        <button type="button" onclick="submitChartForm()">Show Food Intake Status Chart</button>
+                    </form>
                 </div>
-            </div>
+
         </div>
     </div>
     <script src="{{ url_for('static', filename='24h.js') }}"></script>
