@@ -1,4 +1,95 @@
 {% extends 'base.html' %}
 {% block content %}
-    <h2>Food DB Edit Page</h2>
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <title>Food DB Editor</title>
+    <link rel="stylesheet" href="{{ url_for('static', filename='style.css') }}">
+    <link rel="stylesheet" href="{{ url_for('static', filename='db_food.css') }}">
+</head>
+<body>
+    <h2>Food DB Editor</h2>
+    <div class="search-container">
+        <div class="form-group">
+            <label for="dbSelect">Main DB Info and Food Search</label>
+            <select id="dbSelect">
+                <option value="basic">BASIC</option>
+            </select>
+        </div>
+        <div class="form-group">
+            <label for="foodCategory">Food Category</label>
+            <select id="foodCategory">
+                <option value="all">All</option>
+            </select>
+        </div>
+        <div class="form-group">
+            <label for="foodSubCategory">Subcategory</label>
+            <select id="foodSubCategory">
+                <option value="all">All</option>
+            </select>
+        </div>
+        <div class="form-group">
+            <button type="button" onclick="createNewDB()">Create New DB</button>
+            <button type="button" onclick="searchFood()">Search</button>
+        </div>
+    </div>
+    <div class="main-content">
+        <div class="section-container">
+            <!-- Food List -->
+            <div class="section">
+                <h3>Food List</h3>
+                <table>
+                    <thead>
+                        <tr>
+                            <th>Code</th>
+                            <th>Food Name</th>
+                            <th>Weight (g)</th>
+                        </tr>
+                    </thead>
+                    <tbody>
+                        <tr>
+                            <td colspan="3">No data found.</td>
+                        </tr>
+                    </tbody>
+                </table>
+            </div>
+            <!-- Food Search and Add -->
+            <div class="section">
+                <h3>Search and Add Food</h3>
+                <div class="form-group">
+                    <label for="foodCode">Food Code</label>
+                    <input type="text" id="foodCode">
+                </div>
+                <div class="form-group">
+                    <label for="foodName">Food Name</label>
+                    <input type="text" id="foodName">
+                </div>
+                <button type="button" onclick="searchFoodDetails()">Search</button>
+                <table>
+                    <thead>
+                        <tr>
+                            <th>Food Code</th>
+                            <th>Food Name</th>
+                        </tr>
+                    </thead>
+                    <tbody>
+                        <tr>
+                            <td colspan="2">No data found.</td>
+                        </tr>
+                    </tbody>
+                </table>
+                <button type="button" onclick="addFood()">Add Food</button>
+                <button type="button" onclick="deleteFood()">Delete Food</button>
+            </div>
+            <!-- Additional Section (if needed) -->
+            <div class="section">
+                <h3>Additional Section</h3>
+                <!-- Content for the third section -->
+            </div>
+        </div>
+    </div>
+    <script src="{{ url_for('static', filename='db_food.js') }}"></script>
+</body>
+</html>
 {% endblock %}
