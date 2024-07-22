@@ -5,7 +5,9 @@ import numpy as np
 import os
 import logging
 from logging.handlers import RotatingFileHandler
-
+from barchart import barchart; 
+from radarchart import radarchart;
+  
 app = Flask(__name__)
 app.secret_key = 'your_secret_key'
 
@@ -86,6 +88,11 @@ def db_food():
 @login_required
 def db_nutri():
     return render_template('db_nutri.html')
+
+@app.route('/uchang') #########################  Uchang
+@login_required
+def uchang():
+    return render_template('uchang.html')
 
 @app.route('/search_food', methods=['POST'])
 @login_required
@@ -243,6 +250,41 @@ def get_food_ingredients():
     except Exception as e:
         app.logger.error(f"Error in get_food_ingredients: {e}")
         return jsonify({'status': 'error', 'message': str(e)}), 500
+    
+@app.route('/FoodGroupIntake')
+@login_required
+def FoodGroupIntake():
+    return render_template('test2.html')
+
+@app.route('/runchart', methods=['POST'])
+def run_python_code():
+    # 여기에 실행하고자 하는 Python 코드를 작성
+    current_meal_data = {
+        'enerckcal': request.form.get('currentMealEnerckcal'),
+        'enerckj': request.form.get('currentMealEnerckj'),
+        'waterg': request.form.get('currentMealWaterg'),
+        'protcntg': request.form.get('currentMealProtcntg'),
+        'fatg': request.form.get('currentMealFatg'),
+        'choavldfg': request.form.get('currentMealChoavldfg'),
+        'fibtgg': request.form.get('currentMealFibtgg'),
+        'ashg': request.form.get('currentMealAshg'),
+        'camg': request.form.get('currentMealCamg'),
+        'femg': request.form.get('currentMealFemg'),
+        'znmg': request.form.get('currentMealZnmg'),
+        'vitaraemcg': request.form.get('currentMealVitaraemcg'),
+        'vitdmcg': request.form.get('currentMealVitdmcg'),
+        'thiamg': request.form.get('currentMealThiamg'),
+        'ribfmg': request.form.get('currentMealRibfmg'),
+        'niamg': request.form.get('currentMealNiamg'),
+        'pantacmg': request.form.get('currentMealPantacmg'),
+        'vitb6mg': request.form.get('currentMealVitb6mg'),
+        'folmcg': request.form.get('currentMealFolmcg'),
+    }
+    result = radarchart(current_meal_data) 
+    result = barchart(current_meal_data) 
+    return render_template('24h_chart.html', result=result)
+
+
 
 
 # 로그아웃
@@ -253,4 +295,4 @@ def logout():
     return redirect(url_for('login'))
 
 if __name__ == '__main__':
-    app.run(debug=True)
+    app.run(host='0.0.0.0', port=5000, debug=True)

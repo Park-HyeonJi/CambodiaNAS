@@ -457,4 +457,30 @@ function copyData() {
     // Copy data functionality
 }
 
+function submitChartForm() {
+        // Current Meal 행의 값을 가져오기
+        document.getElementById('currentMealEnerckcal').value = document.getElementById('current-meal-enerckcal').innerText;
+        document.getElementById('currentMealEnerckj').value = document.getElementById('current-meal-enerckj').innerText;
+        document.getElementById('currentMealWaterg').value = document.getElementById('current-meal-waterg').innerText;
+        document.getElementById('currentMealProtcntg').value = document.getElementById('current-meal-protcntg').innerText;
+        document.getElementById('currentMealFatg').value = document.getElementById('current-meal-fatg').innerText;
+        document.getElementById('currentMealChoavldfg').value = document.getElementById('current-meal-choavldfg').innerText;
+        document.getElementById('currentMealFibtgg').value = document.getElementById('current-meal-fibtgg').innerText;
+        document.getElementById('currentMealAshg').value = document.getElementById('current-meal-ashg').innerText;
+        document.getElementById('currentMealCamg').value = document.getElementById('current-meal-camg').innerText;
+        document.getElementById('currentMealFemg').value = document.getElementById('current-meal-femg').innerText;
+        document.getElementById('currentMealZnmg').value = document.getElementById('current-meal-znmg').innerText;
+        document.getElementById('currentMealVitaraemcg').value = document.getElementById('current-meal-vitaraemcg').innerText;
+        document.getElementById('currentMealVitdmcg').value = document.getElementById('current-meal-vitdmcg').innerText;
+        document.getElementById('currentMealThiamg').value = document.getElementById('current-meal-thiamg').innerText;
+        document.getElementById('currentMealRibfmg').value = document.getElementById('current-meal-ribfmg').innerText;
+        document.getElementById('currentMealNiamg').value = document.getElementById('current-meal-niamg').innerText;
+        document.getElementById('currentMealPantacmg').value = document.getElementById('current-meal-pantacmg').innerText;
+        document.getElementById('currentMealVitb6mg').value = document.getElementById('current-meal-vitb6mg').innerText;
+        document.getElementById('currentMealFolmcg').value = document.getElementById('current-meal-folmcg').innerText;
+        // 폼 제출
+        document.getElementById('chartForm').submit();
+}
+
+
 
