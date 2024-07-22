@@ -33,9 +33,66 @@
                 <button type="button" onclick="copyData()">Copy Data</button>
             </div>
 
-            <!-- 2행 음식 검색 -->
+            <!-- 2행 -->
             <div class="section-container">
-                <!-- 1열 -->
+                <!-- 1열: 현재 식사 전체 상태 -->
+                <div class="food-data">
+                    <h3>List Of Foods Consumed</h3>
+                    <div class="food-data-content">
+                        <div class="time-categories">
+                            <button type="button" onclick="setActive(this)" data-category="Breakfast">Breakfast</button>
+                            <button type="button" onclick="setActive(this)" data-category="Morning snack">Morning snack</button>
+                            <button type="button" onclick="setActive(this)" data-category="Lunch">Lunch</button>
+                            <button type="button" onclick="setActive(this)" data-category="Afternoon Snack">Afternoon Snack</button>
+                            <button type="button" onclick="setActive(this)" data-category="Dinner">Dinner</button>
+                            <button type="button" onclick="setActive(this)" data-category="Midnight Snack">Midnight Snack</button>
+                        </div>
+                        <div class="food-items">
+                            <table class="food-table">
+                                <thead>
+                                    <tr>
+                                        <th>Food Code</th>
+                                        <th>Food Name</th>
+                                    </tr>
+                                </thead>
+                                <tbody data-category="Breakfast">
+                                    <tr>
+                                        <td colspan="2"></td>
+                                    </tr>
+                                </tbody>
+                                <tbody data-category="Morning snack">
+                                    <tr>
+                                        <td colspan="2"></td>
+                                    </tr>
+                                </tbody>
+                                <tbody data-category="Lunch">
+                                    <tr>
+                                        <td colspan="2"></td>
+                                    </tr>
+                                </tbody>
+                                <tbody data-category="Afternoon Snack">
+                                    <tr>
+                                        <td colspan="2"></td>
+                                    </tr>
+                                </tbody>
+                                <tbody data-category="Dinner">
+                                    <tr>
+                                        <td colspan="2"></td>
+                                    </tr>
+                                </tbody>
+                                <tbody data-category="Midnight Snack">
+                                    <tr>
+                                        <td colspan="2"></td>
+                                    </tr>
+                                </tbody>
+                            </table>
+                        </div>
+                    </div>
+                    <button type="button">Add Food</button>
+                    <button type="button">Copy Food</button>
+                    <button type="button">Delete Food</button>
+                </div>
+                <!-- 2열: 입력할 Food list 및 검색 -->
                 <div class="food-search">
                     <h3>Food Intake Search</h3>
                     <div class="search-options">
@@ -76,63 +133,7 @@
                     </div>
                     <button type="button" onclick="addToFoodList()">Add To Food List</button>
                 </div>
-
-                <!-- 2열 -->
-                <div class="food-data">
-                    <h3>List Of Foods Consumed</h3>
-                    <div class="time-categories">
-                        <button type="button" onclick="setActive(this)" data-category="Breakfast">Breakfast</button>
-                        <button type="button" onclick="setActive(this)" data-category="Morning snack">Morning snack</button>
-                        <button type="button" onclick="setActive(this)" data-category="Lunch">Lunch</button>
-                        <button type="button" onclick="setActive(this)" data-category="Afternoon Snack">Afternoon Snack</button>
-                        <button type="button" onclick="setActive(this)" data-category="Dinner">Dinner</button>
-                        <button type="button" onclick="setActive(this)" data-category="Midnight Snack">Midnight Snack</button>
-                    </div>
-                    <div class="food-items">
-                        <table class="food-table">
-                            <thead>
-                                <tr>
-                                    <th>Food Code</th>
-                                    <th>Food Name</th>
-                                </tr>
-                            </thead>
-                            <tbody data-category="Breakfast">
-                                <tr>
-                                    <td colspan="2"></td>
-                                </tr>
-                            </tbody>
-                            <tbody data-category="Morning snack">
-                                <tr>
-                                    <td colspan="2"></td>
-                                </tr>
-                            </tbody>
-                            <tbody data-category="Lunch">
-                                <tr>
-                                    <td colspan="2"></td>
-                                </tr>
-                            </tbody>
-                            <tbody data-category="Afternoon Snack">
-                                <tr>
-                                    <td colspan="2"></td>
-                                </tr>
-                            </tbody>
-                            <tbody data-category="Dinner">
-                                <tr>
-                                    <td colspan="2"></td>
-                                </tr>
-                            </tbody>
-                            <tbody data-category="Midnight Snack">
-                                <tr>
-                                    <td colspan="2"></td>
-                                </tr>
-                            </tbody>
-                        </table>
-                    </div>
-                    <button type="button">Add Food</button>
-                    <button type="button">Copy Food</button>
-                    <button type="button">Delete Food</button>
-                </div>
-                <!-- 3열 -->
+                <!-- 3열: 식사에 대한 정보 -->
                 <div class="food-details">
                     <h3>List Of Food Ingredients By Food Intake</h3>
                     <div class="form-group">

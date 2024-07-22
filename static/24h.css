@@ -1,22 +1,23 @@
-
+/* 1행: 그룹, 유저 설정 */
 .person-search {
     display: flex;
     flex-direction: row;
     gap: 10px;
-    flex-wrap: wrap;
+    /* flex-wrap: wrap; */
     margin-bottom: 20px;
 }
 
-/* .form-group {
+.form-group {
     display: flex;
     flex-direction: row;
     margin-right: 10px;
-} */
-
-.form-group label {
-    margin-bottom: 5px;
 }
 
+.form-group label {
+    margin-right: 5px;
+}
+
+/* 2행 */
 .section-container {
     display: flex;
     flex-direction: row;
@@ -25,28 +26,47 @@
     margin-bottom: 20px;
 }
 
-.food-search, .food-data, .food-details {
+.food-data, .food-search, .food-details {
     flex: 1;
-    margin: 0 10px;
+}
+
+/* 1열: List Of Foods Consumed */
+.food-data-content {
+    display: flex;
+    flex-direction: row;
+}
+
+.time-categories {
+    display: flex;
+    flex-direction: column;
+    margin-right: 10px;
+}
+
+.time-categories button {
+    margin-bottom: 10px;
 }
 
 .food-table {
     width: 100%;
     border-collapse: collapse;
-    margin-top: 20px;
-    min-height: 200px;
+    table-layout: fixed; /* 테이블 레이아웃을 고정 */
 }
 
 .food-table th, .food-table td {
     border: 1px solid #ddd;
-    /* padding: 8px; */
-    text-align: left;
+    padding: 8px;
+    text-align: center;
+}
+
+.food-table th:first-child, .food-table td:first-child {
+    width: 80px; /* Food Code 열의 너비를 80px로 설정 */
 }
 
 .food-table th {
     background-color: #f2f2f2;
 }
 
+/* 2열: Food Intake Search */
 .pagination {
     display: flex;
     align-items: center;
@@ -69,10 +89,10 @@
     /* overflow-x: auto; */
 }
 
-/* .nutrition-table {
+.nutrition-table {
     width: 100%;
     border-collapse: collapse;
-} */
+}
 
 .nutrition-table th, .nutrition-table td {
     border: 1px solid #ddd;
