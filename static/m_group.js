@@ -1,6 +1,6 @@
 document.addEventListener('DOMContentLoaded', () => {
     loadGroups();
-    clearGroupDetails(); // Hide group details form initially
+    clearGroupDetails();
 });
 
 let selectedGroup = null;
@@ -108,5 +108,5 @@ function clearGroupDetails() {
     selectedGroup = null;
     document.getElementById('group-name').value = '';
     document.getElementById('group-desc').value = '';
-    document.getElementById('group-details').classList.add('hidden'); // Hide group details form
+    document.getElementById('group-details').classList.remove('hidden'); // Hide group details form
 }

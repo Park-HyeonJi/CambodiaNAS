@@ -40,7 +40,7 @@ function loadUsers() {
         userList.appendChild(row);
     });
 
-    document.getElementById('user-details').classList.add('hidden');
+    document.getElementById('user-details').classList.remove('hidden');
     selectedUserId = null;
 }
 
@@ -135,7 +135,7 @@ function clearUserDetails() {
     document.getElementById('user-age').value = '';
     document.getElementById('user-height').value = '';
     document.getElementById('user-weight').value = '';
-    document.getElementById('user-details').classList.add('hidden'); 
+    document.getElementById('user-details').classList.remove('hidden'); 
     selectedUserId = null;
 }
 
