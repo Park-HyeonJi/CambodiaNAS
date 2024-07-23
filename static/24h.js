@@ -169,13 +169,15 @@ function loadFoodList() {
                     tr.style.backgroundColor = 'lightgray';
                     // console.log('Loading nutrition for Food Code:', food['Food Code']);
         
-                    loadIngredients(food); // 행을 클릭할 때 재료 로드
+                    // 행을 클릭할 때 재료 로드
+                    loadIngredients(food);
                 };
                 tableBody.appendChild(tr);
             }
         });
-        // calculateCurrentMeal()
-        calculateDailyTotal()
+
+        // 모든 카테고리의 영양성분을 합산하여 "Daily Total" 업데이트
+        calculateDailyTotal(data)
     });
 }
 
@@ -200,7 +202,7 @@ function loadNutrition(foodCode, foodName) {
         })
         .then(response => response.json())
         .then(data => {
-            console.log('Received nutrition data:', data);
+            // console.log('Received nutrition data:', data);
             if (data.length > 0) {
                 var nutrientTotals = {
                     'ENERC (kcal)': 0, 'WATER (g)': 0, 'PROTCNT (g)': 0, 'FAT (g)': 0, 
@@ -317,215 +319,174 @@ function updateCurrentMealSummary() {
     document.getElementById('current-meal-folmcg').textContent = nutrientTotals['FOL (mcg)'].toFixed(2);
 }
 
-
-// 영양성분 테이블 - Current Meal
-// function calculateCurrentMeal() {
-//     var activeCategory = document.querySelector('.time-categories button.active').dataset.category;
-//     var tableBody = document.querySelector(`.food-items tbody[data-category='${activeCategory}']`);
-
-//     var foodCodes = [];
-//     tableBody.querySelectorAll('tr').forEach(tr => {
-//         var foodCode = tr.cells[0].textContent;
-//         foodCodes.push(foodCode);
-//     });
-
-//     console.log("current meal foodCodes: ", foodCodes)
-
-//     fetch('/get_ingredients', {
-//         method: 'POST',
-//         headers: {
-//             'Content-Type': 'application/json'
-//         },
-//         body: JSON.stringify({ foodCode: foodCodes })
-//     })
-//     .then(response => response.json())
-//     .then(ingredientCodes => {
-//         console.log('영양 성분 테이블:', ingredientCodes);
-//         fetch('/get_nutrition', {
-//             method: 'POST',
-//             headers: {
-//                 'Content-Type': 'application/json'
-//             },
-//             body: JSON.stringify({ ingredientCodes: ingredientCodes })
-//         })
-//         .then(response => response.json())
-//         .then(data => {
-//             console.log('Received nutrition data:', data);
-//             if (data.length > 0) {
-//                 var nutrientTotals = {
-//                     'ENERC (kcal)': 0, 'WATER (g)': 0, 'PROTCNT (g)': 0, 'FAT (g)': 0, 
-//                     'CHOAVLDF (g)': 0, 'FIBTG (g)': 0, 'CA (mg)': 0, 'FE (mg)': 0, 
-//                     'ZN (mg)': 0, 'VITA_RAE (mcg)': 0, 'VITD (mcg)': 0, 'THIA (mg)': 0, 'RIBF (mg)': 0, 
-//                     'NIA (mg)': 0, 'PANTAC (mg)': 0, 'VITB6 (mg)': 0, 'FOL (mcg)': 0
-//                 };
-
-//                 data.forEach(nutrient => {
-//                     for (var key in nutrientTotals) {
-//                         if (nutrient.hasOwnProperty(key)) {
-//                             nutrientTotals[key] += parseFloat(nutrient[key]) || 0;
-//                         }
-//                     }
-//                 });
-
-//                 for (var key in nutrientTotals) {
-//                     var elementId = `current-meal-${key.replace(/[^a-z0-9]/gi, '').toLowerCase()}`;
-//                     var element = document.getElementById(elementId);
-//                     if (element) {
-//                         element.textContent = nutrientTotals[key].toFixed(2);
-//                     } else {
-//                         console.error(`Element with ID ${elementId} not found`);
-//                     }
-//                 }
-//             }
-//         });
-//     });
-// }
-
 // 영양성분 테이블 - Daily Total
-function calculateDailyTotal() {
-    var categories = ['Breakfast', 'Morning snack', 'Lunch', 'Afternoon Snack', 'Dinner', 'Midnight Snack'];
-    var foodCodes = [];
+// function calculateDailyTotal(data) {
+//     var categories = ['Breakfast', 'Morning snack', 'Lunch', 'Afternoon Snack', 'Dinner', 'Midnight Snack'];
+//     var dailyNutrition = {
+//         'ENERC (kcal)': 0, 'WATER (g)': 0, 'PROTCNT (g)': 0, 'FAT (g)': 0, 
+//         'CHOAVLDF (g)': 0, 'FIBTG (g)': 0, 'CA (mg)': 0, 'FE (mg)': 0, 
+//         'ZN (mg)': 0, 'VITA_RAE (mcg)': 0, 'VITD (mcg)': 0, 'THIA (mg)': 0, 'RIBF (mg)': 0, 
+//         'NIA (mg)': 0, 'PANTAC (mg)': 0, 'VITB6 (mg)': 0, 'FOL (mcg)': 0
+//     };
+
+//     categories.forEach(category => {
+//         if(data[category]){
+//             data[category].forEach(food => {
+//                 fetch('/get_ingredients', {
+//                     method: 'POST',
+//                     headers: {
+//                         'Content-Type': 'application/json'
+//                     },
+//                     body: JSON.stringify({ foodCode: food['Food Code'] })
+//                 })
+//                 .then(response => response.json())
+//                 .then(ingredientCodes => {
+//                     fetch('/get_nutrition', {
+//                         method: 'POST',
+//                         headers: {
+//                             'Content-Type': 'application/json'
+//                         },
+//                         body: JSON.stringify({ ingredientCodes: ingredientCodes })
+//                     })
+//                     .then(response => response.json())
+//                     .then(nutritionData => {
+//                         nutritionData.forEach(nutrient => {
+//                             for (var key in nutrientTotals) {
+//                                 if (nutrient.hasOwnProperty(key)) {
+//                                     nutrientTotals[key] += parseFloat(nutrient[key]) || 0;
+//                                 }
+//                             }
+//                         });
+
+//                         updateDailyTotalSummary(nutrientTotals); // "Daily Total" 요약 업데이트
+//                     });
+//                 });
+//             });
+//         }
+//         });
+//     }
+
+
+function calculateDailyTotal(data) {
+    var nutrientTotals = {
+        'ENERC (kcal)': 0, 'WATER (g)': 0, 'PROTCNT (g)': 0, 'FAT (g)': 0, 
+        'CHOAVLDF (g)': 0, 'FIBTG (g)': 0, 'CA (mg)': 0, 'FE (mg)': 0, 
+        'ZN (mg)': 0, 'VITA_RAE (mcg)': 0, 'VITD (mcg)': 0, 'THIA (mg)': 0, 'RIBF (mg)': 0, 
+        'NIA (mg)': 0, 'PANTAC (mg)': 0, 'VITB6 (mg)': 0, 'FOL (mcg)': 0
+    };
+
+    var categories = ['Breakfast', 'Morning Snack', 'Lunch', 'Afternoon Snack', 'Dinner', 'Midnight Snack'];
 
     categories.forEach(category => {
-        var tableBody = document.querySelector(`.food-items tbody[data-category='${category}']`);
-        if (tableBody) {
-            var rows = tableBody.querySelectorAll('tr');
-            rows.forEach(tr => {
-                var foodCode = tr.cells[0].textContent.trim(); // trim() 함수를 사용하여 공백 제거
-                foodCodes.push(foodCode);
-                console.log(`Category: ${category}, Food Code: ${foodCode}`);
+        if (data[category]) {
+            data[category].forEach(food => {
+                fetch('/get_ingredients', {
+                    method: 'POST',
+                    headers: {
+                        'Content-Type': 'application/json'
+                    },
+                    body: JSON.stringify({ foodCode: food['Food Code'] })
+                })
+                .then(response => response.json())
+                .then(ingredientCodes => {
+                    fetch('/get_nutrition', {
+                        method: 'POST',
+                        headers: {
+                            'Content-Type': 'application/json'
+                        },
+                        body: JSON.stringify({ ingredientCodes: ingredientCodes })
+                    })
+                    .then(response => response.json())
+                    .then(nutritionData => {
+                        nutritionData.forEach(nutrient => {
+                            for (var key in nutrientTotals) {
+                                if (nutrient.hasOwnProperty(key)) {
+                                    nutrientTotals[key] += parseFloat(nutrient[key]) || 0;
+                                }
+                            }
+                        });
+
+                        updateDailyTotalSummary(nutrientTotals); // "Daily Total" 요약 업데이트
+                    });
+                });
             });
         }
-    });
-
-    console.log("데일리 토탈 foodCodes: ", foodCodes);
-
-    fetch('/get_ingredients', {
-        method: 'POST',
-        headers: {
-            'Content-Type': 'application/json'
-        },
-        body: JSON.stringify({ foodCode: foodCodes })
-    })
-    .then(response => response.json())
-    .then(ingredientCodes => {
-        console.log('Received ingredient codes:', ingredientCodes);
-        return fetch('/get_nutrition', {
-            method: 'POST',
-            headers: {
-                'Content-Type': 'application/json'
-            },
-            body: JSON.stringify({ ingredientCodes: ingredientCodes })
-        });
-    })
-    .then(response => response.json())
-    .then(data => {
-        console.log('Received nutrition data:', data);
-        if (data.length > 0) {
-            var nutrientTotals = {
-                'ENERC (kcal)': 0, 'WATER (g)': 0, 'PROTCNT (g)': 0, 'FAT (g)': 0, 
-                'CHOAVLDF (g)': 0, 'FIBTG (g)': 0, 'CA (mg)': 0, 'FE (mg)': 0, 
-                'ZN (mg)': 0, 'VITA_RAE (mcg)': 0, 'VITD (mcg)': 0, 'THIA (mg)': 0, 'RIBF (mg)': 0, 
-                'NIA (mg)': 0, 'PANTAC (mg)': 0, 'VITB6 (mg)': 0, 'FOL (mcg)': 0
-            };
-
-            data.forEach(nutrient => {
-                for (var key in nutrientTotals) {
-                    if (nutrient.hasOwnProperty(key)) {
-                        nutrientTotals[key] += parseFloat(nutrient[key]) || 0;
-                    }
-                }
-            });
-
-            for (var key in nutrientTotals) {
-                var elementId = `daily-total-${key.replace(/[^a-z0-9]/gi, '').toLowerCase()}`;
-                var element = document.getElementById(elementId);
-                if (element) {
-                    element.textContent = nutrientTotals[key].toFixed(2);
-                } else {
-                    console.error(`Element with ID ${elementId} not found`);
-                }
-            }
-        }
-    })
-    .catch(error => {
-        console.error("Error fetching nutrition data: ", error);
     });
 }
 
 
+    // console.log("데일리 토탈 foodCodes: ", foodCodes);
 
-function calculateDailyTotal() {
-    var categories = ['Breakfast', 'Morning snack', 'Lunch', 'Afternoon Snack', 'Dinner', 'Midnight Snack'];
-    var foodCodes = [];
+    // fetch('/get_ingredients', {
+    //     method: 'POST',
+    //     headers: {
+    //         'Content-Type': 'application/json'
+    //     },
+    //     body: JSON.stringify({ foodCode: foodCodes })
+    // })
+    // .then(response => response.json())
+    // .then(ingredientCodes => {
+    //     console.log('Received ingredient codes:', ingredientCodes);
+    //     return fetch('/get_nutrition', {
+    //         method: 'POST',
+    //         headers: {
+    //             'Content-Type': 'application/json'
+    //         },
+    //         body: JSON.stringify({ ingredientCodes: ingredientCodes })
+    //     });
+    // })
+    // .then(response => response.json())
+    // .then(data => {
+    //     console.log('Received nutrition data:', data);
+    //     if (data.length > 0) {
+    //         var nutrientTotals = {
+    //             'ENERC (kcal)': 0, 'WATER (g)': 0, 'PROTCNT (g)': 0, 'FAT (g)': 0, 
+    //             'CHOAVLDF (g)': 0, 'FIBTG (g)': 0, 'CA (mg)': 0, 'FE (mg)': 0, 
+    //             'ZN (mg)': 0, 'VITA_RAE (mcg)': 0, 'VITD (mcg)': 0, 'THIA (mg)': 0, 'RIBF (mg)': 0, 
+    //             'NIA (mg)': 0, 'PANTAC (mg)': 0, 'VITB6 (mg)': 0, 'FOL (mcg)': 0
+    //         };
 
-    categories.forEach(category => {
-        var tableBody = document.querySelector(`.food-items tbody[data-category='${category}']`);
-        console.log(`Category: ${category}, TableBody: `, tableBody);
-        if (tableBody) {
-            var rows = tableBody.querySelectorAll('tr');
-            console.log(`Category: ${category}, Rows: `, rows);
-            rows.forEach(tr => {
-                var foodCode = tr.cells[0].textContent.trim(); // trim() 함수를 사용하여 공백 제거
-                foodCodes.push(foodCode);
+    //         data.forEach(nutrient => {
+    //             for (var key in nutrientTotals) {
+    //                 if (nutrient.hasOwnProperty(key)) {
+    //                     nutrientTotals[key] += parseFloat(nutrient[key]) || 0;
+    //                 }
+    //             }
+    //         });
 
-                console.log(`Category: ${category}, Food Code: ${foodCode}`);
-            });
-        }
-        if (tableBody){
-            tableBody.querySelectorAll('tr').forEach(tr => {
-                var foodCode = tr.cells[0].textContent.trim();
-                foodCodes.push(foodCode);
-            });
-        }
-    });
+    //         for (var key in nutrientTotals) {
+    //             var elementId = `daily-total-${key.replace(/[^a-z0-9]/gi, '').toLowerCase()}`;
+    //             var element = document.getElementById(elementId);
+    //             if (element) {
+    //                 element.textContent = nutrientTotals[key].toFixed(2);
+    //             } else {
+    //                 console.error(`Element with ID ${elementId} not found`);
+    //             }
+    //         }
+    //     }
+    // })
+    // .catch(error => {
+    //     console.error("Error fetching nutrition data: ", error);
+    // });
 
-    console.log("데일리 토탈 foodCodes: ", foodCodes)
-
-    fetch('/get_ingredients', {
-        method: 'POST',
-        headers: {
-            'Content-Type': 'application/json'
-        },
-        body: JSON.stringify({ foodCode: foodCodes })
-    })
-    .then(response => response.json())
-    .then(ingredientCodes => {
-        fetch('/get_nutrition', {
-            method: 'POST',
-            headers: {
-                'Content-Type': 'application/json'
-            },
-            body: JSON.stringify({ ingredientCodes: ingredientCodes })
-        })
-        .then(response => response.json())
-        .then(data => {
-            if (data.length > 0) {
-                var nutrientTotals = {
-                    'ENERC (kcal)': 0, 'WATER (g)': 0, 'PROTCNT (g)': 0, 'FAT (g)': 0, 
-                    'CHOAVLDF (g)': 0, 'FIBTG (g)': 0, 'CA (mg)': 0, 'FE (mg)': 0, 
-                    'ZN (mg)': 0, 'VITA_RAE (mcg)': 0, 'VITD (mcg)': 0, 'THIA (mg)': 0, 'RIBF (mg)': 0, 
-                    'NIA (mg)': 0, 'PANTAC (mg)': 0, 'VITB6 (mg)': 0, 'FOL (mcg)': 0
-                };
-
-                data.forEach(nutrient => {
-                    for (var key in nutrientTotals) {
-                        if (nutrient.hasOwnProperty(key)) {
-                            nutrientTotals[key] += parseFloat(nutrient[key]) || 0;
-                        }
-                    }
-                });
-
-                for (var key in nutrientTotals) {
-                    var elementId = `daily-total-${key.replace(/[^a-z0-9]/gi, '').toLowerCase()}`;
-                    var element = document.getElementById(elementId);
-                    if (element) {
-                        element.textContent = nutrientTotals[key].toFixed(2);
-                    }
-                }
-            }
-        });
-    });
+function updateDailyTotalSummary(nutrientTotals) {
+    document.getElementById('daily-total-enerckcal').textContent = nutrientTotals['ENERC (kcal)'].toFixed(2);
+    document.getElementById('daily-total-waterg').textContent = nutrientTotals['WATER (g)'].toFixed(2);
+    document.getElementById('daily-total-protcntg').textContent = nutrientTotals['PROTCNT (g)'].toFixed(2);
+    document.getElementById('daily-total-fatg').textContent = nutrientTotals['FAT (g)'].toFixed(2);
+    document.getElementById('daily-total-choavldfg').textContent = nutrientTotals['CHOAVLDF (g)'].toFixed(2);
+    document.getElementById('daily-total-fibtgg').textContent = nutrientTotals['FIBTG (g)'].toFixed(2);
+    document.getElementById('daily-total-camg').textContent = nutrientTotals['CA (mg)'].toFixed(2);
+    document.getElementById('daily-total-femg').textContent = nutrientTotals['FE (mg)'].toFixed(2);
+    document.getElementById('daily-total-znmg').textContent = nutrientTotals['ZN (mg)'].toFixed(2);
+    document.getElementById('daily-total-vitaraemcg').textContent = nutrientTotals['VITA_RAE (mcg)'].toFixed(2);
+    document.getElementById('daily-total-vitdmcg').textContent = nutrientTotals['VITD (mcg)'].toFixed(2);
+    document.getElementById('daily-total-thiamg').textContent = nutrientTotals['THIA (mg)'].toFixed(2);
+    document.getElementById('daily-total-ribfmg').textContent = nutrientTotals['RIBF (mg)'].toFixed(2);
+    document.getElementById('daily-total-niamg').textContent = nutrientTotals['NIA (mg)'].toFixed(2);
+    document.getElementById('daily-total-pantacmg').textContent = nutrientTotals['PANTAC (mg)'].toFixed(2);
+    document.getElementById('daily-total-vitb6mg').textContent = nutrientTotals['VITB6 (mg)'].toFixed(2);
+    document.getElementById('daily-total-folmcg').textContent = nutrientTotals['FOL (mcg)'].toFixed(2);
 }
 
 function loadIngredients(food) {

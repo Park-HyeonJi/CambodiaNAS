@@ -77,10 +77,10 @@
 .pagination button, .pagination select {
     margin: 0 5px;
 }
-
+/* 
 .food-search button:last-of-type {
     margin-top: 10px;
-}
+} */
 
 .nutrition-table-container {
     padding: 20px;
