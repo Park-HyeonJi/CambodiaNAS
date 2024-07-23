@@ -82,10 +82,12 @@ function searchFood() {
     });
 }
 
+// 버튼 클릭 시 호출
 function setActive(button) {
     document.querySelectorAll('.time-categories button').forEach(btn => btn.classList.remove('active'));
     button.classList.add('active');
-    loadFoodList(); // 버튼이 눌릴 때마다 음식 리스트를 로드
+    resetNutritionTable(); // 영양 성분 테이블 초기화
+    loadFoodList(); // 음식 리스트 초기화
 }
 
 function addToFoodList() {
@@ -143,11 +145,15 @@ function loadFoodList() {
                 uniqueFoods.push(food);
                 var tr = document.createElement("tr");
                 tr.innerHTML = `<td>${food['Food Code']}</td><td>${food['Food Name']}</td>`;
+                
+                // 음식 영양성분 계산 함수 호출
+                loadNutrition(food['Food Code'], food['Food Name']);
+
                 tr.onclick = function() {
                     tableBody.querySelectorAll('tr').forEach(r => r.style.backgroundColor = '');
                     tr.style.backgroundColor = 'lightgray';
                     console.log('Loading nutrition for Food Code:', food['Food Code']);
-                    loadNutrition(food['Food Code']); // 셀을 클릭하면 loadNutrition 함수 호출
+        
                     loadIngredients(food); // 행을 클릭할 때 재료 로드
                 };
                 tableBody.appendChild(tr);
@@ -158,9 +164,19 @@ function loadFoodList() {
     });
 }
 
+function resetNutritionTable() {
+    var mealTbody = document.getElementById('nutrition-tbody');
+    var currentMealSummary = document.getElementById('current-meal-summary');
+    var dailyTotalSummary = document.getElementById('daily-total-summary');
+
+    // "Current Meal"과 "Daily Total" 행을 제외한 모든 행을 제거
+    while (mealTbody.firstChild && mealTbody.firstChild !== currentMealSummary && mealTbody.firstChild !== dailyTotalSummary) {
+        mealTbody.removeChild(mealTbody.firstChild);
+    }
+}
 
 // 영양 성분 테이블 - Current Food
-function loadNutrition(foodCode) {
+function loadNutrition(foodCode, foodName) {
     fetch('/get_ingredients', {
         method: 'POST',
         headers: {
@@ -170,7 +186,7 @@ function loadNutrition(foodCode) {
     })
     .then(response => response.json())
     .then(ingredientCodes => {
-        console.log('Received ingredient codes:', ingredientCodes);
+        console.log('현재 음식 ingredient codes:', ingredientCodes);
         fetch('/get_nutrition', {
             method: 'POST',
             headers: {
@@ -197,20 +213,56 @@ function loadNutrition(foodCode) {
                     }
                 });
 
-                console.log('Nutrient Totals:', nutrientTotals);
+                console.log('현재 음식 총 영양성분:', nutrientTotals);
 
-                for (var key in nutrientTotals) {
-                    if (nutrientTotals.hasOwnProperty(key)) {
-                        var elementId = `current-food-${key.replace(/[^a-z0-9]/gi, '').toLowerCase()}`;
-                        var element = document.getElementById(elementId);
-                        if (element) {
-                            element.textContent = nutrientTotals[key].toFixed(2);
-                            // console.log(`Updated ${elementId} with value: ${nutrientTotals[key].toFixed(2)}`);
-                        } else {
-                            console.error(`Element with ID ${elementId} not found`);
-                        }
-                    }
+                // 셀 추가
+                var mealTbody = document.getElementById('nutrition-tbody');
+                
+                // "Current Meal"과 "Daily Total" 행을 유지하고 새로운 행을 추가
+                var currentMealSummary = document.getElementById('current-meal-summary');
+                var dailyTotalSummary = document.getElementById('daily-total-summary');
+
+                if(mealTbody){
+                    var tr = document.createElement('tr');
+
+                    tr.innerHTML = `
+                        <td>${foodName}</td>
+                        <td>${nutrientTotals['ENERC (kcal)'].toFixed(2)}</td>
+                        <td>${nutrientTotals['WATER (g)'].toFixed(2)}</td>
+                        <td>${nutrientTotals['PROTCNT (g)'].toFixed(2)}</td>
+                        <td>${nutrientTotals['FAT (g)'].toFixed(2)}</td>
+                        <td>${nutrientTotals['CHOAVLDF (g)'].toFixed(2)}</td>
+                        <td>${nutrientTotals['FIBTG (g)'].toFixed(2)}</td>
+                        <td>${nutrientTotals['CA (mg)'].toFixed(2)}</td>
+                        <td>${nutrientTotals['FE (mg)'].toFixed(2)}</td>
+                        <td>${nutrientTotals['ZN (mg)'].toFixed(2)}</td>
+                        <td>${nutrientTotals['VITA_RAE (mcg)'].toFixed(2)}</td>
+                        <td>${nutrientTotals['VITD (mcg)'].toFixed(2)}</td>
+                        <td>${nutrientTotals['THIA (mg)'].toFixed(2)}</td>
+                        <td>${nutrientTotals['RIBF (mg)'].toFixed(2)}</td>
+                        <td>${nutrientTotals['NIA (mg)'].toFixed(2)}</td>
+                        <td>${nutrientTotals['PANTAC (mg)'].toFixed(2)}</td>
+                        <td>${nutrientTotals['VITB6 (mg)'].toFixed(2)}</td>
+                        <td>${nutrientTotals['FOL (mcg)'].toFixed(2)}</td>
+                    `;
+                    mealTbody.insertBefore(tr, currentMealSummary);
+                } else {
+                    console.error('Element with ID "nutrition-tbody" not found');
                 }
+                
+
+                // for (var key in nutrientTotals) {
+                //     if (nutrientTotals.hasOwnProperty(key)) {
+                //         var elementId = `current-food-${key.replace(/[^a-z0-9]/gi, '').toLowerCase()}`;
+                //         var element = document.getElementById(elementId);
+                //         if (element) {
+                //             element.textContent = nutrientTotals[key].toFixed(2);
+                //             // console.log(`Updated ${elementId} with value: ${nutrientTotals[key].toFixed(2)}`);
+                //         } else {
+                //             console.error(`Element with ID ${elementId} not found`);
+                //         }
+                //     }
+                // }
             }
         })
         .catch(error => {
