@@ -82,12 +82,24 @@ function searchFood() {
     });
 }
 
-// 버튼 클릭 시 호출
+// time-categroeis 버튼 클릭 시 호출
 function setActive(button) {
     document.querySelectorAll('.time-categories button').forEach(btn => btn.classList.remove('active'));
     button.classList.add('active');
     resetNutritionTable(); // 영양 성분 테이블 초기화
     loadFoodList(); // 음식 리스트 초기화
+}
+
+// 영양성분 테이블 초기화
+function resetNutritionTable() {
+    var mealTbody = document.getElementById('nutrition-tbody');
+    var currentMealSummary = document.getElementById('current-meal-summary');
+    var dailyTotalSummary = document.getElementById('daily-total-summary');
+
+    // "Current Meal"과 "Daily Total" 행을 제외한 모든 행을 제거
+    while (mealTbody.firstChild && mealTbody.firstChild !== currentMealSummary && mealTbody.firstChild !== dailyTotalSummary) {
+        mealTbody.removeChild(mealTbody.firstChild);
+    }
 }
 
 function addToFoodList() {
@@ -132,6 +144,9 @@ function loadFoodList() {
     var viewDate = document.getElementById('date').value;
     var activeCategory = document.querySelector('.time-categories button.active').dataset.category;
 
+    // 영양 성분 합산할 배열 초기화
+    window.currentMealNutrition = [];
+
     fetch(`/get_food_list?userGroup=${userGroup}&userID=${userID}&viewDate=${viewDate}`)
     .then(response => response.json())
     .then(data => {
@@ -152,27 +167,16 @@ function loadFoodList() {
                 tr.onclick = function() {
                     tableBody.querySelectorAll('tr').forEach(r => r.style.backgroundColor = '');
                     tr.style.backgroundColor = 'lightgray';
-                    console.log('Loading nutrition for Food Code:', food['Food Code']);
+                    // console.log('Loading nutrition for Food Code:', food['Food Code']);
         
                     loadIngredients(food); // 행을 클릭할 때 재료 로드
                 };
                 tableBody.appendChild(tr);
             }
         });
-        calculateCurrentMeal()
+        // calculateCurrentMeal()
         calculateDailyTotal()
     });
-}
-
-function resetNutritionTable() {
-    var mealTbody = document.getElementById('nutrition-tbody');
-    var currentMealSummary = document.getElementById('current-meal-summary');
-    var dailyTotalSummary = document.getElementById('daily-total-summary');
-
-    // "Current Meal"과 "Daily Total" 행을 제외한 모든 행을 제거
-    while (mealTbody.firstChild && mealTbody.firstChild !== currentMealSummary && mealTbody.firstChild !== dailyTotalSummary) {
-        mealTbody.removeChild(mealTbody.firstChild);
-    }
 }
 
 // 영양 성분 테이블 - Current Food
@@ -186,7 +190,7 @@ function loadNutrition(foodCode, foodName) {
     })
     .then(response => response.json())
     .then(ingredientCodes => {
-        console.log('현재 음식 ingredient codes:', ingredientCodes);
+        // console.log('현재 음식 ingredient codes:', ingredientCodes);
         fetch('/get_nutrition', {
             method: 'POST',
             headers: {
@@ -213,7 +217,7 @@ function loadNutrition(foodCode, foodName) {
                     }
                 });
 
-                console.log('현재 음식 총 영양성분:', nutrientTotals);
+                // console.log('현재 음식 총 영양성분:', nutrientTotals);
 
                 // 셀 추가
                 var mealTbody = document.getElementById('nutrition-tbody');
@@ -246,6 +250,10 @@ function loadNutrition(foodCode, foodName) {
                         <td>${nutrientTotals['FOL (mcg)'].toFixed(2)}</td>
                     `;
                     mealTbody.insertBefore(tr, currentMealSummary);
+                    
+                    // 현재 음식의 영양 성분을 window.currentMealNutrition에 추가
+                    window.currentMealNutrition.push(nutrientTotals);
+                    updateCurrentMealSummary(); // "Current Meal" 요약 업데이트
                 } else {
                     console.error('Element with ID "nutrition-tbody" not found');
                 }
@@ -274,68 +282,104 @@ function loadNutrition(foodCode, foodName) {
     });
 }
 
-// 영양성분 테이블 - Current Meal
-function calculateCurrentMeal() {
-    var activeCategory = document.querySelector('.time-categories button.active').dataset.category;
-    var tableBody = document.querySelector(`.food-items tbody[data-category='${activeCategory}']`);
+function updateCurrentMealSummary() {
+    var nutrientTotals = {
+        'ENERC (kcal)': 0, 'WATER (g)': 0, 'PROTCNT (g)': 0, 'FAT (g)': 0, 
+        'CHOAVLDF (g)': 0, 'FIBTG (g)': 0, 'CA (mg)': 0, 'FE (mg)': 0, 
+        'ZN (mg)': 0, 'VITA_RAE (mcg)': 0, 'VITD (mcg)': 0, 'THIA (mg)': 0, 'RIBF (mg)': 0, 
+        'NIA (mg)': 0, 'PANTAC (mg)': 0, 'VITB6 (mg)': 0, 'FOL (mcg)': 0
+    };
 
-    var foodCodes = [];
-    tableBody.querySelectorAll('tr').forEach(tr => {
-        var foodCode = tr.cells[0].textContent;
-        foodCodes.push(foodCode);
-    });
-
-    console.log("current meal foodCodes: ", foodCodes)
-
-    fetch('/get_ingredients', {
-        method: 'POST',
-        headers: {
-            'Content-Type': 'application/json'
-        },
-        body: JSON.stringify({ foodCode: foodCodes })
-    })
-    .then(response => response.json())
-    .then(ingredientCodes => {
-        console.log('영양 성분 테이블:', ingredientCodes);
-        fetch('/get_nutrition', {
-            method: 'POST',
-            headers: {
-                'Content-Type': 'application/json'
-            },
-            body: JSON.stringify({ ingredientCodes: ingredientCodes })
-        })
-        .then(response => response.json())
-        .then(data => {
-            console.log('Received nutrition data:', data);
-            if (data.length > 0) {
-                var nutrientTotals = {
-                    'ENERC (kcal)': 0, 'WATER (g)': 0, 'PROTCNT (g)': 0, 'FAT (g)': 0, 
-                    'CHOAVLDF (g)': 0, 'FIBTG (g)': 0, 'CA (mg)': 0, 'FE (mg)': 0, 
-                    'ZN (mg)': 0, 'VITA_RAE (mcg)': 0, 'VITD (mcg)': 0, 'THIA (mg)': 0, 'RIBF (mg)': 0, 
-                    'NIA (mg)': 0, 'PANTAC (mg)': 0, 'VITB6 (mg)': 0, 'FOL (mcg)': 0
-                };
-
-                data.forEach(nutrient => {
-                    for (var key in nutrientTotals) {
-                        if (nutrient.hasOwnProperty(key)) {
-                            nutrientTotals[key] += parseFloat(nutrient[key]) || 0;
-                        }
-                    }
-                });
-
-                for (var key in nutrientTotals) {
-                    var elementId = `current-meal-${key.replace(/[^a-z0-9]/gi, '').toLowerCase()}`;
-                    var element = document.getElementById(elementId);
-                    if (element) {
-                        element.textContent = nutrientTotals[key].toFixed(2);
-                    } else {
-                        console.error(`Element with ID ${elementId} not found`);
-                    }
-                }
+    window.currentMealNutrition.forEach(nutrient => {
+        for (var key in nutrientTotals) {
+            if (nutrient.hasOwnProperty(key)) {
+                nutrientTotals[key] += nutrient[key];
             }
-        });
+        }
     });
+
+    document.getElementById('current-meal-enerckcal').textContent = nutrientTotals['ENERC (kcal)'].toFixed(2);
+    document.getElementById('current-meal-waterg').textContent = nutrientTotals['WATER (g)'].toFixed(2);
+    document.getElementById('current-meal-protcntg').textContent = nutrientTotals['PROTCNT (g)'].toFixed(2);
+    document.getElementById('current-meal-fatg').textContent = nutrientTotals['FAT (g)'].toFixed(2);
+    document.getElementById('current-meal-choavldfg').textContent = nutrientTotals['CHOAVLDF (g)'].toFixed(2);
+    document.getElementById('current-meal-fibtgg').textContent = nutrientTotals['FIBTG (g)'].toFixed(2);
+    document.getElementById('current-meal-camg').textContent = nutrientTotals['CA (mg)'].toFixed(2);
+    document.getElementById('current-meal-femg').textContent = nutrientTotals['FE (mg)'].toFixed(2);
+    document.getElementById('current-meal-znmg').textContent = nutrientTotals['ZN (mg)'].toFixed(2);
+    document.getElementById('current-meal-vitaraemcg').textContent = nutrientTotals['VITA_RAE (mcg)'].toFixed(2);
+    document.getElementById('current-meal-vitdmcg').textContent = nutrientTotals['VITD (mcg)'].toFixed(2);
+    document.getElementById('current-meal-thiamg').textContent = nutrientTotals['THIA (mg)'].toFixed(2);
+    document.getElementById('current-meal-ribfmg').textContent = nutrientTotals['RIBF (mg)'].toFixed(2);
+    document.getElementById('current-meal-niamg').textContent = nutrientTotals['NIA (mg)'].toFixed(2);
+    document.getElementById('current-meal-pantacmg').textContent = nutrientTotals['PANTAC (mg)'].toFixed(2);
+    document.getElementById('current-meal-vitb6mg').textContent = nutrientTotals['VITB6 (mg)'].toFixed(2);
+    document.getElementById('current-meal-folmcg').textContent = nutrientTotals['FOL (mcg)'].toFixed(2);
 }
+
+
+// 영양성분 테이블 - Current Meal
+// function calculateCurrentMeal() {
+//     var activeCategory = document.querySelector('.time-categories button.active').dataset.category;
+//     var tableBody = document.querySelector(`.food-items tbody[data-category='${activeCategory}']`);
+
+//     var foodCodes = [];
+//     tableBody.querySelectorAll('tr').forEach(tr => {
+//         var foodCode = tr.cells[0].textContent;
+//         foodCodes.push(foodCode);
+//     });
+
+//     console.log("current meal foodCodes: ", foodCodes)
+
+//     fetch('/get_ingredients', {
+//         method: 'POST',
+//         headers: {
+//             'Content-Type': 'application/json'
+//         },
+//         body: JSON.stringify({ foodCode: foodCodes })
+//     })
+//     .then(response => response.json())
+//     .then(ingredientCodes => {
+//         console.log('영양 성분 테이블:', ingredientCodes);
+//         fetch('/get_nutrition', {
+//             method: 'POST',
+//             headers: {
+//                 'Content-Type': 'application/json'
+//             },
+//             body: JSON.stringify({ ingredientCodes: ingredientCodes })
+//         })
+//         .then(response => response.json())
+//         .then(data => {
+//             console.log('Received nutrition data:', data);
+//             if (data.length > 0) {
+//                 var nutrientTotals = {
+//                     'ENERC (kcal)': 0, 'WATER (g)': 0, 'PROTCNT (g)': 0, 'FAT (g)': 0, 
+//                     'CHOAVLDF (g)': 0, 'FIBTG (g)': 0, 'CA (mg)': 0, 'FE (mg)': 0, 
+//                     'ZN (mg)': 0, 'VITA_RAE (mcg)': 0, 'VITD (mcg)': 0, 'THIA (mg)': 0, 'RIBF (mg)': 0, 
+//                     'NIA (mg)': 0, 'PANTAC (mg)': 0, 'VITB6 (mg)': 0, 'FOL (mcg)': 0
+//                 };
+
+//                 data.forEach(nutrient => {
+//                     for (var key in nutrientTotals) {
+//                         if (nutrient.hasOwnProperty(key)) {
+//                             nutrientTotals[key] += parseFloat(nutrient[key]) || 0;
+//                         }
+//                     }
+//                 });
+
+//                 for (var key in nutrientTotals) {
+//                     var elementId = `current-meal-${key.replace(/[^a-z0-9]/gi, '').toLowerCase()}`;
+//                     var element = document.getElementById(elementId);
+//                     if (element) {
+//                         element.textContent = nutrientTotals[key].toFixed(2);
+//                     } else {
+//                         console.error(`Element with ID ${elementId} not found`);
+//                     }
+//                 }
+//             }
+//         });
+//     });
+// }
 
 // 영양성분 테이블 - Daily Total
 function calculateDailyTotal() {
