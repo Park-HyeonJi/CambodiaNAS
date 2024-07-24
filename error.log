@@ -31,3 +31,5 @@ Error in get_ingredients: int() argument must be a string, a bytes-like object o
 Error in get_ingredients: int() argument must be a string, a bytes-like object or a real number, not 'list'
 Error in get_ingredients: int() argument must be a string, a bytes-like object or a real number, not 'list'
 Error in get_ingredients: 'int' object is not iterable
+Error in get_food_list: File is not a zip file
+Error in get_food_list: File is not a zip file
