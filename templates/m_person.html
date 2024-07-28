@@ -42,6 +42,7 @@
                     </tbody>
                 </table>
             </div>
+            <button class="action-btn" onclick="addUser()">Add User</button> <!-- Add User 버튼 위치 이동 -->
         </div>
         <div class="user-details hidden" id="user-details">
             <h3>User Information</h3>
@@ -74,13 +75,11 @@
                     <input type="number" id="user-weight" name="user-weight">
                 </div>
                 <button type="button" onclick="saveUser()">Apply</button>
-                <div>
-                    <button class="action-btn" onclick="addUser()">Add User</button>
-                    <button class="action-btn" onclick="deleteUser()">Delete</button>
-                </div>
+                <button class="action-btn" onclick="deleteUser()">Delete</button> <!-- Delete 버튼 위치 수정 -->
             </form>
         </div>
     </div>
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/xlsx/0.17.0/xlsx.full.min.js"></script>
     <script src="{{ url_for('static', filename='m_person.js') }}"></script>
 </body>
 </html>

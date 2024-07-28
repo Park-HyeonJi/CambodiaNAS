@@ -11,8 +11,8 @@ function loadGroupsForUser() {
 
     groups.forEach(group => {
         const option = document.createElement('option');
-        option.value = group;
-        option.textContent = group;
+        option.value = group.name;
+        option.textContent = group.name;
         groupSelect.appendChild(option);
     });
 
@@ -77,7 +77,8 @@ function saveUser() {
         gender: document.getElementById('user-gender').value,
         age: parseInt(document.getElementById('user-age').value),
         height: parseInt(document.getElementById('user-height').value),
-        weight: parseInt(document.getElementById('user-weight').value)
+        weight: parseInt(document.getElementById('user-weight').value),
+        groupId: selectedGroup
     };
 
     // Check if any field is empty or if age, height, weight are negative
@@ -135,7 +136,6 @@ function clearUserDetails() {
     document.getElementById('user-age').value = '';
     document.getElementById('user-height').value = '';
     document.getElementById('user-weight').value = '';
-    document.getElementById('user-details').classList.remove('hidden'); 
     selectedUserId = null;
 }
 

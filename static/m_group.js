@@ -1,4 +1,5 @@
 document.addEventListener('DOMContentLoaded', () => {
+    document.getElementById('file-upload').addEventListener('change', handleFileUpload);
     loadGroups();
     clearGroupDetails();
 });
@@ -13,9 +14,9 @@ function loadGroups() {
 
     groups.forEach(group => {
         const row = document.createElement('tr');
-        row.addEventListener('click', () => selectGroup(row, group));
+        row.addEventListener('click', () => selectGroup(row, group.name));
         const cell = document.createElement('td');
-        cell.textContent = group;
+        cell.textContent = group.name;
         row.appendChild(cell);
         groupList.appendChild(row);
     });
@@ -40,10 +41,12 @@ function selectGroup(row, groupName) {
 
 // Populate the group details form with the selected group's data
 function showGroupDetails(groupName) {
+    let groups = JSON.parse(localStorage.getItem('groups')) || [];
+    let group = groups.find(g => g.name === groupName);
+
     selectedGroupName = groupName;
-    const groupDesc = localStorage.getItem(groupName + '_desc') || '';
-    document.getElementById('group-name').value = groupName;
-    document.getElementById('group-desc').value = groupDesc;
+    document.getElementById('group-name').value = group.name;
+    document.getElementById('group-desc').value = group.description;
     document.getElementById('group-details').classList.remove('hidden'); // Show group details form
 }
 
@@ -58,16 +61,16 @@ function saveGroup() {
     let groupDesc = document.getElementById('group-desc').value;
 
     let groups = JSON.parse(localStorage.getItem('groups')) || [];
-    if (newGroupName !== selectedGroupName && groups.includes(newGroupName)) {
+    let group = groups.find(g => g.name === selectedGroupName);
+
+    if (newGroupName !== selectedGroupName && groups.some(g => g.name === newGroupName)) {
         alert('This group name already exists.');
         return;
     }
 
-    groups = groups.map(group => group === selectedGroupName ? newGroupName : group);
+    group.name = newGroupName;
+    group.description = groupDesc;
     localStorage.setItem('groups', JSON.stringify(groups));
-
-    localStorage.removeItem(selectedGroupName + '_desc');
-    localStorage.setItem(newGroupName + '_desc', groupDesc);
 
     selectedGroupName = newGroupName; 
     loadGroups();
@@ -78,10 +81,9 @@ function addGroup() {
     let groupName = prompt("Enter the group name to add:");
     if (groupName) {
         let groups = JSON.parse(localStorage.getItem('groups')) || [];
-        if (!groups.includes(groupName)) {
-            groups.push(groupName);
+        if (!groups.some(g => g.name === groupName)) {
+            groups.push({ name: groupName, description: '' });
             localStorage.setItem('groups', JSON.stringify(groups));
-            localStorage.setItem(groupName + '_desc', '');
             loadGroups();
         } else {
             alert('This group name already exists.');
@@ -93,8 +95,7 @@ function addGroup() {
 function deleteGroup() {
     if (selectedGroupName) { 
         let groups = JSON.parse(localStorage.getItem('groups')) || [];
-        groups = groups.filter(group => group !== selectedGroupName); 
-        localStorage.removeItem(selectedGroupName + '_desc');
+        groups = groups.filter(g => g.name !== selectedGroupName); 
         localStorage.setItem('groups', JSON.stringify(groups));
         loadGroups();
         clearGroupDetails();
@@ -108,5 +109,58 @@ function clearGroupDetails() {
     selectedGroup = null;
     document.getElementById('group-name').value = '';
     document.getElementById('group-desc').value = '';
-    document.getElementById('group-details').classList.remove('hidden'); // Hide group details form
+    document.getElementById('group-details').classList.add('hidden'); // Hide group details form
+}
+
+// Handle file upload
+function handleFileUpload(event) {
+    const file = event.target.files[0];
+    const reader = new FileReader();
+    
+    reader.onload = (e) => {
+        const data = new Uint8Array(e.target.result);
+        const workbook = XLSX.read(data, { type: 'array' });
+        const groupsSheet = workbook.Sheets['Groups'];
+        const usersSheet = workbook.Sheets['Users'];
+        
+        const groups = XLSX.utils.sheet_to_json(groupsSheet);
+        const users = XLSX.utils.sheet_to_json(usersSheet);
+
+        localStorage.setItem('groups', JSON.stringify(groups));
+        groups.forEach(group => {
+            localStorage.setItem(group.name + '_users', JSON.stringify(users.filter(user => user.groupId === group.id)));
+        });
+
+        loadGroups();
+    };
+
+    reader.readAsArrayBuffer(file);
+}
+
+function downloadExcel() {
+    const groups = JSON.parse(localStorage.getItem('groups')) || [];
+    const groupData = groups.map(group => ({ id: group.id, name: group.name, description: group.description }));
+
+    let userData = [];
+    groups.forEach(group => {
+        const users = JSON.parse(localStorage.getItem(group.name + '_users')) || [];
+        userData = userData.concat(users.map(user => ({
+            id: user.id, 
+            name: user.name, 
+            gender: user.gender, 
+            age: user.age, 
+            height: user.height, 
+            weight: user.weight, 
+            groupId: group.name
+        })));
+    });
+
+    const workbook = XLSX.utils.book_new();
+    const groupSheet = XLSX.utils.json_to_sheet(groupData);
+    const userSheet = XLSX.utils.json_to_sheet(userData);
+
+    XLSX.utils.book_append_sheet(workbook, groupSheet, 'Groups');
+    XLSX.utils.book_append_sheet(workbook, userSheet, 'Users');
+
+    XLSX.writeFile(workbook, 'group_user_management.xlsx');
 }
