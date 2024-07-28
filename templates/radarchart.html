@@ -7,11 +7,11 @@
 
 </head>
 <body >
-    <div id="af46d2760d3441aeb51b85ead14c47c1" class="chart-container" style="width:900px; height:500px; "></div>
+    <div id="d7d4b8d76bbc4e64bf696d057a22b29f" class="chart-container" style="width:900px; height:500px; "></div>
     <script>
-        var chart_af46d2760d3441aeb51b85ead14c47c1 = echarts.init(
-            document.getElementById('af46d2760d3441aeb51b85ead14c47c1'), 'light', {renderer: 'canvas'});
-        var option_af46d2760d3441aeb51b85ead14c47c1 = {
+        var chart_d7d4b8d76bbc4e64bf696d057a22b29f = echarts.init(
+            document.getElementById('d7d4b8d76bbc4e64bf696d057a22b29f'), 'light', {renderer: 'canvas'});
+        var option_d7d4b8d76bbc4e64bf696d057a22b29f = {
     "animation": true,
     "animationThreshold": 2000,
     "animationDuration": 1000,
@@ -29,22 +29,24 @@
             "name": "Current",
             "data": [
                 [
-                    70,
-                    200,
-                    80,
-                    50,
-                    30
+                    211.0,
+                    152.0,
+                    25.0,
+                    3.0,
+                    13.0
                 ]
             ],
             "label": {
-                "show": true,
+                "show": false,
                 "margin": 8
             },
             "selectedMode": false,
             "zlevel": 0,
             "z": 2,
             "itemStyle": {
-                "normal": {}
+                "normal": {
+                    "color": "magenta"
+                }
             },
             "lineStyle": {
                 "show": true,
@@ -52,7 +54,7 @@
                 "opacity": 1,
                 "curveness": 0,
                 "type": "solid",
-                "color": "yellow"
+                "color": "magenta"
             },
             "areaStyle": {
                 "opacity": 0
@@ -63,22 +65,24 @@
             "name": "Target",
             "data": [
                 [
-                    211.0,
-                    13.0,
-                    3.0,
-                    25.0,
-                    4.0
+                    3000,
+                    3000,
+                    60,
+                    60,
+                    130
                 ]
             ],
             "label": {
-                "show": true,
+                "show": false,
                 "margin": 8
             },
             "selectedMode": false,
             "zlevel": 0,
             "z": 2,
             "itemStyle": {
-                "normal": {}
+                "normal": {
+                    "color": "royalblue"
+                }
             },
             "lineStyle": {
                 "show": true,
@@ -86,7 +90,7 @@
                 "opacity": 1,
                 "curveness": 0,
                 "type": "solid",
-                "color": "blue"
+                "color": "royalblue"
             },
             "areaStyle": {
                 "opacity": 0
@@ -147,24 +151,24 @@
         {
             "indicator": [
                 {
-                    "name": "Energy (100 kcal)",
+                    "name": "Energy (kcal)",
+                    "max": 4000
+                },
+                {
+                    "name": "Water (g)",
+                    "max": 4000
+                },
+                {
+                    "name": "Protein (g)",
                     "max": 100
                 },
                 {
-                    "name": "Carbohydrate (300 g)",
-                    "max": 300
-                },
-                {
-                    "name": "Fat (100 g)",
+                    "name": "Fat (g)",
                     "max": 100
                 },
                 {
-                    "name": "Protein (100 g)",
-                    "max": 100
-                },
-                {
-                    "name": "Vitamins (100 mg)",
-                    "max": 100
+                    "name": "Carbohydrate (g)",
+                    "max": 150
                 }
             ],
             "startAngle": 90,
@@ -197,7 +201,7 @@
     "title": [
         {
             "show": true,
-            "text": "Major Nutritional Values Radar Chart",
+            "text": "Radar for 5 Major Nutritional Values",
             "target": "blank",
             "subtarget": "blank",
             "padding": 5,
@@ -208,7 +212,7 @@
         }
     ]
 };
-        chart_af46d2760d3441aeb51b85ead14c47c1.setOption(option_af46d2760d3441aeb51b85ead14c47c1);
+        chart_d7d4b8d76bbc4e64bf696d057a22b29f.setOption(option_d7d4b8d76bbc4e64bf696d057a22b29f);
     </script>
 </body>
 </html>
