@@ -141,7 +141,8 @@
                     <table class="nutrition-table">
                         <thead>
                             <tr>
-                                <th>Type</th>
+                                <th>Category</th>
+                                <th>Food Name</th>
                                 <th>ENERC (kcal)</th>
                                 <th>WATER (g)</th>
                                 <th>PROTCNT (g)</th>
@@ -162,66 +163,6 @@
                             </tr>
                         </thead>
                         <tbody id="nutrition-tbody">
-                            <!-- <tr>
-                                <td>Current Food</td>
-                                <td id="current-food-enerckcal"></td>
-                                <td id="current-food-waterg"></td>
-                                <td id="current-food-protcntg"></td>
-                                <td id="current-food-fatg"></td>
-                                <td id="current-food-choavldfg"></td>
-                                <td id="current-food-fibtgg"></td>
-                                <td id="current-food-camg"></td>
-                                <td id="current-food-femg"></td>
-                                <td id="current-food-znmg"></td>
-                                <td id="current-food-vitaraemcg"></td>
-                                <td id="current-food-vitdmcg"></td>
-                                <td id="current-food-thiamg"></td>
-                                <td id="current-food-ribfmg"></td>
-                                <td id="current-food-niamg"></td>
-                                <td id="current-food-pantacmg"></td>
-                                <td id="current-food-vitb6mg"></td>
-                                <td id="current-food-folmcg"></td>
-                            </tr> -->
-                            <tr id="current-meal-summary">
-                                <td>Current Meal</td>
-                                <td id="current-meal-enerckcal"></td>
-                                <td id="current-meal-waterg"></td>
-                                <td id="current-meal-protcntg"></td>
-                                <td id="current-meal-fatg"></td>
-                                <td id="current-meal-choavldfg"></td>
-                                <td id="current-meal-fibtgg"></td>
-                                <td id="current-meal-camg"></td>
-                                <td id="current-meal-femg"></td>
-                                <td id="current-meal-znmg"></td>
-                                <td id="current-meal-vitaraemcg"></td>
-                                <td id="current-meal-vitdmcg"></td>
-                                <td id="current-meal-thiamg"></td>
-                                <td id="current-meal-ribfmg"></td>
-                                <td id="current-meal-niamg"></td>
-                                <td id="current-meal-pantacmg"></td>
-                                <td id="current-meal-vitb6mg"></td>
-                                <td id="current-meal-folmcg"></td>
-                            </tr>
-                            <tr id="daily-total-summary">
-                                <td>Daily Total</td>
-                                <td id="daily-total-enerckcal"></td>
-                                <td id="daily-total-waterg"></td>
-                                <td id="daily-total-protcntg"></td>
-                                <td id="daily-total-fatg"></td>
-                                <td id="daily-total-choavldfg"></td>
-                                <td id="daily-total-fibtgg"></td>
-                                <td id="daily-total-camg"></td>
-                                <td id="daily-total-femg"></td>
-                                <td id="daily-total-znmg"></td>
-                                <td id="daily-total-vitaraemcg"></td>
-                                <td id="daily-total-vitdmcg"></td>
-                                <td id="daily-total-thiamg"></td>
-                                <td id="daily-total-ribfmg"></td>
-                                <td id="daily-total-niamg"></td>
-                                <td id="daily-total-pantacmg"></td>
-                                <td id="daily-total-vitb6mg"></td>
-                                <td id="daily-total-folmcg"></td>
-                            </tr>
                         </tbody>
                     </table>                    
                 </div>
@@ -276,7 +217,6 @@
 
         </div>
     </div>
-    <script src="{{ url_for('static', filename='24h.js') }}"></script>
     <script>
         function openTab(evt, tabName) {
             var i, tabcontent, tablinks;
