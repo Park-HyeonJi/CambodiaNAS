@@ -27,37 +27,66 @@ function loadAllFoodList() {
     fetch(`/get_food_list?userGroup=${userGroup}&userID=${userID}&viewDate=${viewDate}`)
     .then(response => response.json())
     .then(data => {
-        console.log('Received data:', data);
+        // console.log('Received data:', data);
         var mealTbody = document.getElementById('nutrition-tbody');
         mealTbody.innerHTML = ''; // 기존 데이터를 초기화
 
+        data['Morning Snack'] = (data['Morning Snack'] || [])
+        .concat(data['Morning Snack1'] || [])
+        .concat(data['Morning Snack2'] || [])
+        .concat(data['Morning snack'] || []);
+    
+        // 불필요한 다른 Morning Snack 관련 키 삭제
+        delete data['Morning Snack1'];
+        delete data['Morning Snack2'];
+        delete data['Morning snack'];
+
         var categories = ['Breakfast', 'Morning Snack', 'Lunch', 'Afternoon Snack', 'Dinner', 'Midnight Snack'];
-        var uniqueFoods = [];
-        var promises = [];
+        var foods = [];
 
         categories.forEach(category => {
             if (data[category]) {
                 data[category].forEach(food => {
-                    if (!uniqueFoods.some(item => item['Food Name'] === food['Food Name'])) {
-                        uniqueFoods.push(food);
-                        // loadNutrition(food['Food Code'], food['Food Name'], category);
-                        promises.push(loadNutrition(food['Food Code'], food['Food Name'], category));
+                    //promises.push(loadNutrition(food['Food Code'], food['Food Name'], category));
+                    // 중복 제거 부분 수정
+                    if (!foods.some(item => item['Food Name'] === food['Food Name'] && item['Category'] === category)) {
+                        foods.push({ ...food, 'Category': category });
                     }
                 });
             }
         });
 
-        Promise.all(promises).then(results => {
+        // 각 음식에 대해 loadNutrition을 호출하고 그 결과를 테이블에 추가
+        Promise.all(foods.map(food => loadNutrition(food['Food Code'], food['Food Name'], food['Category'])))
+        .then(results => {
+            var totalNutrients = {
+                'ENERC (kcal)': 0, 'WATER (g)': 0, 'PROTCNT (g)': 0, 'FAT (g)': 0, 
+                'CHOAVLDF (g)': 0, 'FIBTG (g)': 0, 'CA (mg)': 0, 'FE (mg)': 0, 
+                'ZN (mg)': 0, 'VITA_RAE (mcg)': 0, 'VITD (mcg)': 0, 'THIA (mg)': 0, 'RIBF (mg)': 0, 
+                'NIA (mg)': 0, 'PANTAC (mg)': 0, 'VITB6 (mg)': 0, 'FOL (mcg)': 0
+            };
+
             results.forEach(result => {
                 appendNutritionRow(result);
+
+                // 각 항목의 영양성분을 총합에 추가
+                for (var key in totalNutrients) {
+                    totalNutrients[key] += parseFloat(result.nutrientTotals[key]) || 0;
+                }
             });
+
+            // 총합을 테이블의 마지막 행에 추가
+            appendTotalRow(totalNutrients);
         });
+    })
+    .catch(error => {
+        console.error('Error fetching food list:', error);
     });
 }
 
 function loadNutrition(foodCode, foodName, category) {
     return new Promise((resolve, reject) => {
-        console.log('loadNutrition function called for:', foodCode, foodName, category);
+        // console.log('loadNutrition function called for:', foodCode, foodName, category);
         fetch('/get_ingredients', {
             method: 'POST',
             headers: {
@@ -133,6 +162,37 @@ function appendNutritionRow(result) {
             <td>${result.nutrientTotals['PANTAC (mg)'].toFixed(2)}</td>
             <td>${result.nutrientTotals['VITB6 (mg)'].toFixed(2)}</td>
             <td>${result.nutrientTotals['FOL (mcg)'].toFixed(2)}</td>
+        `;
+        mealTbody.appendChild(tr);
+    } else {
+        console.error('Element with ID "nutrition-tbody" not found');
+    }
+}
+
+function appendTotalRow(totalNutrients) {
+    var mealTbody = document.getElementById('nutrition-tbody');
+
+    if (mealTbody) {
+        var tr = document.createElement('tr');
+        tr.innerHTML = `
+            <td colspan="2"><strong>Daily Total</strong></td>
+            <td>${totalNutrients['ENERC (kcal)'].toFixed(2)}</td>
+            <td>${totalNutrients['WATER (g)'].toFixed(2)}</td>
+            <td>${totalNutrients['PROTCNT (g)'].toFixed(2)}</td>
+            <td>${totalNutrients['FAT (g)'].toFixed(2)}</td>
+            <td>${totalNutrients['CHOAVLDF (g)'].toFixed(2)}</td>
+            <td>${totalNutrients['FIBTG (g)'].toFixed(2)}</td>
+            <td>${totalNutrients['CA (mg)'].toFixed(2)}</td>
+            <td>${totalNutrients['FE (mg)'].toFixed(2)}</td>
+            <td>${totalNutrients['ZN (mg)'].toFixed(2)}</td>
+            <td>${totalNutrients['VITA_RAE (mcg)'].toFixed(2)}</td>
+            <td>${totalNutrients['VITD (mcg)'].toFixed(2)}</td>
+            <td>${totalNutrients['THIA (mg)'].toFixed(2)}</td>
+            <td>${totalNutrients['RIBF (mg)'].toFixed(2)}</td>
+            <td>${totalNutrients['NIA (mg)'].toFixed(2)}</td>
+            <td>${totalNutrients['PANTAC (mg)'].toFixed(2)}</td>
+            <td>${totalNutrients['VITB6 (mg)'].toFixed(2)}</td>
+            <td>${totalNutrients['FOL (mcg)'].toFixed(2)}</td>
         `;
         mealTbody.appendChild(tr);
     } else {
@@ -267,6 +327,7 @@ function loadFoodList() {
     fetch(`/get_food_list?userGroup=${userGroup}&userID=${userID}&viewDate=${viewDate}`)
     .then(response => response.json())
     .then(data => {
+        console.log('Fetched data:', data); // 데이터 확인을 위해 추가
         document.querySelectorAll('.food-items tbody').forEach(tbody => tbody.innerHTML = ""); // 기존 데이터를 초기화
 
         var tableBody = document.querySelector(`.food-items tbody[data-category='${activeCategory}']`);
