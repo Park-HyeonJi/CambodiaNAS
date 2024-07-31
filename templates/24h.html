@@ -64,9 +64,11 @@
                             </table>
                         </div>
                     </div>
-                    <button type="button">Add Food</button>
-                    <button type="button">Copy Food</button>
-                    <button type="button">Delete Food</button>
+                    <div class="food-data-buttons">
+                        <button type="button">Add Food</button>
+                        <button type="button">Copy Food</button>
+                        <button type="button">Delete Food</button>
+                    </div>
                 </div>
                 <!-- 2열: 입력할 Food list 및 검색 -->
                 <div class="food-search">
@@ -84,30 +86,22 @@
                         <input type="text" id="nameInput" disabled>
                         <button type="button" onclick="searchFood()">Search</button>
                     </div>
-                    <table id="foodTable" class="food-table">
-                        <thead>
-                            <tr>
-                                <th>Food Code</th>
-                                <th>Food Name</th>
-                            </tr>
-                        </thead>
-                        <tbody>
-                            <!-- 검색 결과가 여기에 표시됩니다 -->
-                        </tbody>
-                    </table>
-                    <div class="pagination">
-                        <button type="button">«</button>
-                        <button type="button">‹</button>
-                        <span>Page 1 of 0</span>
-                        <button type="button">›</button>
-                        <button type="button">»</button>
-                        <select>
-                            <option value="30">30</option>
-                            <option value="50">50</option>
-                            <option value="100">100</option>
-                        </select>
+                    <div class="search-results">
+                        <table id="foodTable" class="food-table">
+                            <thead>
+                                <tr>
+                                    <th>Food Code</th>
+                                    <th>Food Name</th>
+                                </tr>
+                            </thead>
+                            <tbody>
+                                <!-- 검색 결과가 여기에 표시됩니다 -->
+                            </tbody>
+                        </table>
                     </div>
-                    <button type="button" onclick="addToFoodList()">Add To Food List</button>
+                    <div class="add-food-button">
+                        <button type="button" onclick="addToFoodList()">Add To Food List</button>
+                    </div>
                 </div>
                 <!-- 3열: 식사에 대한 정보 -->
                 <div class="food-details">

@@ -28,9 +28,14 @@
 
 .food-data, .food-search, .food-details {
     flex: 1;
+    /* flex-direction: column; */
+    min-height: 350px;
+    background-color: #f9f9f9;
+    border: 1px solid #ccc;
+    padding: 10px;
+    /* align-items: center; */
 }
 
-/* 1열: List Of Foods Consumed */
 .food-data-content {
     display: flex;
     flex-direction: row;
@@ -44,6 +49,38 @@
 
 .time-categories button {
     margin-bottom: 10px;
+}
+
+.food-data-buttons {
+    display: flex;
+    justify-content: flex-end;
+}
+
+/* .search-results {
+    flex-grow: 1;
+} */
+
+.add-food-button {
+    margin-top: 10px;
+    display: flex;
+    justify-content: flex-end;
+}
+
+.search-options {
+    display: flex;
+    align-items: center;
+    gap: 10px;
+    margin-bottom: 10px;
+}
+
+.search-options label {
+    display: flex;
+    align-items: center;
+    gap: 5px;
+}
+
+.search-options input[type="text"] {
+    width: 70px; /* 입력 필드의 너비 조절 */
 }
 
 .food-table {
@@ -66,22 +103,8 @@
     background-color: #f2f2f2;
 }
 
-/* 2열: Food Intake Search */
-.pagination {
-    display: flex;
-    align-items: center;
-    justify-content: center;
-    margin-top: 10px;
-}
 
-.pagination button, .pagination select {
-    margin: 0 5px;
-}
-/* 
-.food-search button:last-of-type {
-    margin-top: 10px;
-} */
-
+/* 3행 영양성분 테이블 */
 .nutrition-table-container {
     padding: 20px;
     border: 1px solid #ccc;
