@@ -11,11 +11,13 @@ def bar(current_meal_data):
     cond=(recommends.Gender==gender) & (recommends.Age==age); 
     recom=recommends[cond].iloc[0,2:]; recomlist=np.array(recom); print(recomlist)
     nutritionpercent=[]
+    
     for i in range(len(overall_data)):
             v=int(round((overall_data[i]/recomlist[i])*100,0))
             if v >= 250: v=250; # more than 250%, set as 250
             nutritionpercent.append( v )
     overall_data=nutritionpercent
+
     # Categories as specified
     categories = [
         "Energy", "Protein", "CA", "FE", "ZN", "Vita A",
