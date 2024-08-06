@@ -89,11 +89,6 @@ def db_food():
 def db_nutri():
     return render_template('db_nutri.html')
 
-@app.route('/uchang') #########################  Uchang
-@login_required
-def uchang():
-    return render_template('uchang.html')
-
 @app.route('/search_food', methods=['POST'])
 @login_required
 def search_food():
@@ -280,12 +275,9 @@ def run_python_code():
         'vitb6mg': request.form.get('currentMealVitb6mg'),
         'folmcg': request.form.get('currentMealFolmcg'),
     }
-    result = radarchart(current_meal_data) 
-    result = barchart(current_meal_data) 
+    from bar import bar; 
+    result = bar(current_meal_data) 
     return render_template('24h_chart.html', result=result)
-
-
-
 
 # 로그아웃
 @app.route('/logout')
