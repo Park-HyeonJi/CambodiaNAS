@@ -5,8 +5,6 @@ import numpy as np
 import os
 import logging
 from logging.handlers import RotatingFileHandler
-from barchart import barchart; 
-from radarchart import radarchart;
   
 app = Flask(__name__)
 app.secret_key = 'your_secret_key'
@@ -19,6 +17,8 @@ app.logger.addHandler(handler)
 login_manager = LoginManager()
 login_manager.init_app(app)
 login_manager.login_view = 'login'
+
+food_data_path = 'data/Food DATA.xlsx'
 
 users = {'ddd': {'password': 'password'}}
 
@@ -69,16 +69,6 @@ def m_person():
 def tfh():
     return render_template('24h.html')
 
-@app.route('/24h-stas')
-@login_required
-def tfh_stas():
-    return render_template('24h_stas.html')
-
-@app.route('/24h-excel')
-@login_required
-def tfh_excel():
-    return render_template('24h_excel.html')
-
 @app.route('/db-food')
 @login_required
 def db_food():
@@ -89,6 +79,7 @@ def db_food():
 def db_nutri():
     return render_template('db_nutri.html')
 
+### 음식 검색
 @app.route('/search_food', methods=['POST'])
 @login_required
 def search_food():
@@ -97,16 +88,16 @@ def search_food():
         search_type = data['searchType']
         search_value = data['searchValue']
         
-        food_data_path = 'data/CambodiaFood_test.xlsx'
+         # 엑셀 데이터 읽기
         food_data = pd.read_excel(food_data_path)
         
         if search_type == "code":
-            results = food_data[food_data['Food Code'].astype(str).str.contains(search_value, na=False, case=False)]
+            results = food_data[food_data['FOODID'].astype(str).str.contains(search_value, na=False, case=False)]
         else:
-            results = food_data[food_data['Food Name'].str.contains(search_value, na=False, case=False)]
+            results = food_data[food_data['FOODNAME'].str.contains(search_value, na=False, case=False)]
         
-        results = results.drop_duplicates(subset=['Food Code', 'Food Name', 'Ingredient Code'])
-        results = results[['Food Code', 'Food Name', 'Ingredient Code']]
+        results = results.drop_duplicates(subset=['FOODID', 'FOODNAME', 'INGID'])
+        results = results[['FOODID', 'FOODNAME', 'INGID']]
         
         return jsonify(results.to_dict(orient='records'))
     except Exception as e:
@@ -125,10 +116,10 @@ def add_food():
         user_id = data['userID']
         view_date = data['viewDate']
 
-        food_data_path = 'data/CambodiaFood_test.xlsx'
+        # 엑셀 데이터 읽기
         food_data = pd.read_excel(food_data_path)
         
-        selected_food_data = food_data[food_data['Food Name'] == food_name]
+        selected_food_data = food_data[food_data['FOODID'] == food_name]
 
         user_data = load_user_data(user_group, user_id, view_date)
         if time_category not in user_data:
@@ -164,7 +155,7 @@ def load_user_data(user_group, user_id, view_date):
     else:
         user_data = {
             'Breakfast': [],
-            'Morning snack': [],
+            'Morning Snack': [],
             'Lunch': [],
             'Afternoon Snack': [],
             'Dinner': [],
@@ -183,12 +174,12 @@ def get_ingredients():
         if not isinstance(food_codes, list):
             food_codes = [food_codes]
         
-        food_data_path = 'data/CambodiaFood_test.xlsx'
+        food_data_path = 'data/Food DATA.xlsx'
         food_data = pd.read_excel(food_data_path)
         
         ingredient_codes = []
         for food_code in food_codes:
-            ingredients = food_data[food_data['Food Code'] == int(food_code)]['Ingredient Code'].tolist()
+            ingredients = food_data[food_data['FOODID'] == int(food_code)]['INGID'].tolist()
             ingredient_codes.extend(ingredients)
         # ingredients = food_data[food_data['Food Code'] == int(food_codes)]['Ingredient Code'].tolist()
         
@@ -211,10 +202,10 @@ def get_nutrition():
         elif not isinstance(ingredient_codes, list):
             ingredient_codes = list(ingredient_codes)
         
-        nutrition_data_path = 'data/FoodIngredient_test.xlsx'
+        nutrition_data_path = 'data/Ingredient DATA.xlsx'
         nutrition_data = pd.read_excel(nutrition_data_path)
         
-        nutrition_info = nutrition_data[nutrition_data['ID Code'].isin(ingredient_codes)]
+        nutrition_info = nutrition_data[nutrition_data['INGID'].isin(ingredient_codes)]
         nutrition_info = nutrition_info.replace({np.nan: 0})
         nutrition_info = nutrition_info.to_dict(orient='records')
         
@@ -237,23 +228,24 @@ def get_food_ingredients():
     try:
         food_code = request.args.get('foodCode')
         # 데이터 파일에서 음식 재료를 로드합니다.
-        food_data_path = 'data/CambodiaFood_test.xlsx'
+        food_data_path = 'data/Food DATA.xlsx'
         food_data = pd.read_excel(food_data_path)
 
-        ingredients = food_data[food_data['Food Code'] == int(food_code)].to_dict(orient='records')
+        ingredients = food_data[food_data['FOODID'] == int(food_code)].to_dict(orient='records')
         return jsonify(ingredients)
     except Exception as e:
         app.logger.error(f"Error in get_food_ingredients: {e}")
         return jsonify({'status': 'error', 'message': str(e)}), 500
     
-@app.route('/FoodGroupIntake')
-@login_required
-def FoodGroupIntake():
-    return render_template('test2.html')
+# @app.route('/FoodGroupIntake')
+# @login_required
+# def FoodGroupIntake():
+#     return render_template('test2.html')
 
 @app.route('/runchart', methods=['POST'])
 def run_python_code():
-    # 여기에 실행하고자 하는 Python 코드를 작성
+    from bar import bar; 
+
     current_meal_data = {
         'enerckcal': request.form.get('currentMealEnerckcal'),
         'enerckj': request.form.get('currentMealEnerckj'),
@@ -275,8 +267,9 @@ def run_python_code():
         'vitb6mg': request.form.get('currentMealVitb6mg'),
         'folmcg': request.form.get('currentMealFolmcg'),
     }
-    from bar import bar; 
+
     result = bar(current_meal_data) 
+
     return render_template('24h_chart.html', result=result)
 
 # 로그아웃
