@@ -167,53 +167,37 @@
                         <!-- Add more options as needed -->
                     </select>
                     <button type="button" onclick="exportExcel()">Export to Excel</button>
-                    <button type="button" onclick="showCurrentFood()">Current Food Nutrition</button>
-                    <button type="button" onclick="showTotalNutrition()">Total Daily Nutrition</button>
-                    <button type="button" onclick="generateChart()">Generate Chart</button>
+                    <button type="button" onclick="exportExcel()">Export to Excel (Group)</button>
+                    <button type="button" onclick="submitChartForm()">Generate Chart</button>
                 </div>
             </div>
-            <div class="24h-result-container">
-                <h3>24-Hour Recall Method Results</h3>
-                <div class="tab">
-                    <!-- <button class="tablinks" onclick="openTab(event, 'NutrientIntake')">Nutrient Intake</button> -->
-                    <button class="tablinks" onclick="openTab(event, 'FoodGroupIntake')">Food Group Intake</button>
-                </div>
-                
-                <!-- <div id="NutrientIntake" class="tabcontent">
-                    <h3>Nutrient Intake</h3>
-                    <img src="{{ url_for('static', filename='image.png') }}" alt="Nutrient Intake Graph">
-                </div> -->
-
-                <div id="FoodGroupIntake" class="tabcontent">
-                    <form id="chartForm" action="/runchart" method="post">
-                        <input type="hidden" id="currentMealEnerckcal" name="currentMealEnerckcal">
-                        <input type="hidden" id="currentMealEnerckj" name="currentMealEnerckj">
-                        <input type="hidden" id="currentMealWaterg" name="currentMealWaterg">
-                        <input type="hidden" id="currentMealProtcntg" name="currentMealProtcntg">
-                        <input type="hidden" id="currentMealFatg" name="currentMealFatg">
-                        <input type="hidden" id="currentMealChoavldfg" name="currentMealChoavldfg">
-                        <input type="hidden" id="currentMealFibtgg" name="currentMealFibtgg">
-                        <input type="hidden" id="currentMealAshg" name="currentMealAshg">
-                        <input type="hidden" id="currentMealCamg" name="currentMealCamg">
-                        <input type="hidden" id="currentMealFemg" name="currentMealFemg">
-                        <input type="hidden" id="currentMealZnmg" name="currentMealZnmg">
-                        <input type="hidden" id="currentMealVitaraemcg" name="currentMealVitaraemcg">
-                        <input type="hidden" id="currentMealVitdmcg" name="currentMealVitdmcg">
-                        <input type="hidden" id="currentMealThiamg" name="currentMealThiamg">
-                        <input type="hidden" id="currentMealRibfmg" name="currentMealRibfmg">
-                        <input type="hidden" id="currentMealNiamg" name="currentMealNiamg">
-                        <input type="hidden" id="currentMealPantacmg" name="currentMealPantacmg">
-                        <input type="hidden" id="currentMealVitb6mg" name="currentMealVitb6mg">
-                        <input type="hidden" id="currentMealFolmcg" name="currentMealFolmcg">
-                        
-                        <button type="button" onclick="submitChartForm()">Show Food Intake Status Chart</button>
-                    </form>
-                </div>
-
+            <div id="FoodGroupIntake" class="tabcontent">
+                <form id="chartForm" action="/runchart" method="post">
+                    <input type="hidden" id="currentMealEnerckcal" name="currentMealEnerckcal">
+                    <input type="hidden" id="currentMealEnerckj" name="currentMealEnerckj">
+                    <input type="hidden" id="currentMealWaterg" name="currentMealWaterg">
+                    <input type="hidden" id="currentMealProtcntg" name="currentMealProtcntg">
+                    <input type="hidden" id="currentMealFatg" name="currentMealFatg">
+                    <input type="hidden" id="currentMealChoavldfg" name="currentMealChoavldfg">
+                    <input type="hidden" id="currentMealFibtgg" name="currentMealFibtgg">
+                    <input type="hidden" id="currentMealAshg" name="currentMealAshg">
+                    <input type="hidden" id="currentMealCamg" name="currentMealCamg">
+                    <input type="hidden" id="currentMealFemg" name="currentMealFemg">
+                    <input type="hidden" id="currentMealZnmg" name="currentMealZnmg">
+                    <input type="hidden" id="currentMealVitaraemcg" name="currentMealVitaraemcg">
+                    <input type="hidden" id="currentMealVitdmcg" name="currentMealVitdmcg">
+                    <input type="hidden" id="currentMealThiamg" name="currentMealThiamg">
+                    <input type="hidden" id="currentMealRibfmg" name="currentMealRibfmg">
+                    <input type="hidden" id="currentMealNiamg" name="currentMealNiamg">
+                    <input type="hidden" id="currentMealPantacmg" name="currentMealPantacmg">
+                    <input type="hidden" id="currentMealVitb6mg" name="currentMealVitb6mg">
+                    <input type="hidden" id="currentMealFolmcg" name="currentMealFolmcg">
+                </form>
+            </div>
         </div>
     </div>
 
-    <script>
+    <!-- <script>
         function openTab(evt, tabName) {
             var i, tabcontent, tablinks;
             tabcontent = document.getElementsByClassName("tabcontent");
@@ -230,7 +214,7 @@
 
         // Open the first tab by default
         document.getElementsByClassName("tablinks")[0].click();
-    </script>
+    </script> -->
 </body>
 </html>
 

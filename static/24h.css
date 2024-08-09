@@ -49,6 +49,7 @@
 
 .time-categories button {
     margin-bottom: 10px;
+    height: 40px;
 }
 
 .food-data-buttons {
@@ -166,7 +167,7 @@
     background-color: #45a049;
 }
 
-.tab {
+/* .tab {
     overflow: hidden;
     border: 1px solid #ccc;
     background-color: #f1f1f1;
@@ -194,7 +195,7 @@
     display: none;
     padding: 6px 12px;
     border-top: none;
-}
+} */
 
 .selected {
     background-color: lightgray;
