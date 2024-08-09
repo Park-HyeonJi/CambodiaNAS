@@ -49,7 +49,7 @@ function loadAllFoodList() {
                 data[category].forEach(food => {
                     //promises.push(loadNutrition(food['Food Code'], food['Food Name'], category));
                     // 중복 제거 부분 수정
-                    if (!foods.some(item => item['Food Name'] === food['Food Name'] && item['Category'] === category)) {
+                    if (!foods.some(item => item['FOODNAME'] === food['FOODNAME'] && item['Category'] === category)) {
                         foods.push({ ...food, 'Category': category });
                     }
                 });
@@ -57,7 +57,7 @@ function loadAllFoodList() {
         });
 
         // 각 음식에 대해 loadNutrition을 호출하고 그 결과를 테이블에 추가
-        Promise.all(foods.map(food => loadNutrition(food['Food Code'], food['Food Name'], food['Category'])))
+        Promise.all(foods.map(food => loadNutrition(food['FOODID'], food['FOODNAME'], food['Category'])))
         .then(results => {
             var totalNutrients = {
                 'ENERC (kcal)': 0, 'WATER (g)': 0, 'PROTCNT (g)': 0, 'FAT (g)': 0, 
@@ -265,15 +265,17 @@ function searchFood() {
     })
     .then(response => response.json())
     .then(data => {
+        console.log(data)
+        
         var tableBody = document.querySelector("#foodTable tbody");
         tableBody.innerHTML = "";
 
         var uniqueFoods = [];
         data.forEach(row => {
-            if (!uniqueFoods.some(food => food['Food Name'] === row['Food Name'])) {
+            if (!uniqueFoods.some(food => food['FOODNAME'] === row['FOODNAME'])) {
                 uniqueFoods.push(row);
                 var tr = document.createElement("tr");
-                tr.innerHTML = `<td>${row['Food Code']}</td><td>${row['Food Name']}</td>`;
+                tr.innerHTML = `<td>${row['FOODID']}</td><td>${row['FOODNAME']}</td>`;
                 tr.onclick = function() {
                     tableBody.querySelectorAll('tr').forEach(r => r.style.backgroundColor = '');
                     tr.style.backgroundColor = 'lightgray';
@@ -320,7 +322,7 @@ function addToFoodList() {
     });
 }
 
-// 두 번째 컨테이너
+// 첫 번째 컨테이너
 function loadFoodList() {
     var userGroup = document.getElementById('userGroup').value;
     var userID = document.getElementById('userID').value;
@@ -337,10 +339,10 @@ function loadFoodList() {
         var uniqueFoods = [];
 
         data[activeCategory].forEach(food => {
-            if (!uniqueFoods.some(item => item['Food Name'] === food['Food Name'])) {
+            if (!uniqueFoods.some(item => item['FOODNAME'] === food['FOODNAME'])) {
                 uniqueFoods.push(food);
                 var tr = document.createElement("tr");
-                tr.innerHTML = `<td>${food['Food Code']}</td><td>${food['Food Name']}</td>`;
+                tr.innerHTML = `<td>${food['FOODID']}</td><td>${food['FOODNAME']}</td>`;
 
                 tr.onclick = function() {
                     tableBody.querySelectorAll('tr').forEach(r => r.style.backgroundColor = '');
@@ -355,18 +357,22 @@ function loadFoodList() {
     });
 }
 
+// 세 번째 컨테이너
 function loadIngredients(food) {
     // ingredientTableBody를 초기화합니다.
     var ingredientTableBody = document.getElementById('ingredientTableBody');
     ingredientTableBody.innerHTML = "";
 
     // 음식의 재료 정보를 가져옵니다.
-    fetch(`/get_food_ingredients?foodCode=${food['Food Code']}`)
+    fetch(`/get_food_ingredients?foodCode=${food['FOODID']}`)
     .then(response => response.json())
     .then(data => {
+        console.log(data)
         data.forEach(ingredient => {
             var tr = document.createElement("tr");
-            tr.innerHTML = `<td>${ingredient['Ingredient Code']}</td><td>${ingredient['Ingrdient']}</td><td>${ingredient['1 person (g)']}</td>`;
+            tr.innerHTML = `<td>${ingredient['INGID']}</td>
+            <td>${ingredient['INGNAME_EN']}</td>
+            <td>${ingredient['1 person (g)']}</td>`;
             ingredientTableBody.appendChild(tr);
         });
     });
@@ -380,13 +386,14 @@ function copyData() {
     // Copy data functionality
 }
 
+// 3행 차트
 function submitChartForm() {
     if (!dailyTotalNutrients) {
         alert('Daily total nutrients not calculated yet.');
         return;
     }
 
-    // Current Meal 행의 값을 가져오기
+    // Daily total 행의 값을 가져오기
     document.getElementById('currentMealEnerckcal').value = dailyTotalNutrients['ENERC (kcal)'].toFixed(2);
     document.getElementById('currentMealEnerckj').value = (dailyTotalNutrients['ENERC (kcal)'] * 4.184).toFixed(2); // kcal to kJ conversion
     document.getElementById('currentMealWaterg').value = dailyTotalNutrients['WATER (g)'].toFixed(2);

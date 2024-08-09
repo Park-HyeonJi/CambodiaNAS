@@ -18,7 +18,8 @@ login_manager = LoginManager()
 login_manager.init_app(app)
 login_manager.login_view = 'login'
 
-food_data_path = 'data/Food DATA.xlsx'
+# 음식 데이터 경로
+food_data_path = 'data/FoodData.xlsx'
 
 users = {'ddd': {'password': 'password'}}
 
@@ -104,6 +105,7 @@ def search_food():
         app.logger.error(f"Error in search_food: {e}")
         return jsonify({'status': 'error', 'message': str(e)}), 500
 
+### 음식 추가
 @app.route('/add_food', methods=['POST'])
 @login_required
 def add_food():
@@ -118,10 +120,10 @@ def add_food():
 
         # 엑셀 데이터 읽기
         food_data = pd.read_excel(food_data_path)
-        
-        selected_food_data = food_data[food_data['FOODID'] == food_name]
 
+        selected_food_data = food_data[food_data['FOODID'] == food_code]
         user_data = load_user_data(user_group, user_id, view_date)
+
         if time_category not in user_data:
             user_data[time_category] = []
         
@@ -133,6 +135,7 @@ def add_food():
         app.logger.error(f"Error in add_food: {e}")
         return jsonify({'status': 'error', 'message': str(e)}), 500
 
+### 음식 리스트 조회
 @app.route('/get_food_list', methods=['GET'])
 @login_required
 def get_food_list():
@@ -163,7 +166,7 @@ def load_user_data(user_group, user_id, view_date):
         }
     return user_data
 
-# 재료 코드
+### 재료 리스트 조회
 @app.route('/get_ingredients', methods=['POST'])
 @login_required
 def get_ingredients():
@@ -173,13 +176,12 @@ def get_ingredients():
 
         if not isinstance(food_codes, list):
             food_codes = [food_codes]
-        
-        food_data_path = 'data/Food DATA.xlsx'
+
         food_data = pd.read_excel(food_data_path)
         
         ingredient_codes = []
         for food_code in food_codes:
-            ingredients = food_data[food_data['FOODID'] == int(food_code)]['INGID'].tolist()
+            ingredients = food_data[food_data['FOODID'] == food_code]['INGID'].tolist()
             ingredient_codes.extend(ingredients)
         # ingredients = food_data[food_data['Food Code'] == int(food_codes)]['Ingredient Code'].tolist()
         
@@ -201,9 +203,9 @@ def get_nutrition():
             ingredient_codes = [ingredient_codes]
         elif not isinstance(ingredient_codes, list):
             ingredient_codes = list(ingredient_codes)
-        
-        nutrition_data_path = 'data/Ingredient DATA.xlsx'
-        nutrition_data = pd.read_excel(nutrition_data_path)
+
+        # nutrition_data = pd.read_excel(nutrition_data_path)
+        nutrition_data = pd.read_excel(food_data_path)
         
         nutrition_info = nutrition_data[nutrition_data['INGID'].isin(ingredient_codes)]
         nutrition_info = nutrition_info.replace({np.nan: 0})
@@ -227,11 +229,11 @@ def save_user_data(user_group, user_id, view_date, data):
 def get_food_ingredients():
     try:
         food_code = request.args.get('foodCode')
+
         # 데이터 파일에서 음식 재료를 로드합니다.
-        food_data_path = 'data/Food DATA.xlsx'
         food_data = pd.read_excel(food_data_path)
 
-        ingredients = food_data[food_data['FOODID'] == int(food_code)].to_dict(orient='records')
+        ingredients = food_data[food_data['FOODID'] == food_code].to_dict(orient='records')
         return jsonify(ingredients)
     except Exception as e:
         app.logger.error(f"Error in get_food_ingredients: {e}")
