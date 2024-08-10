@@ -52,6 +52,11 @@
     height: 40px;
 }
 
+.time-categories button.active {
+    background-color: #4CAF50;
+    color: white;
+}
+
 .food-data-buttons {
     display: flex;
     justify-content: flex-end;
