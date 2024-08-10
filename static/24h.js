@@ -27,9 +27,9 @@ function loadAllFoodList() {
     fetch(`/get_food_list?userGroup=${userGroup}&userID=${userID}&viewDate=${viewDate}`)
     .then(response => response.json())
     .then(data => {
-        // console.log('Received data:', data);
+        // 기존 데이터를 초기화
         var mealTbody = document.getElementById('nutrition-tbody');
-        mealTbody.innerHTML = ''; // 기존 데이터를 초기화
+        mealTbody.innerHTML = '';
 
         data['Morning Snack'] = (data['Morning Snack'] || [])
         .concat(data['Morning Snack1'] || [])
@@ -60,10 +60,10 @@ function loadAllFoodList() {
         Promise.all(foods.map(food => loadNutrition(food['FOODID'], food['FOODNAME'], food['Category'])))
         .then(results => {
             var totalNutrients = {
-                'ENERC (kcal)': 0, 'WATER (g)': 0, 'PROTCNT (g)': 0, 'FAT (g)': 0, 
-                'CHOAVLDF (g)': 0, 'FIBTG (g)': 0, 'CA (mg)': 0, 'FE (mg)': 0, 
-                'ZN (mg)': 0, 'VITA_RAE (mcg)': 0, 'VITD (mcg)': 0, 'THIA (mg)': 0, 'RIBF (mg)': 0, 
-                'NIA (mg)': 0, 'PANTAC (mg)': 0, 'VITB6 (mg)': 0, 'FOL (mcg)': 0
+                'Energy': 0, 'Water': 0, 'Protein': 0, 'Fat': 0, 
+                'Carbo': 0, 'Fiber': 0, 'CA': 0, 'FE': 0, 
+                'ZN': 0, 'VA': 0, 'VB1': 0, 'VB2': 0, 'VB3': 0, 'VB6': 0,
+                'Fol': 0, 'VB12': 0, 'VC': 0, 'VD': 0, 'NA': 0
             };
 
             results.forEach(result => {
@@ -107,10 +107,10 @@ function loadNutrition(foodCode, foodName, category) {
             .then(data => {
                 if (data.length > 0) {
                     var nutrientTotals = {
-                        'ENERC (kcal)': 0, 'WATER (g)': 0, 'PROTCNT (g)': 0, 'FAT (g)': 0, 
-                        'CHOAVLDF (g)': 0, 'FIBTG (g)': 0, 'CA (mg)': 0, 'FE (mg)': 0, 
-                        'ZN (mg)': 0, 'VITA_RAE (mcg)': 0, 'VITD (mcg)': 0, 'THIA (mg)': 0, 'RIBF (mg)': 0, 
-                        'NIA (mg)': 0, 'PANTAC (mg)': 0, 'VITB6 (mg)': 0, 'FOL (mcg)': 0
+                        'Energy': 0, 'Water': 0, 'Protein': 0, 'Fat': 0, 
+                        'Carbo': 0, 'Fiber': 0, 'CA': 0, 'FE': 0, 
+                        'ZN': 0, 'VA': 0, 'VB1': 0, 'VB2': 0, 'VB3': 0, 'VB6': 0,
+                        'Fol': 0, 'VB12': 0, 'VC': 0, 'VD': 0, 'NA': 0
                     };
 
                     data.forEach(nutrient => {
@@ -145,23 +145,25 @@ function appendNutritionRow(result) {
         tr.innerHTML = `
             <td>${result.category}</td>
             <td>${result.foodName}</td>
-            <td>${result.nutrientTotals['ENERC (kcal)'].toFixed(2)}</td>
-            <td>${result.nutrientTotals['WATER (g)'].toFixed(2)}</td>
-            <td>${result.nutrientTotals['PROTCNT (g)'].toFixed(2)}</td>
-            <td>${result.nutrientTotals['FAT (g)'].toFixed(2)}</td>
-            <td>${result.nutrientTotals['CHOAVLDF (g)'].toFixed(2)}</td>
-            <td>${result.nutrientTotals['FIBTG (g)'].toFixed(2)}</td>
-            <td>${result.nutrientTotals['CA (mg)'].toFixed(2)}</td>
-            <td>${result.nutrientTotals['FE (mg)'].toFixed(2)}</td>
-            <td>${result.nutrientTotals['ZN (mg)'].toFixed(2)}</td>
-            <td>${result.nutrientTotals['VITA_RAE (mcg)'].toFixed(2)}</td>
-            <td>${result.nutrientTotals['VITD (mcg)'].toFixed(2)}</td>
-            <td>${result.nutrientTotals['THIA (mg)'].toFixed(2)}</td>
-            <td>${result.nutrientTotals['RIBF (mg)'].toFixed(2)}</td>
-            <td>${result.nutrientTotals['NIA (mg)'].toFixed(2)}</td>
-            <td>${result.nutrientTotals['PANTAC (mg)'].toFixed(2)}</td>
-            <td>${result.nutrientTotals['VITB6 (mg)'].toFixed(2)}</td>
-            <td>${result.nutrientTotals['FOL (mcg)'].toFixed(2)}</td>
+            <td>${result.nutrientTotals['Energy'].toFixed(2)}</td>
+            <td>${result.nutrientTotals['Water'].toFixed(2)}</td>
+            <td>${result.nutrientTotals['Protein'].toFixed(2)}</td>
+            <td>${result.nutrientTotals['Fat'].toFixed(2)}</td>
+            <td>${result.nutrientTotals['Carbo'].toFixed(2)}</td>
+            <td>${result.nutrientTotals['Fiber'].toFixed(2)}</td>
+            <td>${result.nutrientTotals['CA'].toFixed(2)}</td>
+            <td>${result.nutrientTotals['FE'].toFixed(2)}</td>
+            <td>${result.nutrientTotals['ZN'].toFixed(2)}</td>
+            <td>${result.nutrientTotals['VA'].toFixed(2)}</td>
+            <td>${result.nutrientTotals['VB1'].toFixed(2)}</td>
+            <td>${result.nutrientTotals['VB2'].toFixed(2)}</td>
+            <td>${result.nutrientTotals['VB3'].toFixed(2)}</td>
+            <td>${result.nutrientTotals['VB6'].toFixed(2)}</td>
+            <td>${result.nutrientTotals['Fol'].toFixed(2)}</td>
+            <td>${result.nutrientTotals['VB12'].toFixed(2)}</td>
+            <td>${result.nutrientTotals['VC'].toFixed(2)}</td>
+            <td>${result.nutrientTotals['VD'].toFixed(2)}</td>
+            <td>${result.nutrientTotals['NA'].toFixed(2)}</td>
         `;
         mealTbody.appendChild(tr);
     } else {
@@ -179,23 +181,25 @@ function appendTotalRow(totalNutrients) {
         var tr = document.createElement('tr');
         tr.innerHTML = `
             <td colspan="2"><strong>Daily Total</strong></td>
-            <td>${totalNutrients['ENERC (kcal)'].toFixed(2)}</td>
-            <td>${totalNutrients['WATER (g)'].toFixed(2)}</td>
-            <td>${totalNutrients['PROTCNT (g)'].toFixed(2)}</td>
-            <td>${totalNutrients['FAT (g)'].toFixed(2)}</td>
-            <td>${totalNutrients['CHOAVLDF (g)'].toFixed(2)}</td>
-            <td>${totalNutrients['FIBTG (g)'].toFixed(2)}</td>
-            <td>${totalNutrients['CA (mg)'].toFixed(2)}</td>
-            <td>${totalNutrients['FE (mg)'].toFixed(2)}</td>
-            <td>${totalNutrients['ZN (mg)'].toFixed(2)}</td>
-            <td>${totalNutrients['VITA_RAE (mcg)'].toFixed(2)}</td>
-            <td>${totalNutrients['VITD (mcg)'].toFixed(2)}</td>
-            <td>${totalNutrients['THIA (mg)'].toFixed(2)}</td>
-            <td>${totalNutrients['RIBF (mg)'].toFixed(2)}</td>
-            <td>${totalNutrients['NIA (mg)'].toFixed(2)}</td>
-            <td>${totalNutrients['PANTAC (mg)'].toFixed(2)}</td>
-            <td>${totalNutrients['VITB6 (mg)'].toFixed(2)}</td>
-            <td>${totalNutrients['FOL (mcg)'].toFixed(2)}</td>
+            <td>${totalNutrients['Energy'].toFixed(2)}</td>
+            <td>${totalNutrients['Water'].toFixed(2)}</td>
+            <td>${totalNutrients['Protein'].toFixed(2)}</td>
+            <td>${totalNutrients['Fat'].toFixed(2)}</td>
+            <td>${totalNutrients['Carbo'].toFixed(2)}</td>
+            <td>${totalNutrients['Fiber'].toFixed(2)}</td>
+            <td>${totalNutrients['CA'].toFixed(2)}</td>
+            <td>${totalNutrients['FE'].toFixed(2)}</td>
+            <td>${totalNutrients['ZN'].toFixed(2)}</td>
+            <td>${totalNutrients['VA'].toFixed(2)}</td>
+            <td>${totalNutrients['VB1'].toFixed(2)}</td>
+            <td>${totalNutrients['VB2'].toFixed(2)}</td>
+            <td>${totalNutrients['VB3'].toFixed(2)}</td>
+            <td>${totalNutrients['VB6'].toFixed(2)}</td>
+            <td>${totalNutrients['Fol'].toFixed(2)}</td>
+            <td>${totalNutrients['VB12'].toFixed(2)}</td>
+            <td>${totalNutrients['VC'].toFixed(2)}</td>
+            <td>${totalNutrients['VD'].toFixed(2)}</td>
+            <td>${totalNutrients['NA'].toFixed(2)}</td>
         `;
         mealTbody.appendChild(tr);
     } else {
@@ -394,7 +398,7 @@ function submitChartForm() {
     }
 
     // Daily total 행의 값을 가져오기
-    document.getElementById('currentMealEnerckcal').value = dailyTotalNutrients['ENERC (kcal)'].toFixed(2);
+    document.getElementById('currentMealEnerckcal').value = dailyTotalNutrients['Energy'].toFixed(2);
     document.getElementById('currentMealEnerckj').value = (dailyTotalNutrients['ENERC (kcal)'] * 4.184).toFixed(2); // kcal to kJ conversion
     document.getElementById('currentMealWaterg').value = dailyTotalNutrients['WATER (g)'].toFixed(2);
     document.getElementById('currentMealProtcntg').value = dailyTotalNutrients['PROTCNT (g)'].toFixed(2);

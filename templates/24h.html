@@ -137,23 +137,25 @@
                             <tr>
                                 <th>Category</th>
                                 <th>Food Name</th>
-                                <th>ENERC (kcal)</th>
-                                <th>WATER (g)</th>
-                                <th>PROTCNT (g)</th>
-                                <th>FAT (g)</th>
-                                <th>CHOAVLDF (g)</th>
-                                <th>FIBTG (g)</th>
+                                <th>Energy (kcal)</th>
+                                <th>Water (g)</th>
+                                <th>Protein (g)</th>
+                                <th>Fat (g)</th>
+                                <th>Carbohydrate (g)</th>
+                                <th>Fiber (g)</th>
                                 <th>CA (mg)</th>
                                 <th>FE (mg)</th>
                                 <th>ZN (mg)</th>
-                                <th>VITA_RAE (mcg)</th>
-                                <th>VITD (mcg)</th>
-                                <th>THIA (mg)</th>
-                                <th>RIBF (mg)</th>
-                                <th>NIA (mg)</th>
-                                <th>PANTAC (mg)</th>
-                                <th>VITB6 (mg)</th>
-                                <th>FOL (mcg)</th>
+                                <th>Vitamin A_RAE (mcg)</th>
+                                <th>Vitamin B1 (mg)</th>
+                                <th>Vitamin B2 (mg)</th>
+                                <th>Vitamin B3 (mg)</th>
+                                <th>Vitamin B6 (mg)</th>
+                                <th>Folic Acid (mcg)</th>
+                                <th>Vitamin B12 (mcg)</th>
+                                <th>Vitamin C (mg)</th>
+                                <th>Vitamin D (mcg)</th>
+                                <th>Na (mg)</th>
                             </tr>
                         </thead>
                         <tbody id="nutrition-tbody">
@@ -168,10 +170,31 @@
                     </select>
                     <button type="button" onclick="exportExcel()">Export to Excel</button>
                     <button type="button" onclick="exportExcel()">Export to Excel (Group)</button>
-                    <button type="button" onclick="submitChartForm()">Generate Chart</button>
+                    <form id="chartForm" action="/runchart" method="post">
+                        <input type="hidden" id="currentMealEnerckcal" name="currentMealEnerckcal">
+                        <input type="hidden" id="currentMealEnerckj" name="currentMealEnerckj">
+                        <input type="hidden" id="currentMealWaterg" name="currentMealWaterg">
+                        <input type="hidden" id="currentMealProtcntg" name="currentMealProtcntg">
+                        <input type="hidden" id="currentMealFatg" name="currentMealFatg">
+                        <input type="hidden" id="currentMealChoavldfg" name="currentMealChoavldfg">
+                        <input type="hidden" id="currentMealFibtgg" name="currentMealFibtgg">
+                        <input type="hidden" id="currentMealAshg" name="currentMealAshg">
+                        <input type="hidden" id="currentMealCamg" name="currentMealCamg">
+                        <input type="hidden" id="currentMealFemg" name="currentMealFemg">
+                        <input type="hidden" id="currentMealZnmg" name="currentMealZnmg">
+                        <input type="hidden" id="currentMealVitaraemcg" name="currentMealVitaraemcg">
+                        <input type="hidden" id="currentMealVitdmcg" name="currentMealVitdmcg">
+                        <input type="hidden" id="currentMealThiamg" name="currentMealThiamg">
+                        <input type="hidden" id="currentMealRibfmg" name="currentMealRibfmg">
+                        <input type="hidden" id="currentMealNiamg" name="currentMealNiamg">
+                        <input type="hidden" id="currentMealPantacmg" name="currentMealPantacmg">
+                        <input type="hidden" id="currentMealVitb6mg" name="currentMealVitb6mg">
+                        <input type="hidden" id="currentMealFolmcg" name="currentMealFolmcg">
+                        <button type="button" onclick="submitChartForm()">Generate Chart</button>
+                    </form>
                 </div>
             </div>
-            <div id="FoodGroupIntake" class="tabcontent">
+            <!-- <div id="FoodGroupIntake" class="tabcontent">
                 <form id="chartForm" action="/runchart" method="post">
                     <input type="hidden" id="currentMealEnerckcal" name="currentMealEnerckcal">
                     <input type="hidden" id="currentMealEnerckj" name="currentMealEnerckj">
@@ -193,7 +216,7 @@
                     <input type="hidden" id="currentMealVitb6mg" name="currentMealVitb6mg">
                     <input type="hidden" id="currentMealFolmcg" name="currentMealFolmcg">
                 </form>
-            </div>
+            </div> -->
         </div>
     </div>
 
