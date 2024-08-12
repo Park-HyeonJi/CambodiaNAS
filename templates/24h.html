@@ -8,6 +8,7 @@
     <link rel="stylesheet" href="{{ url_for('static', filename='style.css') }}">
     <link rel="stylesheet" href="{{ url_for('static', filename='24h.css') }}">
     <script src="{{ url_for('static', filename='24h.js') }}" defer></script>
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/xlsx/0.16.2/xlsx.full.min.js"></script>
 </head>
 <body>
     <h2>24Hour Recall Method</h2>
@@ -40,6 +41,7 @@
                     <h3>List Of Foods Consumed</h3>
                     <div class="food-data-content">
                         <div class="time-categories">
+                            <b>Time</b>
                             <button type="button" onclick="setActive(this)" data-category="Breakfast">Breakfast</button>
                             <button type="button" onclick="setActive(this)" data-category="Morning Snack">Morning Snack</button>
                             <button type="button" onclick="setActive(this)" data-category="Lunch">Lunch</button>

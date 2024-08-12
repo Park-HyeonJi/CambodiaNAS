@@ -390,7 +390,13 @@ function copyData() {
     // Copy data functionality
 }
 
-// 3행 차트
+// 엑셀로 내보내기
+function exportExcel() {
+    
+
+}
+
+// 차트 생성
 function submitChartForm() {
     if (!dailyTotalNutrients) {
         alert('Daily total nutrients not calculated yet.');
