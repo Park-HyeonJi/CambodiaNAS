@@ -27,19 +27,23 @@ function loadAllFoodList() {
     fetch(`/get_food_list?userGroup=${userGroup}&userID=${userID}&viewDate=${viewDate}`)
     .then(response => response.json())
     .then(data => {
+        if (!data || typeof data !== 'object') {
+            throw new Error('Invalid data format received from server');
+        }
+
         // 기존 데이터를 초기화
         var mealTbody = document.getElementById('nutrition-tbody');
         mealTbody.innerHTML = '';
 
-        data['Morning Snack'] = (data['Morning Snack'] || [])
-        .concat(data['Morning Snack1'] || [])
-        .concat(data['Morning Snack2'] || [])
-        .concat(data['Morning snack'] || []);
+        // data['Morning Snack'] = (data['Morning Snack'] || [])
+        // .concat(data['Morning Snack1'] || [])
+        // .concat(data['Morning Snack2'] || [])
+        // .concat(data['Morning snack'] || []);
     
         // 불필요한 다른 Morning Snack 관련 키 삭제
-        delete data['Morning Snack1'];
-        delete data['Morning Snack2'];
-        delete data['Morning snack'];
+        // delete data['Morning Snack1'];
+        // delete data['Morning Snack2'];
+        // delete data['Morning snack'];
 
         var categories = ['Breakfast', 'Morning Snack', 'Lunch', 'Afternoon Snack', 'Dinner', 'Midnight Snack'];
         var foods = [];
@@ -49,7 +53,7 @@ function loadAllFoodList() {
                 data[category].forEach(food => {
                     //promises.push(loadNutrition(food['Food Code'], food['Food Name'], category));
                     // 중복 제거 부분 수정
-                    if (!foods.some(item => item['FOODNAME'] === food['FOODNAME'] && item['Category'] === category)) {
+                    if (!foods.some(item => item['FOODID'] === food['FOODID'] && item['Category'] === category)) {
                         foods.push({ ...food, 'Category': category });
                     }
                 });
@@ -77,6 +81,10 @@ function loadAllFoodList() {
 
             // 총합을 테이블의 마지막 행에 추가
             appendTotalRow(totalNutrients);
+        })
+        .catch(error => {
+            console.error('Error processing nutrition data:', error);
+            // 필요시 UI에서 사용자에게 오류를 알리거나 오류 처리를 추가
         });
     })
     .catch(error => {
@@ -320,6 +328,7 @@ function addToFoodList() {
     .then(data => {
         if (data.status === 'success') {
             loadFoodList();
+            loadAllFoodList();
         } else {
             alert("Error adding food: " + data.message);
         }
@@ -336,7 +345,7 @@ function loadFoodList() {
     fetch(`/get_food_list?userGroup=${userGroup}&userID=${userID}&viewDate=${viewDate}`)
     .then(response => response.json())
     .then(data => {
-        console.log('Fetched data:', data); // 데이터 확인을 위해 추가
+        // console.log('Fetched data:', data); // 데이터 확인을 위해 추가
         document.querySelectorAll('.food-items tbody').forEach(tbody => tbody.innerHTML = ""); // 기존 데이터를 초기화
 
         var tableBody = document.querySelector(`.food-items tbody[data-category='${activeCategory}']`);
