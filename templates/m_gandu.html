@@ -1,0 +1,138 @@
+{% extends 'base.html' %}
+{% block content %}
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <title>Group and User Management</title>
+    <link rel="stylesheet" href="{{ url_for('static', filename='style.css') }}">
+    <link rel="stylesheet" href="{{ url_for('static', filename='m_gandu.css') }}">
+    <style>
+        .selected {
+            background-color: #d3d3d3;
+        }
+    </style>
+</head>
+<body>
+    <div>
+        <h2>Group Management</h2>
+    </div>
+    <div class="container">
+        <div class="group-management">
+            <div class="group-list">
+                <h3>Group List</h3>
+                <input type="file" id="file-upload" />
+                <div class="group-table">
+                    <table>
+                        <thead>
+                            <tr>
+                                <th>Group Name</th>
+                            </tr>
+                        </thead>
+                        <tbody id="group-list">
+                            <!-- Group names will be inserted here dynamically -->
+                        </tbody>
+                    </table>
+                </div>
+                <button onclick="addGroup()">Add Group</button>
+            </div>
+    
+            <div id="group-details" class="group-details">
+                <h3>Group Information</h3>
+                <form id="group-form">
+                    <div>
+                        <label for="group-name">Group Name:</label>
+                        <input type="text" id="group-name" name="group-name">
+                    </div>
+                    <div>
+                        <label for="group-desc">Group Description:</label>
+                        <input type="text" id="group-desc" name="group-desc">
+                    </div>
+                    <div>
+                        <button type="button" onclick="saveGroup()">Save Current Group Information</button>
+                    </div>
+                    <div>
+                        <button type="button" onclick="deleteGroup()">Delete</button>
+                    </div>
+                </form>
+            </div>
+        </div>
+    </div>    
+    <div>
+        <h2>User Management</h2>
+    </div>
+    <div class="container">
+        <div class="group-selection">
+            <h3>Group Select</h3>
+            <select id="group-select" onchange="loadUsers()">
+                <!-- Group options will be inserted here dynamically -->
+            </select>
+        </div>
+    </div>
+    <div class="user-management">
+        <div class="user-list">
+            <h3>List Of Users In The Current Group</h3>
+            <div class="search-container">
+                <label for="search-id">ID Search:</label>
+                <input type="text" id="search-id" oninput="searchUser()">
+            </div>
+            <div class="user-table-container">
+                <table>
+                    <thead>
+                        <tr>
+                            <th>ID</th>
+                            <th>Name</th>
+                            <th>Gender</th>
+                            <th>Age</th>
+                            <th>Height(cm)</th>
+                            <th>Weight(Kg)</th>
+                        </tr>
+                    </thead>
+                    <tbody id="user-list">
+                        <!-- User data will be inserted here dynamically -->
+                    </tbody>
+                </table>
+            </div>
+            <div><button onclick="addUser()">Add user</button></div>
+            <div><button onclick="downloadExcel()">Download Excel</button></div>
+        </div>
+        <div class="user-details" id="user-details">
+            <h3>User Information</h3>
+            <form id="user-form">
+                <div>
+                    <label for="user-id">ID:</label>
+                    <input type="text" id="user-id" name="user-id">
+                </div>
+                <div>
+                    <label for="user-name">Name:</label>
+                    <input type="text" id="user-name" name="user-name">
+                </div>
+                <div>
+                    <label for="user-gender">Gender:</label>
+                    <select id="user-gender" name="user-gender">
+                        <option value="male">male</option>
+                        <option value="female">female</option>
+                    </select>
+                </div>
+                <div>
+                    <label for="user-age">Age:</label>
+                    <input type="number" id="user-age" name="user-age">
+                </div>
+                <div>
+                    <label for="user-height">Height:</label>
+                    <input type="number" id="user-height" name="user-height">
+                </div>
+                <div>
+                    <label for="user-weight">Weight:</label>
+                    <input type="number" id="user-weight" name="user-weight">
+                </div>
+                <div><button type="button" onclick="saveUser()">Apply</button></div>
+                <div><button class="button" onclick="deleteUser()">Delete</button></div>
+            </form>
+        </div>
+    </div>
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/xlsx/0.17.0/xlsx.full.min.js"></script>
+    <script src="{{ url_for('static', filename='m_gandu.js') }}"></script>
+</body>
+</html>
+{% endblock %}
