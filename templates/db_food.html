@@ -4,7 +4,7 @@
 <html lang="en">
 <head>
     <meta charset="UTF-8">
-    <title>Food DB Editor</title>
+    <title>Edit Food & Food Ingredient DB</title>
     <link rel="stylesheet" href="{{ url_for('static', filename='style.css') }}">
     <link rel="stylesheet" href="{{ url_for('static', filename='db_food.css') }}">
 </head>
@@ -18,12 +18,12 @@
                 <div class="search-options">
                     <label>
                         <input type="radio" name="searchType" value="code" checked onclick="toggleInputFields()">
-                        Food Code
+                        FOODID
                     </label>
                     <input type="text" id="codeInput">
                     <label>
                         <input type="radio" name="searchType" value="name" onclick="toggleInputFields()">
-                        Food Name
+                        FOODNAME
                     </label>
                     <input type="text" id="nameInput" disabled>
                     <button type="button" onclick="searchFood()">Search</button>
@@ -31,8 +31,8 @@
                 <table id="foodTable" class="food-table">
                     <thead>
                         <tr>
-                            <th>Food Code</th>
-                            <th>Food Name</th>
+                            <th>FOODID</th>
+                            <th>FOODNAME</th>
                         </tr>
                     </thead>
                     <tbody>
@@ -40,29 +40,43 @@
                     </tbody>
                 </table>
                 <div class="pagination">
-                    <button type="button">«</button>
-                    <button type="button">‹</button>
-                    <span>Page 1 of 0</span>
-                    <button type="button">›</button>
-                    <button type="button">»</button>
-                    <select>
+                    <button id="prevPageFoodBtn">Previous</button>
+                    <button id="nextPageFoodBtn">Next</button>                    
+                    <select id="rowsPerPageFood">
+                        <option value="10">10</option>
                         <option value="30">30</option>
                         <option value="50">50</option>
-                        <option value="100">100</option>
                     </select>
                 </div>
-                <button type="button">Apply Food</button>
-                <button type="button">Add Food</button>
-                <button type="button">Delete Food</button>
+                <button id="editFoodBtn" type="button">Edit Food</button>
+                <button id="addFoodBtn" type="button">Add Food</button>
+                <button id="deleteFoodBtn" type="button">Delete Food</button>
+                <input type="hidden" id="selectedFoodID" value="">
+                <input type="hidden" id="selectedFoodName" value="">
             </div>
+
             <!-- Food Ingredient -->
             <div class="section">
                 <h3>Edit Food Ingredient</h3>
-                <table class="food-table">
+                <div class="search-options">
+                    <label>
+                        <input type="radio" name="ingredientSearchType" value="ingredientCode" checked onclick="toggleIngredientInputFields()">
+                        INGID
+                    </label>
+                    <input type="text" id="ingredientCodeInput">
+                    <label>
+                        <input type="radio" name="ingredientSearchType" value="ingredientName" onclick="toggleIngredientInputFields()">
+                        INGNAME_EN
+                    </label>
+                    <input type="text" id="ingredientNameInput" disabled>
+                    <button type="button" onclick="searchIngredient()">Search</button>
+                </div>
+                <div id="duplicateOptionsContainer"></div>
+                <table id="ingredientTable" class="food-table">
                     <thead>
                         <tr>
-                            <th>Ingredient Code</th>
-                            <th>Ingredient</th>
+                            <th>INGID</th>
+                            <th>INGNAME_EN</th>
                             <th>1 person (g)</th>
                         </tr>
                     </thead>
@@ -70,11 +84,20 @@
                         <!-- Ingredients will be dynamically added here -->
                     </tbody>
                 </table>
-                <button type="button">Apply Food Ingredient</button>
-                <button type="button">Add Food Ingredient</button>
-                <button type="button">Delete Food Ingredient</button>
+                <div class="pagination">
+                    <button id="prevPageIngredientBtn">Previous</button>
+                    <button id="nextPageIngredientBtn">Next</button>                    
+                    <select id="rowsPerPageIngredient">
+                        <option value="10">10</option>
+                        <option value="30">30</option>
+                        <option value="50">50</option>
+                    </select>
+                </div>
+                <button id="editIngredientBtn" type="button">Edit Food Ingredient</button>
+                <button id="addIngredientBtn" type="button">Add Food Ingredient</button>
+                <button id="deleteIngredientBtn" type="button">Delete Food Ingredient</button>
             </div>
-    </div>
+        </div>
     </div>
     <script src="{{ url_for('static', filename='db_food.js') }}"></script>
 </body>
