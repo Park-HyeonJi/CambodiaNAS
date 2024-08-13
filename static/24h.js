@@ -251,6 +251,7 @@ function loadUsers() {
     selectedUserId = null;
 }
 
+// 두 번째 컨테이너
 function toggleInputFields() {
     var codeInput = document.getElementById("codeInput");
     var nameInput = document.getElementById("nameInput");
@@ -265,7 +266,12 @@ function toggleInputFields() {
     }
 }
 
-// 두 번째 컨테이너
+// Pagination
+let currentPage = 1;
+const limit = 10; // 페이지당 표시할 아이템 수
+let totalPages = 1;
+let currentSearchResults = []; // 현재 검색 결과를 저장하는 배열
+
 function searchFood() {
     var searchType = document.querySelector('input[name="searchType"]:checked').value;
     var searchValue = (searchType === "code") ? document.getElementById("codeInput").value : document.getElementById("nameInput").value;
@@ -279,27 +285,61 @@ function searchFood() {
     })
     .then(response => response.json())
     .then(data => {
-        console.log(data)
-        
-        var tableBody = document.querySelector("#foodTable tbody");
-        tableBody.innerHTML = "";
+        // console.log(data)
+        // 중복 제거
+        const uniqueResults = [];
+        const seenCodes = new Set();
 
-        var uniqueFoods = [];
         data.forEach(row => {
-            if (!uniqueFoods.some(food => food['FOODNAME'] === row['FOODNAME'])) {
-                uniqueFoods.push(row);
-                var tr = document.createElement("tr");
-                tr.innerHTML = `<td>${row['FOODID']}</td><td>${row['FOODNAME']}</td>`;
-                tr.onclick = function() {
-                    tableBody.querySelectorAll('tr').forEach(r => r.style.backgroundColor = '');
-                    tr.style.backgroundColor = 'lightgray';
-                    tr.dataset.selected = true;
-                };
-                tableBody.appendChild(tr);
+            if (!seenCodes.has(row['FOODID'])) {
+                seenCodes.add(row['FOODID']);
+                uniqueResults.push(row);
             }
         });
+
+        currentSearchResults = uniqueResults;
+        totalPages = Math.ceil(currentSearchResults.length / limit);
+        currentPage = 1; // 검색 후 첫 페이지로 이동
+        renderSearchResults(); // 페이지를 초기화하며 결과를 렌더링
     });
 }
+
+function renderSearchResults() {
+    const tableBody = document.querySelector("#foodTable tbody");
+    tableBody.innerHTML = ""; // 기존 데이터를 초기화
+
+    const start = (currentPage - 1) * limit;
+    const end = start + limit;
+    const resultsToShow = currentSearchResults.slice(start, end);
+
+    resultsToShow.forEach(row => {
+        var tr = document.createElement("tr");
+        tr.innerHTML = `<td>${row['FOODID']}</td><td>${row['FOODNAME']}</td>`;
+        tr.onclick = function() {
+            tableBody.querySelectorAll('tr').forEach(r => r.style.backgroundColor = '');
+            tr.style.backgroundColor = 'lightgray';
+            tr.dataset.selected = true;
+        };
+        tableBody.appendChild(tr);
+    });
+
+    document.getElementById('prevPageFoodBtn').disabled = currentPage === 1;
+    document.getElementById('nextPageFoodBtn').disabled = currentPage === totalPages;
+}
+
+document.getElementById('prevPageFoodBtn').addEventListener('click', () => {
+    if (currentPage > 1) {
+        currentPage--;
+        renderSearchResults();
+    }
+});
+
+document.getElementById('nextPageFoodBtn').addEventListener('click', () => {
+    if (currentPage < totalPages) {
+        currentPage++;
+        renderSearchResults();
+    }
+});
 
 function addToFoodList() {
     var selectedRow = document.querySelector("#foodTable tbody tr[data-selected='true']");

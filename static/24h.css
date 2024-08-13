@@ -72,6 +72,16 @@
     flex-grow: 1;
 } */
 
+.pagination {
+    display: flex;
+    justify-content: center;
+    margin-top: 10px;
+}
+
+.pagination button {
+    margin-right: 10px; /* 왼쪽과 오른쪽에 각각 10px 간격 추가 */
+}
+
 .add-food-button {
     margin-top: 10px;
     display: flex;
