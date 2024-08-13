@@ -478,7 +478,7 @@ def delete_ingredientDB():
 # 재료 코드
 @app.route('/get_ingredientsDB', methods=['GET'])
 @login_required
-def get_ingredients():
+def get_ingredientsDB():
     try:
         ing_id = request.args.get('INGID')  # 쿼리 파라미터에서 INGID를 가져옴
 
@@ -509,7 +509,7 @@ def search_food():
         search_type = data['searchType']
         search_value = data['searchValue']
         
-         # 엑셀 데이터 읽기
+        # 엑셀 데이터 읽기
         food_data = pd.read_excel(food_data_path)
         
         if search_type == "code":
