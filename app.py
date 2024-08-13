@@ -79,7 +79,6 @@ def get_groups():
         app.logger.error(f"Error in get_groups: {e}")
         return jsonify({'status': 'error', 'message': str(e)}), 500
 
-
 @app.route('/save_group', methods=['POST'])
 @login_required
 def save_group():
@@ -97,8 +96,10 @@ def save_group():
             groups_df.loc[groups_df['name'] == group_name, 'description'] = group_desc
             app.logger.info(f"Updated group description for {group_name}")
         else:
-            app.logger.warning(f"Group {group_name} not found")
-            return jsonify({'status': 'error', 'message': 'Group not found'}), 404
+            # 그룹이 존재하지 않으면 새 그룹 추가
+            new_group = pd.DataFrame({'name': [group_name], 'description': [group_desc]})
+            groups_df = pd.concat([groups_df, new_group], ignore_index=True)
+            app.logger.info(f"Added new group {group_name}")
 
         save_excel_data(groups_df, users_df)
         app.logger.info(f"Group data saved successfully for {group_name}")
@@ -106,8 +107,6 @@ def save_group():
     except Exception as e:
         app.logger.error(f"Error in save_group: {e}")
         return jsonify({'status': 'error', 'message': str(e)}), 500
-
-
 
 @app.route('/delete_group', methods=['POST'])
 @login_required

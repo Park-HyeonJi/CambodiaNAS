@@ -86,3 +86,4 @@ Traceback (most recent call last):
     return send_file(output, attachment_filename=f'{group_name}_users.xlsx', as_attachment=True)
            ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
 TypeError: send_file() got an unexpected keyword argument 'attachment_filename'
+Error in save_group: 'DataFrame' object has no attribute 'append'
