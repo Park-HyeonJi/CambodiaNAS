@@ -413,25 +413,19 @@ function submitChartForm() {
     }
 
     // Daily total 행의 값을 가져오기
-    document.getElementById('currentMealEnerckcal').value = dailyTotalNutrients['Energy'].toFixed(2);
-    document.getElementById('currentMealEnerckj').value = (dailyTotalNutrients['ENERC (kcal)'] * 4.184).toFixed(2); // kcal to kJ conversion
-    document.getElementById('currentMealWaterg').value = dailyTotalNutrients['WATER (g)'].toFixed(2);
-    document.getElementById('currentMealProtcntg').value = dailyTotalNutrients['PROTCNT (g)'].toFixed(2);
-    document.getElementById('currentMealFatg').value = dailyTotalNutrients['FAT (g)'].toFixed(2);
-    document.getElementById('currentMealChoavldfg').value = dailyTotalNutrients['CHOAVLDF (g)'].toFixed(2);
-    document.getElementById('currentMealFibtgg').value = dailyTotalNutrients['FIBTG (g)'].toFixed(2);
-    document.getElementById('currentMealAshg').value = 0; // Assuming this value is not available in dailyTotalNutrients
-    document.getElementById('currentMealCamg').value = dailyTotalNutrients['CA (mg)'].toFixed(2);
-    document.getElementById('currentMealFemg').value = dailyTotalNutrients['FE (mg)'].toFixed(2);
-    document.getElementById('currentMealZnmg').value = dailyTotalNutrients['ZN (mg)'].toFixed(2);
-    document.getElementById('currentMealVitaraemcg').value = dailyTotalNutrients['VITA_RAE (mcg)'].toFixed(2);
-    document.getElementById('currentMealVitdmcg').value = dailyTotalNutrients['VITD (mcg)'].toFixed(2);
-    document.getElementById('currentMealThiamg').value = dailyTotalNutrients['THIA (mg)'].toFixed(2);
-    document.getElementById('currentMealRibfmg').value = dailyTotalNutrients['RIBF (mg)'].toFixed(2);
-    document.getElementById('currentMealNiamg').value = dailyTotalNutrients['NIA (mg)'].toFixed(2);
-    document.getElementById('currentMealPantacmg').value = dailyTotalNutrients['PANTAC (mg)'].toFixed(2);
-    document.getElementById('currentMealVitb6mg').value = dailyTotalNutrients['VITB6 (mg)'].toFixed(2);
-    document.getElementById('currentMealFolmcg').value = dailyTotalNutrients['FOL (mcg)'].toFixed(2);
+    document.getElementById('currentMealEnergy').value = dailyTotalNutrients['Energy'].toFixed(2);
+    document.getElementById('currentMealProtein').value = dailyTotalNutrients['Protein'].toFixed(2);
+    document.getElementById('currentMealCA').value = dailyTotalNutrients['CA'].toFixed(2);
+    document.getElementById('currentMealFE').value = dailyTotalNutrients['FE'].toFixed(2);
+    document.getElementById('currentMealZN').value = dailyTotalNutrients['ZN'].toFixed(2);
+    document.getElementById('currentMealVA').value = dailyTotalNutrients['VA'].toFixed(2);
+    document.getElementById('currentMealVB1').value = dailyTotalNutrients['VB1'].toFixed(2);
+    document.getElementById('currentMealVB2').value = dailyTotalNutrients['VB2'].toFixed(2);
+    document.getElementById('currentMealVB3').value = dailyTotalNutrients['VB3'].toFixed(2);
+    document.getElementById('currentMealFol').value = dailyTotalNutrients['Fol'].toFixed(2);
+    document.getElementById('currentMealVC').value = dailyTotalNutrients['VC'].toFixed(2);
+    document.getElementById('currentMealVD').value = dailyTotalNutrients['VD'].toFixed(2);
+    document.getElementById('currentMealNA').value = dailyTotalNutrients['NA'].toFixed(2);
 
     // 폼 제출
     document.getElementById('chartForm').submit();

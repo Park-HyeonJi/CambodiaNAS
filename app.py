@@ -669,25 +669,19 @@ def run_python_code():
     from bar import bar; 
 
     current_meal_data = {
-        'enerckcal': request.form.get('currentMealEnerckcal'),
-        'enerckj': request.form.get('currentMealEnerckj'),
-        'waterg': request.form.get('currentMealWaterg'),
-        'protcntg': request.form.get('currentMealProtcntg'),
-        'fatg': request.form.get('currentMealFatg'),
-        'choavldfg': request.form.get('currentMealChoavldfg'),
-        'fibtgg': request.form.get('currentMealFibtgg'),
-        'ashg': request.form.get('currentMealAshg'),
-        'camg': request.form.get('currentMealCamg'),
-        'femg': request.form.get('currentMealFemg'),
-        'znmg': request.form.get('currentMealZnmg'),
-        'vitaraemcg': request.form.get('currentMealVitaraemcg'),
-        'vitdmcg': request.form.get('currentMealVitdmcg'),
-        'thiamg': request.form.get('currentMealThiamg'),
-        'ribfmg': request.form.get('currentMealRibfmg'),
-        'niamg': request.form.get('currentMealNiamg'),
-        'pantacmg': request.form.get('currentMealPantacmg'),
-        'vitb6mg': request.form.get('currentMealVitb6mg'),
-        'folmcg': request.form.get('currentMealFolmcg'),
+        'Energy': request.form.get('currentMealEnergy'),
+        'Protein': request.form.get('currentMealProtein'),
+        'CA': request.form.get('currentMealCA'),
+        'FE': request.form.get('currentMealFE'),
+        'ZN': request.form.get('currentMealZN'),
+        'VA': request.form.get('currentMealVA'),
+        'VB1': request.form.get('currentMealVB1'),
+        'VB2': request.form.get('currentMealVB2'),
+        'VB': request.form.get('currentMealVB3'),
+        'Fol': request.form.get('currentMealFol'),
+        'VC': request.form.get('currentMealVC'),
+        'VD': request.form.get('currentMealVD'),
+        'NA': request.form.get('currentMealNA'),
     }
 
     result = bar(current_meal_data) 
