@@ -5,15 +5,8 @@ import numpy as np
 import os
 import logging
 from logging.handlers import RotatingFileHandler
-<<<<<<< HEAD
-  
-=======
-from barchart import barchart
-from radarchart import radarchart
 from io import BytesIO
 
-
->>>>>>> PHJ_m
 app = Flask(__name__)
 app.secret_key = 'your_secret_key'
 
@@ -852,11 +845,9 @@ def get_food_ingredients():
 
 @app.route('/runchart', methods=['POST'])
 def run_python_code():
-<<<<<<< HEAD
+
     from bar import bar; 
 
-=======
->>>>>>> PHJ_m
     current_meal_data = {
         'Energy': request.form.get('currentMealEnergy'),
         'Protein': request.form.get('currentMealProtein'),
@@ -877,10 +868,8 @@ def run_python_code():
 
     return render_template('24h_chart.html', result=result)
 
-<<<<<<< HEAD
+
 # 로그아웃
-=======
->>>>>>> PHJ_m
 @app.route('/logout')
 @login_required
 def logout():
