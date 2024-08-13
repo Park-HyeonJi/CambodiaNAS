@@ -5,8 +5,6 @@ document.addEventListener('DOMContentLoaded', () => {
     // Breakfast 버튼을 디폴트로 활성화
     const defaultCategory = document.querySelector('.time-categories button[data-category="Breakfast"]');
     setActive(defaultCategory);
-
-    loadAllFoodList();
 });
 
 // time-categroeis 버튼 클릭 시 호출
@@ -31,19 +29,23 @@ function loadAllFoodList() {
             throw new Error('Invalid data format received from server');
         }
 
+         // 데이터 내의 NaN 값을 null로 변환
+        // for (let category in data) {
+        //     if (data.hasOwnProperty(category)) {
+        //         data[category] = data[category].map(food => {
+        //             for (let key in food) {
+        //                 if (isNaN(food[key])) {
+        //                     food[key] = 0; // 또는 원하는 다른 기본값으로 설정
+        //                 }
+        //             }
+        //             return food;
+        //         });
+        //     }
+        // }
+
         // 기존 데이터를 초기화
         var mealTbody = document.getElementById('nutrition-tbody');
         mealTbody.innerHTML = '';
-
-        // data['Morning Snack'] = (data['Morning Snack'] || [])
-        // .concat(data['Morning Snack1'] || [])
-        // .concat(data['Morning Snack2'] || [])
-        // .concat(data['Morning snack'] || []);
-    
-        // 불필요한 다른 Morning Snack 관련 키 삭제
-        // delete data['Morning Snack1'];
-        // delete data['Morning Snack2'];
-        // delete data['Morning snack'];
 
         var categories = ['Breakfast', 'Morning Snack', 'Lunch', 'Afternoon Snack', 'Dinner', 'Midnight Snack'];
         var foods = [];
@@ -328,7 +330,7 @@ function addToFoodList() {
     .then(data => {
         if (data.status === 'success') {
             loadFoodList();
-            loadAllFoodList();
+            // loadAllFoodList();
         } else {
             alert("Error adding food: " + data.message);
         }
@@ -367,6 +369,7 @@ function loadFoodList() {
                 tableBody.appendChild(tr);
             }
         });
+        loadAllFoodList();
     });
 }
 
