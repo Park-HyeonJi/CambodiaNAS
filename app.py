@@ -5,7 +5,6 @@ import numpy as np
 import os
 import logging
 from logging.handlers import RotatingFileHandler
-from barchart import barchart;
 
 app = Flask(__name__)
 app.secret_key = 'your_secret_key'

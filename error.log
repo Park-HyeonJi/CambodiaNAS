@@ -26,3 +26,6 @@ Error in get_nutrition: 'Food Code'
 Error in get_nutrition: 'Food Code'
 Error in get_nutrition: only list-like objects are allowed to be passed to isin(), you passed a `int`
 Error in get_ingredients: 'Ingredient Code'
+Error in search_food: [Errno 2] No such file or directory: 'data/FoodData.xlsx'
+Error in search_food: [Errno 2] No such file or directory: 'data/FoodData.xlsx'
+Error in search_food: [Errno 2] No such file or directory: 'data/FoodData.xlsx'
