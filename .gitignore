@@ -2,3 +2,4 @@ __pycache__/
 venv/
 error.log
 .DS_Store
+error.log.1
