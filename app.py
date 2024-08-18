@@ -472,6 +472,236 @@ def add_ingredientDB():
         app.logger.error(f"Error in add_ingredientDB: {e}")
         return jsonify({'status': 'error', 'message': str(e)}), 500
 
+@app.route('/search_ingredientDBN', methods=['POST'])
+def search_ingredientDBN():
+    try:
+        data = request.get_json()
+        search_type = data['searchType']
+        search_value = data['searchValue'].strip().lower()  # 검색어의 공백 제거 및 소문자로 변환
+        
+        food_data_path = 'data/FoodData.xlsx'
+        food_data = pd.read_excel(food_data_path)
+
+        # INGNAME_EN 및 INGID 열을 문자열로 변환
+        food_data['INGNAME_EN'] = food_data['INGNAME_EN'].astype(str).str.strip()
+        food_data['INGID'] = food_data['INGID'].astype(str).str.strip()
+
+        if search_type == "ingredientCode":
+            # 'search_value'가 INGID에 포함되는 모든 행을 검색
+            results = food_data[food_data['INGID'].str.lower().str.contains(search_value, case=False, na=False)]
+        else:
+            # 'search_value'가 INGNAME_EN에 포함되는 모든 행을 검색
+            results = food_data[food_data['INGNAME_EN'].str.lower().str.contains(search_value, case=False, na=False)]
+        
+        results = results.fillna('N/A')
+        results = results.drop_duplicates(subset=['INGID', 'INGNAME_EN'])
+        results = results[['INGID', 'INGNAME_EN', '1 person (g)']]
+        
+        # 결과가 없을 경우 빈 리스트 반환
+        result_list = results.to_dict(orient='records')
+        if not result_list:
+            app.logger.info("No results found for search.")
+            return jsonify([])  # 빈 리스트 반환
+        
+        # 결과를 리스트 형식으로 반환
+        return jsonify(result_list)
+    
+    except Exception as e:
+        app.logger.error(f"Error in search_ingredient: {e}")
+        return jsonify({'status': 'error', 'message': str(e)}), 500
+
+@app.route('/get_nutrientDBN', methods=['GET'])
+def get_nutrientDBN():
+    try:
+        ing_id = request.args.get('INGID')
+        
+        if ing_id is None:
+            raise ValueError('INGID parameter is missing')
+        
+        # 데이터 파일에서 영양소 정보를 로드합니다.
+        food_data_path = 'data/FoodData.xlsx'
+        food_data = pd.read_excel(food_data_path)
+
+        # 'INGID'가 문자열일 경우
+        nutrient_data = food_data[food_data['INGID'].astype(str) == ing_id]
+
+        # NaN 값을 'N/A'로 대체
+        nutrient_data = nutrient_data.fillna('N/A')
+        
+        if not nutrient_data.empty:
+            # 영양소 데이터만 반환
+            nutrient_data_json = nutrient_data.iloc[0].to_dict()
+            return jsonify(nutrient_data_json)
+        else:
+            return jsonify({})  # 빈 객체 반환
+
+    except Exception as e:
+        app.logger.error(f"Error in get_nutrient_data: {e}")
+        return jsonify({'status': 'error', 'message': str(e)}), 500
+
+
+@app.route('/add_ingredientDBN', methods=['POST'])
+def add_ingredientDBN():
+    try:
+        data = request.get_json()
+        INGID = data['INGID']
+        INGNAME_EN = data['INGNAME_EN']
+        person_g = data.get('1 person (g)', 100)  # 사용자가 입력하지 않으면 기본값 100
+
+        # 엑셀 파일 경로 설정
+        food_ingredient_data_path = 'data/FoodData.xlsx'
+        temp_food_ingredient_data_path = 'data/FoodData_temp.xlsx'
+
+        # 기존 엑셀 파일 로드
+        food_ingredient_data = pd.read_excel(food_ingredient_data_path)
+
+        # 새로운 행을 NaN이 아닌 실제 값으로 삽입
+        new_row = {col: None for col in food_ingredient_data.columns}  # 기본값 None 설정
+        new_row['FOODID'] = INGID
+        new_row['CLASS'] = None  # CLASS 필드를 null로 처리
+        new_row['FOODNAME'] = INGNAME_EN
+        new_row['INGID'] = INGID
+        new_row['INGNAME'] = None  # INGNAME 필드를 null로 처리
+        new_row['INGNAME_EN'] = INGNAME_EN
+        new_row['INGNAME_SC'] = None  # INGNAME_SC 필드를 null로 처리
+        new_row['1 person (g)'] = person_g
+
+        # 새로운 행을 DataFrame으로 변환하고 기존 데이터에 추가
+        new_ingredient_df = pd.DataFrame([new_row])
+        food_ingredient_data = pd.concat([food_ingredient_data, new_ingredient_df], ignore_index=True)
+
+        # 임시 파일에 저장
+        food_ingredient_data.to_excel(temp_food_ingredient_data_path, index=False)
+
+        # 임시 파일을 실제 파일로 덮어쓰기
+        os.replace(temp_food_ingredient_data_path, food_ingredient_data_path)
+
+        return jsonify({'status': 'success', 'message': 'Ingredient added successfully'})
+    except Exception as e:
+        app.logger.error(f"Error in add_ingredientDB: {e}")
+        return jsonify({'status': 'error', 'message': str(e)}), 500
+    
+@app.route('/edit_ingredientDBN', methods=['POST'])
+@login_required
+def edit_ingredientDBN():
+    try:
+        data = request.get_json()
+        original_INGID = data.get('original_INGID')
+        new_INGID = data.get('new_INGID')
+        INGNAME_EN = data.get('INGNAME_EN')
+
+        # 엑셀 파일 로드
+        food_ingredient_data_path = 'data/FoodData.xlsx'
+        df = pd.read_excel(food_ingredient_data_path)
+
+        # Ensure no NaN values
+        df.fillna('', inplace=True)
+
+        # 조건 설정
+        update_condition = (df['INGID'].astype(str) == str(original_INGID))
+
+        # 데이터가 존재하는지 확인
+        matching_rows = df[update_condition]
+
+        if matching_rows.empty:
+            return jsonify({'status': 'error', 'message': 'No matching entry found to update'}), 404
+
+        # 각 행에 대해 업데이트 수행
+        for idx in matching_rows.index:
+            if str(df.at[idx, 'FOODID']) == str(original_INGID):
+                df.at[idx, 'FOODID'] = new_INGID
+                df.at[idx, 'FOODNAME'] = INGNAME_EN
+                df.at[idx, 'INGID'] = new_INGID
+                df.at[idx, 'INGNAME_EN'] = INGNAME_EN
+            else:
+                df.at[idx, 'INGID'] = new_INGID
+                df.at[idx, 'INGNAME_EN'] = INGNAME_EN
+
+        # 엑셀 파일에 저장
+        df.to_excel(food_ingredient_data_path, index=False)
+
+        return jsonify({'status': 'success'})
+    except Exception as e:
+        return jsonify({'status': 'error', 'message': str(e)}), 500
+
+@app.route('/delete_ingredientDBN', methods=['POST'])
+@login_required
+def delete_ingredientDBN():
+    try:
+        data = request.get_json()
+        app.logger.debug(f"Received data: {data}")
+
+        food_ingredient_data_path = 'data/FoodData.xlsx'
+
+        INGIDs = data.get('INGIDs')
+        app.logger.debug(f"INGIDs: {INGIDs}")
+
+        # 엑셀 파일 읽기
+        df = pd.read_excel(food_ingredient_data_path)
+        
+        if not INGIDs:
+            return jsonify({'status': 'error', 'message': 'No INGIDs provided'}), 400
+
+        # 삭제할 행을 찾고 삭제
+        rows_to_delete = df[df['INGID'].astype(str) == INGIDs]
+        if rows_to_delete.empty:
+            return jsonify({'status': 'error', 'message': 'FOODID not found'}), 404
+
+        df = df[df['INGID'].astype(str) != INGIDs]
+
+
+        # 수정된 데이터프레임을 다시 엑셀에 저장
+        df.to_excel(food_ingredient_data_path, index=False)
+
+        return jsonify({'status': 'success'})
+    except Exception as e:
+        app.logger.error(f"Error in delete_ingredientDB: {e}")
+        return jsonify({'status': 'error', 'message': str(e)}), 500
+
+
+@app.route('/update_nutrient/<ingid>', methods=['POST'])
+def update_nutrient(ingid):
+    FOOD_INGREDIENT_DATA_PATH = 'data/FoodData.xlsx'
+    try:
+        data = request.get_json()
+        df = pd.read_excel(FOOD_INGREDIENT_DATA_PATH)
+
+        # 엑셀 열 이름과 JSON 키 값의 매핑
+        column_mapping = {
+            'energy': 'Energy',
+            'water': 'Water',
+            'protein': 'Protein',
+            'fat': 'Fat',
+            'carbo': 'Carbo',
+            'fiber': 'Fiber',
+            'ca': 'CA',
+            'fe': 'FE',
+            'zn': 'ZN',
+            'va': 'VA',
+            'vb1': 'VB1',
+            'vb2': 'VB2',
+            'vb3': 'VB3',
+            'vb6': 'VB6',
+            'fol': 'Fol',
+            'vb12': 'VB12',
+            'vc': 'VC',
+            'vd': 'VD',
+            'na': 'NA (mg)',  # 공백을 포함한 열 이름
+        }
+
+        update_condition = (df['INGID'].astype(str) == str(ingid))
+
+        if update_condition.any():
+            for key, value in data.items():
+                if key in column_mapping:  # 매핑된 열 이름으로 업데이트
+                    df.loc[update_condition, column_mapping[key]] = value
+
+            df.to_excel(FOOD_INGREDIENT_DATA_PATH, index=False)
+            return jsonify({'status': 'success'})
+        else:
+            return jsonify({'status': 'error', 'message': 'No matching entry found'}), 404
+    except Exception as e:
+        return jsonify({'status': 'error', 'message': str(e)}), 500
 
 
 @app.route('/check_ingredientDB', methods=['POST'])
