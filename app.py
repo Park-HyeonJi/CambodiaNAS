@@ -415,8 +415,6 @@ def add_foodDB():
         app.logger.error(f"Error in add_foodDB: {e}")
         return jsonify({'status': 'error', 'message': str(e)}), 500
 
-
-
 @app.route('/add_ingredientDB', methods=['POST'])
 @login_required
 def add_ingredientDB():
@@ -424,10 +422,12 @@ def add_ingredientDB():
         data = request.get_json()
         INGID = data.get('INGID')
         FOODID = data.get('FOODID')
+        FOODNAME = data.get('FOODNAME')  # 클라이언트로부터 받은 FOODNAME
         
         # 새로운 데이터를 포함하는 행 생성
         new_row = {
             'FOODID': FOODID,
+            'FOODNAME': FOODNAME,  # 데이터베이스에 FOODNAME 추가
             'INGID': INGID,
             'INGNAME_EN': data.get('INGNAME_EN'),
             '1 person (g)': data.get('1 person (g)'),
@@ -455,7 +455,6 @@ def add_ingredientDB():
 
         # 엑셀 파일 업데이트
         food_data_path = 'data/FoodData.xlsx'
-        # 기존 코드를 수정:
         df = pd.read_excel(food_data_path)
         df = pd.concat([df, pd.DataFrame([new_row])], ignore_index=True)
         df.to_excel(food_data_path, index=False)

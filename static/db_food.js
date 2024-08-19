@@ -496,11 +496,20 @@ function addIngredient() {
 }
 
 function applyNewIngredient() {
-    const newRow = document.getElementById('newIngredientRow');
-    const inputINGID = newRow.cells[0].textContent.trim();
-    const inputPersonG = parseFloat(newRow.cells[2].textContent.trim());
+    // 선택된 ingredient 데이터를 가져옴
+    const selectedRow = document.querySelector("#ingredientTableBody tr.selectedRow");
+    
+    if (!selectedRow) {
+        alert("Please select an ingredient to apply.");
+        return;
+    }
+
+    const inputINGID = selectedRow.cells[0].textContent.trim();
+    const inputPersonG = parseFloat(selectedRow.cells[2].textContent.trim());
+    const inputINGNAME_EN = selectedRow.cells[1].textContent.trim();
 
     const FOODID = selectedFoodID; // 현재 선택된 FOODID
+    const FOODNAME = selectedFoodName; // 현재 선택된 FOODNAME
 
     if (!inputINGID || isNaN(inputPersonG)) {
         alert("Please fill in INGID and amount (g).");
@@ -517,9 +526,10 @@ function applyNewIngredient() {
                 // 기존 영양소 데이터를 가져와 새로운 FOODID에 추가
                 const newIngredient = {
                     INGID: ingredient['INGID'],
-                    INGNAME_EN: ingredient['INGNAME_EN'],
+                    INGNAME_EN: inputINGNAME_EN,  // 검색된 이름 사용
                     '1 person (g)': inputPersonG,
                     FOODID: FOODID,  // 새로운 FOODID에 맞게 업데이트
+                    FOODNAME: FOODNAME, // 현재 선택된 FOODNAME 추가
                     Energy: ingredient['Energy'],
                     Water: ingredient['Water'],
                     Protein: ingredient['Protein'],
@@ -552,7 +562,6 @@ function applyNewIngredient() {
             alert("Error fetching ingredient details.");
         });
 }
-
 
 
 function displayDuplicateOptions(duplicateData, newRow) {
