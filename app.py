@@ -449,8 +449,7 @@ def add_ingredientDB():
             'VB12': data.get('VB12'),
             'VC': data.get('VC'),
             'VD': data.get('VD'),
-            'NA': data.get('NA'),
-            'NA (mg)': data.get('NA (mg)')
+            'NA': data.get('NA')
         }
 
         # 엑셀 파일 업데이트
@@ -507,13 +506,19 @@ def search_ingredientDBN():
         data = request.get_json()
         search_type = data['searchType']
         search_value = data['searchValue'].strip().lower()  # 검색어의 공백 제거 및 소문자로 변환
-        
+
         food_data_path = 'data/FoodData.xlsx'
         food_data = pd.read_excel(food_data_path)
 
-        # INGNAME_EN 및 INGID 열을 문자열로 변환
+        # INGID 및 INGNAME_EN 열에 NaN 값을 포함한 행을 제거
+        food_data = food_data.dropna(subset=['INGID', 'INGNAME_EN'])
+
+        # INGNAME_EN 및 INGID 열을 문자열로 변환 및 공백 제거
         food_data['INGNAME_EN'] = food_data['INGNAME_EN'].astype(str).str.strip()
         food_data['INGID'] = food_data['INGID'].astype(str).str.strip()
+
+        # 'N/A' 값을 포함한 행을 제거
+        food_data = food_data[(food_data['INGID'] != 'N/A') & (food_data['INGNAME_EN'] != 'N/A')]
 
         if search_type == "ingredientCode":
             # 'search_value'가 INGID에 포함되는 모든 행을 검색
@@ -538,6 +543,7 @@ def search_ingredientDBN():
     except Exception as e:
         app.logger.error(f"Error in search_ingredient: {e}")
         return jsonify({'status': 'error', 'message': str(e)}), 500
+
 
 @app.route('/get_nutrientDBN', methods=['GET'])
 def get_nutrientDBN():
@@ -715,7 +721,7 @@ def update_nutrient(ingid):
             'vb12': 'VB12',
             'vc': 'VC',
             'vd': 'VD',
-            'na': 'NA (mg)',  # 공백을 포함한 열 이름
+            'na': 'NA',  # 공백을 포함한 열 이름
         }
 
         update_condition = (df['INGID'].astype(str) == str(ingid))
@@ -824,7 +830,7 @@ def edit_ingredientDB():
         scaleFactor = new_person_g / original_person_g
 
         # 각 성분 값들을 업데이트
-        for column in ['Energy', 'Water', 'Protein', 'Fat', 'Carbo', 'Fiber', 'CA', 'FE', 'ZN', 'VA', 'VB1', 'VB2', 'VB3', 'VB6', 'Fol', 'VB12', 'VC', 'VD', 'NA (mg)']:
+        for column in ['Energy', 'Water', 'Protein', 'Fat', 'Carbo', 'Fiber', 'CA', 'FE', 'ZN', 'VA', 'VB1', 'VB2', 'VB3', 'VB6', 'Fol', 'VB12', 'VC', 'VD', 'NA']:
             df.loc[update_condition, column] = df.loc[update_condition, column] * scaleFactor
 
         # INGNAME_EN 및 1 person (g) 값 업데이트

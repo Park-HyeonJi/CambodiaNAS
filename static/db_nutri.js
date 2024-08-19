@@ -85,7 +85,7 @@ function loadNutrientData(ingID) {
             document.getElementById('vb12').value = data.VB12 || '';      // "VB12" 값 설정
             document.getElementById('vc').value = data.VC || '';          // "VC" 값 설정
             document.getElementById('vd').value = data.VD || '';          // "VD" 값 설정
-            document.getElementById('na').value = data['NA (mg)'] || '';  // 공백을 포함한 "NA (mg)" 값 설정
+            document.getElementById('na').value = data.NA || '';  // "NA" 값 설정
         })
         .catch(error => {
             console.error('Error loading nutrient data:', error);
