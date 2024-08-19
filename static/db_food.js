@@ -366,14 +366,14 @@ function addFood() {
 }
 
 function handleContentEditableDefaults() {
-    document.querySelectorAll('#newFoodRow .editable', '#newIngredientRow .editable').forEach(field => {
+    document.querySelectorAll('#newIngredientRow .editable').forEach(field => {
         const placeholder = field.getAttribute('data-placeholder');
         // 초기 상태에서 기본값을 설정합니다.
         if (!field.textContent.trim()) {
             field.textContent = placeholder;
             field.classList.add('placeholder');
         }
-        
+
         // 클릭 또는 포커스 시 기본값을 제거합니다.
         field.addEventListener('focus', () => {
             if (field.classList.contains('placeholder')) {
@@ -413,16 +413,21 @@ function applyNewFood() {
     .then(response => response.json())
     .then(data => {
         if (data.status === 'success') {
-            alert("Food saved successfully!");
+            alert("Food saved successfully! Please add at least one ingredient for the new food item.");
             foodData.push({ FOODID: foodID, FOODNAME: foodName });
             totalRowsFood = foodData.length;
             showPage(currentPageFood); // 테이블 업데이트
             newRow.children[0].setAttribute("contenteditable", "false");
             newRow.children[1].setAttribute("contenteditable", "false");
             newRow.removeAttribute('id');
+
+             // 새로운 음식을 추가한 후, 해당 음식 자동 검색
+             document.getElementById('codeInput').value = foodID;
+             document.querySelector('input[name="searchType"][value="code"]').checked = true;
+             searchFood();  // 검색 함수 호출
+
         } else {
             alert("Error saving food: " + data.message);
-            // 오류가 발생한 경우, 행을 제거하여 UI에서 삭제
             document.querySelector("#foodTable tbody").removeChild(newRow);
         }
         resetAddFoodButton();
@@ -434,6 +439,7 @@ function applyNewFood() {
         resetAddFoodButton();
     });
 }
+
 
 function resetAddFoodButton() {
     var addButton = document.getElementById('addFoodBtn');
@@ -449,8 +455,8 @@ function addIngredient() {
     const newRow = document.createElement("tr");
     newRow.innerHTML = `
         <td class="editable" data-placeholder="Enter INGID" contenteditable="true"></td>
-        <td class="editable" data-placeholder="Enter INGNAME_EN" contenteditable="true"></td>
-        <td class="editable" data-placeholder="Enter amount (g)" contenteditable="true"></td>`;
+        <td class="editable" contenteditable="false"></td>
+        <td class="editable" contenteditable="true"></td>`;
     newRow.id = 'newIngredientRow';
 
     tableBody.appendChild(newRow);
@@ -461,59 +467,102 @@ function addIngredient() {
     addButton.removeEventListener('click', addIngredient);
     addButton.addEventListener('click', applyNewIngredient);
 
+    // `INGID` 입력 시 데이터를 가져오는 이벤트 리스너 추가
+    newRow.cells[0].addEventListener('blur', function() {
+        const ingid = this.textContent.trim();
+        const foodid = selectedFoodID; // 현재 선택된 FOODID
+
+        if (ingid && foodid) {
+            fetch(`/get_ingredient_details?FOODID=${foodid}&INGID=${ingid}`)
+                .then(response => response.json())
+                .then(data => {
+                    if (data.status === 'success' && data.ingredient) {
+                        const ingredient = data.ingredient;
+                        newRow.cells[1].textContent = ingredient.INGNAME_EN || 'N/A';  // INGNAME_EN
+                        newRow.cells[2].textContent = ingredient['1 person (g)'] || '';  // 1 person (g)
+                    } else {
+                        alert('Ingredient not found for this FOODID.');
+                    }
+                })
+                .catch(error => {
+                    console.error('Error fetching ingredient details:', error);
+                    alert("Error fetching ingredient details.");
+                });
+        }
+    });
+
     // 기본값을 배경처럼 보이게 하고, 입력 시 제거하는 코드 추가
     handleContentEditableDefaults();
 }
 
 function applyNewIngredient() {
-    const newRow = document.getElementById('newIngredientRow');
-    const inputINGID = newRow.cells[0].textContent.trim();
-    const inputINGNAME_EN = newRow.cells[1].textContent.trim();
-    const inputPersonG = newRow.cells[2].textContent.trim();
-
-    let foodID = selectedFoodID || inputINGID;
-    let foodName = selectedFoodName || inputINGNAME_EN;
-
-    // Validate input
-    if (!inputINGID || !inputINGNAME_EN || !inputPersonG) {
-        alert("Please fill in all fields.");
+    // 선택된 ingredient 데이터를 가져옴
+    const selectedRow = document.querySelector("#ingredientTableBody tr.selectedRow");
+    
+    if (!selectedRow) {
+        alert("Please select an ingredient to apply.");
         return;
     }
 
-    fetch('/check_ingredientDB', {
-        method: 'POST',
-        headers: { 'Content-Type': 'application/json' },
-        body: JSON.stringify({ INGID: inputINGID, INGNAME_EN: inputINGNAME_EN }),
-    })
-    .then(response => response.json())
-    .then(data => {
-        if (data.status === 'success') {
-            if (data.data.length > 0) {
-                if (selectedFoodID && selectedFoodName) {
-                    displayDuplicateOptions(data.data, newRow);
-                } else {
-                    alert('No food item selected. Please select a food item first.');
-                    document.getElementById('ingredientTableBody').removeChild(newRow);
-                    resetAddIngredientButton();
-                }
-            } else {
-                saveNewIngredient({
-                    INGID: inputINGID,
-                    INGNAME_EN: inputINGNAME_EN,
+    const inputINGID = selectedRow.cells[0].textContent.trim();
+    const inputPersonG = parseFloat(selectedRow.cells[2].textContent.trim());
+    const inputINGNAME_EN = selectedRow.cells[1].textContent.trim();
+
+    const FOODID = selectedFoodID; // 현재 선택된 FOODID
+    const FOODNAME = selectedFoodName; // 현재 선택된 FOODNAME
+
+    if (!inputINGID || isNaN(inputPersonG)) {
+        alert("Please fill in INGID and amount (g).");
+        return;
+    }
+
+    // 엑셀에서 해당 INGID를 기반으로 데이터를 가져옴
+    fetch(`/get_ingredient_details?INGID=${inputINGID}`)
+        .then(response => response.json())
+        .then(data => {
+            if (data.status === 'success' && data.ingredient) {
+                const ingredient = data.ingredient;
+
+                // 기존 영양소 데이터를 가져와 새로운 FOODID에 추가
+                const newIngredient = {
+                    INGID: ingredient['INGID'],
+                    INGNAME_EN: inputINGNAME_EN,  // 검색된 이름 사용
                     '1 person (g)': inputPersonG,
-                    FOODID: foodID,
-                    FOODNAME: foodName
-                });
+                    FOODID: FOODID,  // 새로운 FOODID에 맞게 업데이트
+                    FOODNAME: FOODNAME, // 현재 선택된 FOODNAME 추가
+                    Energy: ingredient['Energy'],
+                    Water: ingredient['Water'],
+                    Protein: ingredient['Protein'],
+                    Fat: ingredient['Fat'],
+                    Carbo: ingredient['Carbo'],
+                    Fiber: ingredient['Fiber'],
+                    CA: ingredient['CA'],
+                    FE: ingredient['FE'],
+                    ZN: ingredient['ZN'],
+                    VA: ingredient['VA'],
+                    VB1: ingredient['VB1'],
+                    VB2: ingredient['VB2'],
+                    VB3: ingredient['VB3'],
+                    VB6: ingredient['VB6'],
+                    Fol: ingredient['Fol'],
+                    VB12: ingredient['VB12'],
+                    VC: ingredient['VC'],
+                    VD: ingredient['VD'],
+                    NA: ingredient['NA'],
+                    'NA (mg)': ingredient['NA (mg)']
+                };
+
+                saveNewIngredient(newIngredient);
+            } else {
+                alert('Ingredient not found for the specified INGID.');
             }
-        } else {
-            alert('Error checking ingredients: ' + data.message);
-        }
-    })
-    .catch(error => {
-        console.error('Error:', error);
-        alert("Error checking ingredients.");
-    });
+        })
+        .catch(error => {
+            console.error('Error fetching ingredient details:', error);
+            alert("Error fetching ingredient details.");
+        });
 }
+
 
 function displayDuplicateOptions(duplicateData, newRow) {
     const container = document.getElementById('duplicateOptionsContainer');
@@ -595,11 +644,6 @@ function applySelectedDuplicate(item, newRow) {
 }
 
 function saveNewIngredient(newIngredient) {
-    if (!newIngredient || !newIngredient.INGID || !newIngredient.INGNAME_EN) {
-        console.error('Invalid ingredient data provided.');
-        return;
-    }
-
     fetch('/add_ingredientDB', {
         method: 'POST',
         headers: { 'Content-Type': 'application/json' },
@@ -613,13 +657,11 @@ function saveNewIngredient(newIngredient) {
             totalRowsIngredient = IngredientData.length;
             showIngredientPage(currentPageIngredient);
 
-            // Only try to remove the new row if it exists
             const newRow = document.getElementById('newIngredientRow');
             if (newRow) {
                 newRow.remove();
             }
 
-            // Reset the Add Ingredient button
             resetAddIngredientButton();
         } else {
             alert('Error adding ingredient: ' + data.message);
@@ -815,108 +857,112 @@ function applyEditIngredient() {
         return;
     }
 
-    // 기존 INGID 가져오기
+    // 기존 INGID와 FOODID 가져오기
     const originalINGID = selectedRow.getAttribute('data-original-ingid');
-    console.log("Original INGID in applyEditIngredient:", originalINGID);  // 디버깅 로그 추가
+    const FOODID = selectedFoodID;
 
-    if (!originalINGID) {
-        alert("Original INGID not found. Something went wrong.");
+    if (!originalINGID || !FOODID) {
+        alert("Original INGID or FOODID not found. Something went wrong.");
         return;
     }
 
     const newINGID = selectedRow.cells[0].textContent.trim();
     const INGNAME_EN = selectedRow.cells[1].textContent.trim();
-    const person_g = selectedRow.cells[2].textContent.trim();
+    const person_g = parseFloat(selectedRow.cells[2].textContent.trim());
 
     // 입력값이 유효한지 체크
-    if (!newINGID || !INGNAME_EN || !person_g) {
-        alert("Please fill in all fields.");
+    if (!newINGID || !INGNAME_EN || isNaN(person_g)) {
+        alert("Please fill in all fields with valid data.");
         return;
     }
 
-    // FOODID가 선택되지 않았을 때 적절한 값을 설정
-    const FOODID = selectedFoodID || originalINGID; // 선택된 FOODID가 없을 경우 기존 INGID를 사용
+    // 기존 데이터와 새로운 데이터를 비교하여 성분 값의 비율 계산
+    fetch(`/get_food_ingredientsDB?FOODID=${FOODID}&INGID=${originalINGID}`)
+        .then(response => response.json())
+        .then(originalData => {
+            if (!originalData || originalData.length === 0) {
+                throw new Error("Original ingredient data not found.");
+            }
 
-    fetch('/edit_ingredientDB', {
-        method: 'POST',
-        headers: {
-            'Content-Type': 'application/json',
-        },
-        body: JSON.stringify({
-            original_INGID: originalINGID, // 기존 INGID
-            new_INGID: newINGID, // 수정된 INGID
-            INGNAME_EN: INGNAME_EN,
-            person_g: person_g,
-            FOODID: FOODID  // ensure this variable is set correctly
-        }),
-    })
-    .then(response => {
-        if (response.ok) {
-            return response.json();
-        } else {
-            throw new Error("Failed to update ingredient: " + response.statusText);
-        }
-    })
-    .then(data => {
-        if (data.status === 'success') {
-            alert("Ingredient updated successfully!");
+            const originalIngredient = originalData[0];
+            const originalPersonG = parseFloat(originalIngredient['1 person (g)']);
+            const scaleFactor = person_g / originalPersonG;
 
-            // 수정된 행의 내용을 고정
-            selectedRow.cells[0].setAttribute("contenteditable", "false");
-            selectedRow.cells[1].setAttribute("contenteditable", "false");
-            selectedRow.cells[2].setAttribute("contenteditable", "false");
+            // 수정할 데이터를 준비
+            const updatedIngredient = {
+                original_INGID: originalINGID,
+                new_INGID: newINGID,
+                INGNAME_EN: INGNAME_EN,
+                person_g: person_g,
+                FOODID: FOODID,
+                Energy: originalIngredient['Energy'] * scaleFactor,
+                Water: originalIngredient['Water'] * scaleFactor,
+                Protein: originalIngredient['Protein'] * scaleFactor,
+                Fat: originalIngredient['Fat'] * scaleFactor,
+                Carbo: originalIngredient['Carbo'] * scaleFactor,
+                Fiber: originalIngredient['Fiber'] * scaleFactor,
+                CA: originalIngredient['CA'] * scaleFactor,
+                FE: originalIngredient['FE'] * scaleFactor,
+                ZN: originalIngredient['ZN'] * scaleFactor,
+                VA: originalIngredient['VA'] * scaleFactor,
+                VB1: originalIngredient['VB1'] * scaleFactor,
+                VB2: originalIngredient['VB2'] * scaleFactor,
+                VB3: originalIngredient['VB3'] * scaleFactor,
+                VB6: originalIngredient['VB6'] * scaleFactor,
+                Fol: originalIngredient['Fol'] * scaleFactor,
+                VB12: originalIngredient['VB12'] * scaleFactor,
+                VC: originalIngredient['VC'] * scaleFactor,
+                VD: originalIngredient['VD'] * scaleFactor,
+                NA: originalIngredient['NA'] * scaleFactor,
+                'NA (mg)': originalIngredient['NA (mg)'] * scaleFactor,
+            };
 
-            // 선택된 행 초기화
-            selectedFoodID = null;
-
-            // 테이블 업데이트
-            // ingredientTable 업데이트
-            IngredientData = IngredientData.map(ingredient => {
-                if (ingredient.INGID === originalINGID) {
-                    return {
-                        ...ingredient,
-                        INGID: newINGID,
-                        INGNAME_EN: INGNAME_EN,
-                        '1 person (g)': person_g
-                    };
-                }
-                return ingredient;
+            // 서버에 수정된 데이터를 전송
+            return fetch('/edit_ingredientDB', {
+                method: 'POST',
+                headers: { 'Content-Type': 'application/json' },
+                body: JSON.stringify(updatedIngredient)
             });
+        })
+        .then(response => response.json())
+        .then(data => {
+            if (data.status === 'success') {
+                alert("Ingredient updated successfully!");
 
-            totalRowsIngredient = IngredientData.length;
-            showIngredientPage(currentPageIngredient);
+                // 수정된 행의 내용을 고정
+                selectedRow.cells[0].setAttribute("contenteditable", "false");
+                selectedRow.cells[1].setAttribute("contenteditable", "false");
+                selectedRow.cells[2].setAttribute("contenteditable", "false");
 
-            foodData = foodData.map(food => {
-                if (food.FOODID === FOODID) {
-                    return {
-                        ...food,
-                        INGID: newINGID, // Update the relevant field if needed
-                        INGNAME_EN: INGNAME_EN // Update the relevant field if needed
-                    };
-                }
-                return food;
-            });
-            totalRowsFood = foodData.length;
-            showPage(currentPageFood);
+                // 선택된 행 초기화
+                selectedFoodID = null;
 
-            // Disable content editing and reset button
-            selectedRow.cells[0].setAttribute("contenteditable", "false");
-            selectedRow.cells[1].setAttribute("contenteditable", "false");
-            selectedRow.cells[2].setAttribute("contenteditable", "false");
+                // 테이블 업데이트
+                IngredientData = IngredientData.map(ingredient => {
+                    if (ingredient.INGID === originalINGID && ingredient.FOODID === FOODID) {
+                        return {
+                            ...ingredient,
+                            INGID: newINGID,
+                            INGNAME_EN: INGNAME_EN,
+                            '1 person (g)': person_g
+                        };
+                    }
+                    return ingredient;
+                });
 
-            selectedFoodID = null;
-            selectedFoodName = null;
-        } else {
-            alert("Error updating ingredient: " + data.message);
-        }
+                totalRowsIngredient = IngredientData.length;
+                showIngredientPage(currentPageIngredient);
 
-        resetEditIngredientButton();
-    })
-    .catch(error => {
-        console.error('Error:', error);
-        alert("Error updating ingredient.");
-        resetEditIngredientButton();
-    });
+                resetEditIngredientButton();
+            } else {
+                alert("Error updating ingredient: " + data.message);
+            }
+        })
+        .catch(error => {
+            console.error('Error:', error);
+            alert("Error updating ingredient.");
+            resetEditIngredientButton();
+        });
 }
 
 

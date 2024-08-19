@@ -1,0 +1,97 @@
+/* 기본 설정 */
+h2 {
+    white-space: nowrap;
+    font-size: 24px;
+    margin-bottom: 50px;
+}
+
+.container {
+    display: flex;
+    justify-content: space-between; /* 섹션 간의 공간을 동일하게 분배 */
+    width: 100%;
+}
+
+/* Group Management 섹션 */
+.group-management {
+    display: flex;
+    width: 100%;
+}
+
+.group-list, .group-details {
+    width: 48%; /* 동일한 너비로 설정 */
+    padding: 20px;
+    border-radius: 8px;
+    margin-right: 20px;
+    background-color: #fffacd; /* Group Management 색상 */
+}
+
+.group-details {
+    background-color: #e0ffe0; /* 세부 정보 섹션 색상 */
+}
+
+.group-list table {
+    width: 100%;
+    border-collapse: collapse;
+}
+
+.group-table {
+    background-color: white;
+    max-height: 340px;
+    overflow-y: auto;
+    margin-bottom: 10px;
+}
+
+.group-list th, .group-list td {
+    border: 1px solid #ddd;
+    padding: 8px;
+    text-align: left;
+}
+
+.group-list tr.selected {
+    background-color: #f0f8ff;
+}
+
+/* User Management 섹션 */
+.user-management {
+    display: flex;
+    width: 100%;
+}
+
+.user-list, .user-details {
+    width: 48%; /* 동일한 너비로 설정 */
+    padding: 20px;
+    border-radius: 8px;
+    margin-right: 20px;
+}
+
+.user-list {
+    background-color: #E6E6FA; /* User List 색상 */
+}
+
+.user-details {
+    background-color: #FFB6C1; /* User Details 색상 */
+}
+
+.user-table-container {
+    max-height: 340px;
+    margin-top: 10px;
+    margin-bottom: 10px;
+    background-color: white;
+    overflow-y: auto;
+}
+
+.user-list table {
+    width: 100%;
+    border-collapse: collapse;
+}
+
+.user-list th, .user-list td {
+    border: 1px solid #ddd;
+    padding: 8px;
+    text-align: left;
+}
+
+.user-list tr.selected {
+    background-color: #f0f8ff;
+}
+

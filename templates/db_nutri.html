@@ -1,4 +1,145 @@
 {% extends 'base.html' %}
 {% block content %}
-    <h2>Food Ingredients DB Edit Page</h2>
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <title>Edit Ingredient DB</title>
+    <link rel="stylesheet" href="{{ url_for('static', filename='style.css') }}">
+    <link rel="stylesheet" href="{{ url_for('static', filename='db_nutri.css') }}">
+</head>
+<body>
+    <h2>Ingredient DB Editor</h2>
+    <div class="main-content">
+        <div class="section-container">
+            <!-- Food Ingredient -->
+            <div class="section">
+                <h3>Edit Food Ingredient</h3>
+                <div class="search-options">
+                    <label>
+                        <input type="radio" name="ingredientSearchType" value="ingredientCode" checked onclick="toggleIngredientInputFields()">
+                        INGID
+                    </label>
+                    <input type="text" id="ingredientCodeInput">
+                    <label>
+                        <input type="radio" name="ingredientSearchType" value="ingredientName" onclick="toggleIngredientInputFields()">
+                        INGNAME_EN
+                    </label>
+                    <input type="text" id="ingredientNameInput" disabled>
+                    <button type="button" onclick="searchIngredient()">Search</button>
+                </div>
+                <table id="ingredientTable" class="food-table">
+                    <thead>
+                        <tr>
+                            <th>INGID</th>
+                            <th>INGNAME_EN</th>
+                            <th>1 person (g)</th>
+                        </tr>
+                    </thead>
+                    <tbody id="ingredientTableBody">
+                        <!-- Ingredients will be dynamically added here -->
+                    </tbody>
+                </table>
+                <div class="pagination">
+                    <button id="prevPageIngredientBtn">Previous</button>
+                    <button id="nextPageIngredientBtn">Next</button>                    
+                    <select id="rowsPerPageIngredient">
+                        <option value="10">10</option>
+                        <option value="30">30</option>
+                        <option value="50">50</option>
+                    </select>
+                </div>
+                <button id="editIngredientBtn" type="button">Edit Ingredient</button>
+                <button id="addIngredientBtn" type="button">Add Ingredient</button>
+                <button id="deleteIngredientBtn" type="button">Delete Ingredient</button>
+            </div>
+            <!-- Food Nutrient-->
+            <div class ="section">
+                <h3>Edit Nutrient</h3>
+                <form id="nutrientForm">
+                    <div class="form-row">
+                        <label for="energy">Energy (kcal):</label>
+                        <input type="number" id="energy" name="energy">
+                    </div>
+                    <div class="form-row">
+                        <label for="water">Water (g):</label>
+                        <input type="number" id="water" name="water">
+                    </div>
+                    <div class="form-row">
+                        <label for="protein">Protein (g):</label>
+                        <input type="number" id="protein" name="protein">
+                    </div>
+                    <div class="form-row">
+                        <label for="fat">Fat (g):</label>
+                        <input type="number" id="fat" name="fat">
+                    </div>
+                    <div class="form-row">
+                        <label for="carbo">Carbohydrate (g):</label>
+                        <input type="number" id="carbo" name="carbo">
+                    </div>
+                    <div class="form-row">
+                        <label for="fiber">Fiber (g):</label>
+                        <input type="number" id="fiber" name="fiber">
+                    </div>
+                    <div class="form-row">
+                        <label for="ca">Calcium (Ca) (mg):</label>
+                        <input type="number" id="ca" name="ca">
+                    </div>
+                    <div class="form-row">
+                        <label for="fe">Iron (Fe) (mg):</label>
+                        <input type="number" id="fe" name="fe">
+                    </div>
+                    <div class="form-row">
+                        <label for="zn">Zinc (Zn) (mg):</label>
+                        <input type="number" id="zn" name="zn">
+                    </div>
+                    <div class="form-row">
+                        <label for="va">Vitamin A (VA) (µg):</label>
+                        <input type="number" id="va" name="va">
+                    </div>
+                    <div class="form-row">
+                        <label for="vb1">Vitamin B1 (VB1) (mg):</label>
+                        <input type="number" id="vb1" name="vb1">
+                    </div>
+                    <div class="form-row">
+                        <label for="vb2">Vitamin B2 (VB2) (mg):</label>
+                        <input type="number" id="vb2" name="vb2">
+                    </div>
+                    <div class="form-row">
+                        <label for="vb3">Vitamin B3 (VB3) (mg):</label>
+                        <input type="number" id="vb3" name="vb3">
+                    </div>
+                    <div class="form-row">
+                        <label for="vb6">Vitamin B6 (VB6) (mg):</label>
+                        <input type="number" id="vb6" name="vb6">
+                    </div>
+                    <div class="form-row">
+                        <label for="fol">Folate (Fol) (µg):</label>
+                        <input type="number" id="fol" name="fol">
+                    </div>
+                    <div class="form-row">
+                        <label for="vb12">Vitamin B12 (VB12) (µg):</label>
+                        <input type="number" id="vb12" name="vb12">
+                    </div>
+                    <div class="form-row">
+                        <label for="vc">Vitamin C (VC) (mg):</label>
+                        <input type="number" id="vc" name="vc">
+                    </div>
+                    <div class="form-row">
+                        <label for="vd">Vitamin D (VD) (µg):</label>
+                        <input type="number" id="vd" name="vd">
+                    </div>
+                    <div class="form-row">
+                        <label for="na">Natrium (Na) (mg):</label>
+                        <input type="number" id="na" name="na">
+                    </div>
+                    <button id="addNutrientBtn" type="button">Save Nutrient</button>
+                </form>
+                
+            </div>
+        </div>
+    </div>
+    <script src="{{ url_for('static', filename='db_nutri.js') }}"></script>
+</body>
+</html>
 {% endblock %}
