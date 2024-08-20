@@ -1042,8 +1042,19 @@ def load_user_data(user_group, user_id, view_date):
     return user_data
 
 ### 유저 음식 기록 저장
-def save_user_data(data):
-    data.to_excel(user_data_path, index=False)
+def save_user_data(new_data):
+    # 기존 데이터 로드
+    if os.path.exists(user_data_path):
+        existing_data = pd.read_excel(user_data_path)
+    else:
+        existing_data = pd.DataFrame()
+
+    # 새로운 데이터와 기존 데이터 병합
+    updated_data = pd.concat([existing_data, new_data], ignore_index=True)
+
+    # 병합된 데이터를 엑셀 파일에 저장
+    updated_data.to_excel(user_data_path, index=False)
+
 
 ### 재료 리스트 조회
 @app.route('/get_ingredients', methods=['POST'])
