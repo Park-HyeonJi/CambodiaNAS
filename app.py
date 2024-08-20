@@ -999,9 +999,9 @@ def add_food():
         app.logger.debug(f"selected_food_data after adding user info: {selected_food_data}")
         
         # 기존 사용자 데이터를 불러와서 새로운 데이터를 추가
-        user_data = load_user_data(user_group, user_id, view_date)
+        existing_data = pd.read_excel(user_data_path)
         # 데이터프레임 결합
-        updated_data = pd.concat([user_data, selected_food_data], ignore_index=True)
+        updated_data = pd.concat([existing_data, selected_food_data], ignore_index=True)
 
         save_user_data(updated_data)
 
@@ -1009,6 +1009,20 @@ def add_food():
     except Exception as e:
         app.logger.error(f"Error in add_food: {e}")
         return jsonify({'status': 'error', 'message': str(e)}), 500
+
+### 유저 음식 기록 저장
+def save_user_data(updated_data):
+    # 기존 데이터 로드
+    # if os.path.exists(user_data_path):
+    #     existing_data = pd.read_excel(user_data_path)
+    # else:
+    #     existing_data = pd.DataFrame()
+
+    # 새로운 데이터와 기존 데이터 병합
+    # updated_data = pd.concat([existing_data, new_data], ignore_index=True)
+
+    # 병합된 데이터를 엑셀 파일에 저장
+    updated_data.to_excel(user_data_path, index=False)
 
 ### 음식 리스트 조회
 @app.route('/get_food_list', methods=['GET'])
@@ -1041,19 +1055,7 @@ def load_user_data(user_group, user_id, view_date):
     app.logger.debug(f"load_user_data: {user_data}")
     return user_data
 
-### 유저 음식 기록 저장
-def save_user_data(new_data):
-    # 기존 데이터 로드
-    if os.path.exists(user_data_path):
-        existing_data = pd.read_excel(user_data_path)
-    else:
-        existing_data = pd.DataFrame()
 
-    # 새로운 데이터와 기존 데이터 병합
-    updated_data = pd.concat([existing_data, new_data], ignore_index=True)
-
-    # 병합된 데이터를 엑셀 파일에 저장
-    updated_data.to_excel(user_data_path, index=False)
 
 
 ### 재료 리스트 조회
@@ -1097,7 +1099,7 @@ def get_nutrition():
         nutrition_info = nutrition_info.replace({np.nan: 0}) # NaN 값을 0으로 대체
         nutrition_info = nutrition_info.to_dict(orient='records')
         
-        app.logger.debug(f"nutrition_info: {nutrition_info}")
+        # app.logger.debug(f"nutrition_info: {nutrition_info}")
         return jsonify(nutrition_info)
     except Exception as e:
         app.logger.error(f"Error in get_nutrition: {e}")
