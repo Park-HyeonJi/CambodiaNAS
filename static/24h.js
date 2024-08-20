@@ -1,10 +1,6 @@
 document.addEventListener('DOMContentLoaded', () => {
     loadGroupsForUser();
     toggleInputFields();
-
-    // Breakfast 버튼을 디폴트로 활성화
-    const defaultCategory = document.querySelector('.time-categories button[data-category="Breakfast"]');
-    setActive(defaultCategory);
 });
 
 // 1행: 그룹 및 유저
@@ -43,7 +39,11 @@ function loadUsers() {
                 userSelect.appendChild(option);
             });
 
-            selectedUserId = null;
+            // userSelect = null;
+
+            // Breakfast 버튼을 디폴트로 활성화
+            const defaultCategory = document.querySelector('.time-categories button[data-category="Breakfast"]');
+            setActive(defaultCategory);
         })
         .catch(error => console.error('Error loading users:', error));
 }
@@ -58,7 +58,7 @@ function setActive(button) {
     button.classList.add('active');
 
     // 음식 리스트 초기화
-    loadFoodList();
+    loadData();
 }
 
 // 첫 번째 컨테이너
@@ -71,7 +71,7 @@ function loadFoodList() {
     fetch(`/get_food_list?userGroup=${userGroup}&userID=${userID}&viewDate=${viewDate}`)
     .then(response => response.json())
     .then(data => {
-        console.log('Fetched data:', data); // 데이터 확인을 위해 추가
+        // console.log('Fetched data:', data); // 데이터 확인을 위해 추가
         document.querySelectorAll('.food-items tbody').forEach(tbody => tbody.innerHTML = ""); // 기존 데이터를 초기화
 
         var tableBody = document.querySelector(`.food-items tbody[data-category='${activeCategory}']`);
@@ -187,7 +187,18 @@ document.getElementById('nextPageFoodBtn').addEventListener('click', () => {
     }
 });
 
+// 음식 추가
 function addToFoodList() {
+    document.querySelectorAll("#foodTable tbody tr").forEach(row => {
+        row.addEventListener('click', function() {
+            // 모든 행의 data-selected 속성을 제거
+            document.querySelectorAll("#foodTable tbody tr").forEach(r => r.removeAttribute('data-selected'));
+            
+            // 클릭한 행에 data-selected 속성을 추가
+            this.setAttribute('data-selected', 'true');
+        });
+    });
+    
     var selectedRow = document.querySelector("#foodTable tbody tr[data-selected='true']");
     if (!selectedRow) return alert("Please select a food item to add");
 
@@ -197,6 +208,8 @@ function addToFoodList() {
     var userGroup = document.getElementById('userGroup').value;
     var userID = document.getElementById('userID').value;
     var viewDate = document.getElementById('date').value;
+
+    console.log(foodCode, foodName, timeCategory, userGroup, userID, viewDate)
 
     fetch('/add_food', {
         method: 'POST',
@@ -214,6 +227,7 @@ function addToFoodList() {
     })
     .then(response => response.json())
     .then(data => {
+        console.log("추가 성공")
         if (data.status === 'success') {
             loadFoodList();
             // loadAllFoodList();
@@ -288,7 +302,7 @@ function loadAllFoodList() {
 
             results.forEach(result => {
                 appendNutritionRow(result);
-                console.log("영양성분 계산 음식", result)
+                // console.log("영양성분 계산 음식", result)
                 // 각 항목의 영양성분을 총합에 추가
                 for (var key in totalNutrients) {
                     totalNutrients[key] += parseFloat(result.nutrientTotals[key]) || 0;
@@ -333,7 +347,7 @@ function loadNutrition(foodCode, foodName, category) {
             .then(response => response.json())
             .then(data => {
                 if (data.length > 0) {
-                    console.log("영양성분계산", data)
+                    // console.log("영양성분계산", data)
                     var nutrientTotals = {
                         'Energy': 0, 'Water': 0, 'Protein': 0, 'Fat': 0, 
                         'Carbo': 0, 'Fiber': 0, 'CA': 0, 'FE': 0, 
