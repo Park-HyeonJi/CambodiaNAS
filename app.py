@@ -1011,20 +1011,6 @@ def add_food():
         return jsonify({'status': 'error', 'message': str(e)}), 500
 
 ### 음식 리스트 조회
-# @app.route('/get_food_list', methods=['GET'])
-# @login_required
-# def get_food_list():
-#     try:
-#         user_group = request.args.get('userGroup')
-#         user_id = request.args.get('userID')
-#         view_date = request.args.get('viewDate')
-
-#         user_data = load_user_data(user_group, user_id, view_date)
-#         return jsonify(user_data)
-#     except Exception as e:
-#         app.logger.error(f"Error in get_food_list: {e}")
-#         return jsonify({'status': 'error', 'message': str(e)}), 500
-### 음식 리스트 조회
 @app.route('/get_food_list', methods=['GET'])
 @login_required
 def get_food_list():
@@ -1034,7 +1020,6 @@ def get_food_list():
         view_date = request.args.get('viewDate')
 
         user_data = load_user_data(user_group, user_id, view_date)
-        
         result = user_data.to_dict(orient='records')
 
         return jsonify(result)

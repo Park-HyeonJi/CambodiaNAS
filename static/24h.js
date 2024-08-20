@@ -28,21 +28,7 @@ function loadAllFoodList() {
         if (!data || typeof data !== 'object') {
             throw new Error('Invalid data format received from server');
         }
-
-         // 데이터 내의 NaN 값을 null로 변환
-        // for (let category in data) {
-        //     if (data.hasOwnProperty(category)) {
-        //         data[category] = data[category].map(food => {
-        //             for (let key in food) {
-        //                 if (isNaN(food[key])) {
-        //                     food[key] = 0; // 또는 원하는 다른 기본값으로 설정
-        //                 }
-        //             }
-        //             return food;
-        //         });
-        //     }
-        // }
-
+        console.log("영양성분 테이블 받은 데이터", data)
         // 기존 데이터를 초기화
         var mealTbody = document.getElementById('nutrition-tbody');
         mealTbody.innerHTML = '';
@@ -51,11 +37,11 @@ function loadAllFoodList() {
         var foods = [];
 
         categories.forEach(category => {
-            if (data[category]) {
-                data[category].forEach(food => {
+            if (data.some(item => item['TIME'] === category)) {
+                data.filter(food => food['TIME'] === category).forEach(food => {
                     //promises.push(loadNutrition(food['Food Code'], food['Food Name'], category));
                     // 중복 제거 부분 수정
-                    if (!foods.some(item => item['FOODID'] === food['FOODID'] && item['Category'] === category)) {
+                    if (!foods.some(item => item['FOODID'] === food['FOODID'] && item['TIME'] === category)) {
                         foods.push({ ...food, 'Category': category });
                     }
                 });
@@ -442,7 +428,7 @@ function loadIngredients(food) {
 }
 
 function loadData() {
-    loadFoodList();
+    // loadFoodList();
 }
 
 function copyData() {
