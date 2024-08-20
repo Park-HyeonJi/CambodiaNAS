@@ -394,14 +394,14 @@ function loadFoodList() {
     fetch(`/get_food_list?userGroup=${userGroup}&userID=${userID}&viewDate=${viewDate}`)
     .then(response => response.json())
     .then(data => {
-        // console.log('Fetched data:', data); // 데이터 확인을 위해 추가
+        console.log('Fetched data:', data); // 데이터 확인을 위해 추가
         document.querySelectorAll('.food-items tbody').forEach(tbody => tbody.innerHTML = ""); // 기존 데이터를 초기화
 
         var tableBody = document.querySelector(`.food-items tbody[data-category='${activeCategory}']`);
         var uniqueFoods = [];
 
-        data[activeCategory].forEach(food => {
-            if (!uniqueFoods.some(item => item['FOODNAME'] === food['FOODNAME'])) {
+        data.forEach(food => {
+            if (food['TIME'] === activeCategory && !uniqueFoods.some(item => item['FOODNAME'] === food['FOODNAME'])) {
                 uniqueFoods.push(food);
                 var tr = document.createElement("tr");
                 tr.innerHTML = `<td>${food['FOODID']}</td><td>${food['FOODNAME']}</td>`;

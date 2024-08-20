@@ -12,18 +12,17 @@ app.secret_key = 'your_secret_key'
 
 # 엑셀 파일 경로 설정
 EXCEL_FILE_PATH = './data/group_user_data.xlsx'
+food_data_path = 'data/FoodData.xlsx'
+user_data_path = 'data/Test_SaveUserData.xlsx'
 
 # 로깅 설정
-handler = RotatingFileHandler('error.log', maxBytes=10000, backupCount=1)
-handler.setLevel(logging.ERROR)
-app.logger.addHandler(handler)
+# handler = RotatingFileHandler('error.log', maxBytes=10000, backupCount=1)
+# handler.setLevel(logging.ERROR)
+# app.logger.addHandler(handler)
 
 login_manager = LoginManager()
 login_manager.init_app(app)
 login_manager.login_view = 'login'
-
-# 음식 데이터 경로
-food_data_path = 'data/FoodData.xlsx'
 
 users = {'ddd': {'password': 'password'}}
 
@@ -87,14 +86,14 @@ def save_group():
         group_name = data.get('name', '')
         group_desc = data.get('description', '')
 
-        app.logger.info(f"Received group name: {group_name}, description: {group_desc}")
+        # app.logger.info(f"Received group name: {group_name}, description: {group_desc}")
 
         groups_df, users_df = load_excel_data()
 
         if group_name in groups_df['name'].values:
             # 그룹 정보 업데이트
             groups_df.loc[groups_df['name'] == group_name, 'description'] = group_desc
-            app.logger.info(f"Updated group description for {group_name}")
+            # app.logger.info(f"Updated group description for {group_name}")
         else:
             # 그룹이 존재하지 않으면 새 그룹 추가
             new_group = pd.DataFrame({'name': [group_name], 'description': [group_desc]})
@@ -237,8 +236,8 @@ def load_excel_data():
     groups_df = pd.read_excel(xls, 'Group')
     users_df = pd.read_excel(xls, 'Users')
 
-    app.logger.info(f"Loaded groups: {groups_df.to_dict(orient='records')}")
-    app.logger.info(f"Loaded users: {users_df.to_dict(orient='records')}")
+    # app.logger.info(f"Loaded groups: {groups_df.to_dict(orient='records')}")
+    # app.logger.info(f"Loaded users: {users_df.to_dict(orient='records')}")
 
     return groups_df, users_df
 
@@ -983,23 +982,48 @@ def add_food():
         user_id = data['userID']
         view_date = data['viewDate']
 
-        # 엑셀 데이터 읽기
         food_data = pd.read_excel(food_data_path)
+        selected_food_data = food_data[food_data['FOODID'] == food_code].copy()
 
-        selected_food_data = food_data[food_data['FOODID'] == food_code]
-        user_data = load_user_data(user_group, user_id, view_date)
+        if selected_food_data.empty:
+            app.logger.error(f"No data found for foodCode: {food_code}")
+            return jsonify({'status': 'error', 'message': f"No data found for foodCode: {food_code}"}), 400
 
-        if time_category not in user_data:
-            user_data[time_category] = []
+        # 사용자 정보 추가 (userGroup, userID, viewDate, timeCategory)
+        selected_food_data['USERID'] = user_id
+        selected_food_data['USERGROUP'] = user_group
+        selected_food_data['DATE'] = view_date
+        selected_food_data['TIME'] = time_category
+
+        # 확인용 디버깅 로그 추가
+        app.logger.debug(f"selected_food_data after adding user info: {selected_food_data}")
         
-        user_data[time_category].extend(selected_food_data.to_dict(orient='records'))
-        save_user_data(user_group, user_id, view_date, user_data)
+        # 기존 사용자 데이터를 불러와서 새로운 데이터를 추가
+        user_data = load_user_data(user_group, user_id, view_date)
+        # 데이터프레임 결합
+        updated_data = pd.concat([user_data, selected_food_data], ignore_index=True)
+
+        save_user_data(updated_data)
 
         return jsonify({'status': 'success'})
     except Exception as e:
         app.logger.error(f"Error in add_food: {e}")
         return jsonify({'status': 'error', 'message': str(e)}), 500
 
+### 음식 리스트 조회
+# @app.route('/get_food_list', methods=['GET'])
+# @login_required
+# def get_food_list():
+#     try:
+#         user_group = request.args.get('userGroup')
+#         user_id = request.args.get('userID')
+#         view_date = request.args.get('viewDate')
+
+#         user_data = load_user_data(user_group, user_id, view_date)
+#         return jsonify(user_data)
+#     except Exception as e:
+#         app.logger.error(f"Error in get_food_list: {e}")
+#         return jsonify({'status': 'error', 'message': str(e)}), 500
 ### 음식 리스트 조회
 @app.route('/get_food_list', methods=['GET'])
 @login_required
@@ -1010,26 +1034,31 @@ def get_food_list():
         view_date = request.args.get('viewDate')
 
         user_data = load_user_data(user_group, user_id, view_date)
-        return jsonify(user_data)
+        
+        result = user_data.to_dict(orient='records')
+
+        return jsonify(result)
     except Exception as e:
         app.logger.error(f"Error in get_food_list: {e}")
         return jsonify({'status': 'error', 'message': str(e)}), 500
 
+### 유저 음식 기록 조회
 def load_user_data(user_group, user_id, view_date):
-    file_path = f'data/{user_group}_{user_id}_{view_date}.xlsx'
-    if os.path.exists(file_path):
-        xls = pd.ExcelFile(file_path)
-        user_data = {sheet: xls.parse(sheet).to_dict(orient='records') for sheet in xls.sheet_names}
-    else:
-        user_data = {
-            'Breakfast': [],
-            'Morning Snack': [],
-            'Lunch': [],
-            'Afternoon Snack': [],
-            'Dinner': [],
-            'Midnight Snack': []
-        }
+    if os.path.exists(user_data_path):
+        user_data = pd.read_excel(user_data_path)
+
+        # 특정 유저 ID와 날짜로 필터링
+        if user_id and view_date:
+            user_data = user_data[(user_data['USERID'].astype(str) == user_id) & (user_data['DATE'].astype(str) == view_date)]
+        else:
+            # 시트가 없을 경우 빈 데이터프레임 반환
+            user_data = pd.DataFrame()
+    app.logger.debug(f"load_user_data: {user_data}")
     return user_data
+
+### 유저 음식 기록 저장
+def save_user_data(data):
+    data.to_excel(user_data_path, index=False)
 
 ### 재료 리스트 조회
 @app.route('/get_ingredients', methods=['POST'])
@@ -1079,13 +1108,6 @@ def get_nutrition():
         app.logger.error(f"Error in get_nutrition: {e}")
         return jsonify({'status': 'error', 'message': str(e)}), 500
 
-def save_user_data(user_group, user_id, view_date, data):
-    file_path = f'data/{user_group}_{user_id}_{view_date}.xlsx'
-    with pd.ExcelWriter(file_path) as writer:
-        for sheet_name, records in data.items():
-            df = pd.DataFrame(records)
-            df.to_excel(writer, sheet_name=sheet_name, index=False)
-
 @app.route('/get_food_ingredients', methods=['GET'])
 @login_required
 def get_food_ingredients():
@@ -1100,11 +1122,6 @@ def get_food_ingredients():
     except Exception as e:
         app.logger.error(f"Error in get_food_ingredients: {e}")
         return jsonify({'status': 'error', 'message': str(e)}), 500
-    
-# @app.route('/FoodGroupIntake')
-# @login_required
-# def FoodGroupIntake():
-#     return render_template('test2.html')
 
 @app.route('/runchart', methods=['POST'])
 def run_python_code():
