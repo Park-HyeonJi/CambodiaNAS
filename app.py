@@ -1,4 +1,4 @@
-from flask import Flask, render_template, redirect, url_for, request, jsonify, send_file
+from flask import Flask, render_template, redirect, url_for, request, jsonify, send_file, session
 from flask_login import LoginManager, UserMixin, login_user, login_required, logout_user, current_user
 import pandas as pd
 import numpy as np
@@ -6,25 +6,28 @@ import os
 import logging
 from logging.handlers import RotatingFileHandler
 from io import BytesIO
+import random
+import string
 
 app = Flask(__name__)
-app.secret_key = 'your_secret_key'
+
+# 무작위로 secret_key 생성
+def generate_secret_key(length=24):
+    characters = string.ascii_letters + string.digits + string.punctuation
+    return ''.join(random.choice(characters) for i in range(length))
+
+app.secret_key = generate_secret_key()
 
 # 엑셀 파일 경로 설정
 EXCEL_FILE_PATH = './data/group_user_data.xlsx'
 food_data_path = 'data/FoodData.xlsx'
 user_data_path = 'data/Test_SaveUserData.xlsx'
 
-# 로깅 설정
-# handler = RotatingFileHandler('error.log', maxBytes=10000, backupCount=1)
-# handler.setLevel(logging.ERROR)
-# app.logger.addHandler(handler)
-
 login_manager = LoginManager()
 login_manager.init_app(app)
 login_manager.login_view = 'login'
 
-users = {'ddd': {'password': 'password'}}
+users = {'default_user': {'password': 'password'}}
 
 class User(UserMixin):
     def __init__(self, id):
@@ -40,21 +43,15 @@ def load_user(user_id):
 @app.route('/')
 def base():
     if current_user.is_authenticated:
-        return redirect(url_for('m_gandu'))  # 기본 페이지를 m_gandu로 변경
+        return redirect(url_for('m_gandu'))
     return redirect(url_for('login'))
 
 @app.route('/login', methods=['GET', 'POST'])
 def login():
     if request.method == 'POST':
-        username = request.form['username']
-        password = request.form['password']
-        
-        if username in users and users[username]['password'] == password:
-            user = User(username)
-            login_user(user)
-            return redirect(url_for('m_gandu'))  # 로그인 후 m_gandu로 리다이렉트
-
-        return redirect(url_for('login'))
+        user = User('default_user')
+        login_user(user)
+        return redirect(url_for('m_gandu'))
     
     return render_template('login.html')
 
@@ -163,7 +160,7 @@ def save_user():
             # 기존 사용자의 정보 업데이트
             app.logger.info(f"Updating existing user with ID: {user_id} in group: {user_group}")
             users_df.loc[(users_df['id'].astype(str) == user_id) & (users_df['group'] == user_group),
-                         ['name', 'gender', 'age', 'height', 'weight']] = \
+                        ['name', 'gender', 'age', 'height', 'weight']] = \
                 [data['name'], data['gender'], data['age'], data['height'], data['weight']]
         else:
             app.logger.info(f"Adding new user with ID: {user_id} in group: {user_group}")
@@ -1151,6 +1148,7 @@ def run_python_code():
 @login_required
 def logout():
     logout_user()
+    session.clear()
     return redirect(url_for('login'))
 
 if __name__ == '__main__':

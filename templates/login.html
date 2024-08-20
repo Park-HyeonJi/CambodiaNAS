@@ -18,11 +18,8 @@
         <h1>Cambodia<br>Nutrition Assessment Program</h1>
         <div class="login-wrapper">
             <h2>Login</h2>
-                <form method="POST" action="{{ url_for('login') }}" id="login-form">
-                <input type="text" id="username" name="username" placeholder="ID" required value="ddd">
-                <input type="password" id="password" name="password" placeholder="Password" required value="password">
-                <div class="button-container">
-                    <button type="submit">Login</button>
+            <form method="POST" action="{{ url_for('login') }}">
+                    <button type="submit">start</button>
                 </div>
             </form>
                 {% with messages = get_flashed_messages() %}

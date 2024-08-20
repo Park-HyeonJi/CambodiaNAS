@@ -57,85 +57,111 @@
             <div class ="section">
                 <h3>Edit Nutrient</h3>
                 <form id="nutrientForm">
-                    <div class="form-row">
-                        <label for="energy">Energy (kcal):</label>
-                        <input type="number" id="energy" name="energy">
+                    <div class="column-container-wrapper">
+                    <div class="column-container">
+                        <div class="form-row">
+                            <label for="energy">Energy :</label>
+                            <input type="number" id="energy" name="energy">
+                            <span class="unit">(kcal)</span>
+                        </div>
+                        <div class="form-row">
+                            <label for="water">Water :</label>
+                            <input type="number" id="water" name="water">
+                            <span class="unit">(g)</span>
+                        </div>
+                        <div class="form-row">
+                            <label for="protein">Protein :</label>
+                            <input type="number" id="protein" name="protein">
+                            <span class="unit">(g)</span>
+                        </div>
+                        <div class="form-row">
+                            <label for="fat">Fat :</label>
+                            <input type="number" id="fat" name="fat">
+                            <span class="unit">(g)</span>
+                        </div>
+                        <div class="form-row">
+                            <label for="carbo">CHO :</label>
+                            <input type="number" id="carbo" name="carbo">
+                            <span class="unit">(g)</span>
+                        </div>
+                        <div class="form-row">
+                            <label for="fiber">Fiber :</label>
+                            <input type="number" id="fiber" name="fiber">
+                            <span class="unit">(g)</span>
+                        </div>
+                        <div class="form-row">
+                            <label for="ca">Ca :</label>
+                            <input type="number" id="ca" name="ca">
+                            <span class="unit">(mg)</span>
+                        </div>
+                        <div class="form-row">
+                            <label for="fe">Fe :</label>
+                            <input type="number" id="fe" name="fe">
+                            <span class="unit">(mg)</span>
+                        </div>
+                        <div class="form-row">
+                            <label for="zn">Zn :</label>
+                            <input type="number" id="zn" name="zn">
+                            <span class="unit">(mg)</span>
+                        </div>
                     </div>
-                    <div class="form-row">
-                        <label for="water">Water (g):</label>
-                        <input type="number" id="water" name="water">
+                    <div class="column-container">
+                        <div class="form-row">
+                            <label for="va">Vit.A :</label>
+                            <input type="number" id="va" name="va">
+                            <span class="unit">(mg)</span>
+                        </div>
+                        <div class="form-row">
+                            <label for="vb1">Vit.B1 :</label>
+                            <input type="number" id="vb1" name="vb1">
+                            <span class="unit">(mg)</span>
+                        </div>
+                        <div class="form-row">
+                            <label for="vb2">Vit.B2 :</label>
+                            <input type="number" id="vb2" name="vb2">
+                            <span class="unit">(mg)</span>
+                        </div>
+                        <div class="form-row">
+                            <label for="vb3">Vit.B3 :</label>
+                            <input type="number" id="vb3" name="vb3">
+                            <span class="unit">(mg)</span>
+                        </div>
+                        <div class="form-row">
+                            <label for="vb6">Vit.B6 :</label>
+                            <input type="number" id="vb6" name="vb6">
+                            <span class="unit">(mg)</span>
+                        </div>
+                        <div class="form-row">
+                            <label for="fol">Folate :</label>
+                            <input type="number" id="fol" name="fol">
+                            <span class="unit">(mcg)</span>
+                        </div>
+                        <div class="form-row">
+                            <label for="vb12">Vit.B12 :</label>
+                            <input type="number" id="vb12" name="vb12">
+                            <span class="unit">(mcg)</span>
+                        </div>
+                        <div class="form-row">
+                            <label for="vc">Vit.C :</label>
+                            <input type="number" id="vc" name="vc">
+                            <span class="unit">(mg)</span>
+                        </div>
+                        <div class="form-row">
+                            <label for="vd">Vit.D :</label>
+                            <input type="number" id="vd" name="vd">
+                            <span class="unit">(mcg)</span>
+                        </div>
+                        <div class="form-row">
+                            <label for="na">Na :</label>
+                            <input type="number" id="na" name="na">
+                            <span class="unit">(mg)</span>
+                        </div>
                     </div>
-                    <div class="form-row">
-                        <label for="protein">Protein (g):</label>
-                        <input type="number" id="protein" name="protein">
-                    </div>
-                    <div class="form-row">
-                        <label for="fat">Fat (g):</label>
-                        <input type="number" id="fat" name="fat">
-                    </div>
-                    <div class="form-row">
-                        <label for="carbo">CHO (g):</label>
-                        <input type="number" id="carbo" name="carbo">
-                    </div>
-                    <div class="form-row">
-                        <label for="fiber">Fiber (g):</label>
-                        <input type="number" id="fiber" name="fiber">
-                    </div>
-                    <div class="form-row">
-                        <label for="ca">Ca (mg):</label>
-                        <input type="number" id="ca" name="ca">
-                    </div>
-                    <div class="form-row">
-                        <label for="fe">Fe (mg):</label>
-                        <input type="number" id="fe" name="fe">
-                    </div>
-                    <div class="form-row">
-                        <label for="zn">Zn (mg):</label>
-                        <input type="number" id="zn" name="zn">
-                    </div>
-                    <div class="form-row">
-                        <label for="va">Vit.A (mg):</label>
-                        <input type="number" id="va" name="va">
-                    </div>
-                    <div class="form-row">
-                        <label for="vb1">Vit.B1 (mg):</label>
-                        <input type="number" id="vb1" name="vb1">
-                    </div>
-                    <div class="form-row">
-                        <label for="vb2">Vit.B2 (mg):</label>
-                        <input type="number" id="vb2" name="vb2">
-                    </div>
-                    <div class="form-row">
-                        <label for="vb3">Vit.B3 (mg):</label>
-                        <input type="number" id="vb3" name="vb3">
-                    </div>
-                    <div class="form-row">
-                        <label for="vb6">Vit.B6 (mg):</label>
-                        <input type="number" id="vb6" name="vb6">
-                    </div>
-                    <div class="form-row">
-                        <label for="fol">Folate (mcg):</label>
-                        <input type="number" id="fol" name="fol">
-                    </div>
-                    <div class="form-row">
-                        <label for="vb12">Vit.B12 (mcg):</label>
-                        <input type="number" id="vb12" name="vb12">
-                    </div>
-                    <div class="form-row">
-                        <label for="vc">Vit.C (mg):</label>
-                        <input type="number" id="vc" name="vc">
-                    </div>
-                    <div class="form-row">
-                        <label for="vd">Vit.D (mcg):</label>
-                        <input type="number" id="vd" name="vd">
-                    </div>
-                    <div class="form-row">
-                        <label for="na">Na (mg):</label>
-                        <input type="number" id="na" name="na">
-                    </div>
-                    <button id="addNutrientBtn" type="button">Save Nutrient</button>
+                </div>
+                    <div class="button-container">
+                        <button id="addNutrientBtn" type="button">Save Nutrient</button>
+                    </div>                
                 </form>
-                
             </div>
         </div>
     </div>
