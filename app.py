@@ -1085,20 +1085,19 @@ def get_ingredients():
 def get_nutrition():
     try:
         data = request.get_json()
+        food_code = data['foodCode']
         ingredient_codes = data['ingredientCodes']
 
-        if isinstance(ingredient_codes, int):
-            ingredient_codes = [ingredient_codes]
-        elif not isinstance(ingredient_codes, list):
-            ingredient_codes = list(ingredient_codes)
-
-        # nutrition_data = pd.read_excel(nutrition_data_path)
         nutrition_data = pd.read_excel(food_data_path)
         
-        nutrition_info = nutrition_data[nutrition_data['INGID'].isin(ingredient_codes)]
-        nutrition_info = nutrition_info.replace({np.nan: 0})
+        nutrition_info = nutrition_data[
+            (nutrition_data['FOODID'] == food_code) & 
+            (nutrition_data['INGID'].isin(ingredient_codes))
+        ]
+        nutrition_info = nutrition_info.replace({np.nan: 0}) # NaN 값을 0으로 대체
         nutrition_info = nutrition_info.to_dict(orient='records')
         
+        app.logger.debug(f"nutrition_info: {nutrition_info}")
         return jsonify(nutrition_info)
     except Exception as e:
         app.logger.error(f"Error in get_nutrition: {e}")

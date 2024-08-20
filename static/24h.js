@@ -28,8 +28,8 @@ function loadAllFoodList() {
         if (!data || typeof data !== 'object') {
             throw new Error('Invalid data format received from server');
         }
-        console.log("영양성분 테이블 받은 데이터", data)
-        // 기존 데이터를 초기화
+        // console.log("영양성분 테이블 받은 데이터", data)
+
         var mealTbody = document.getElementById('nutrition-tbody');
         mealTbody.innerHTML = '';
 
@@ -60,7 +60,7 @@ function loadAllFoodList() {
 
             results.forEach(result => {
                 appendNutritionRow(result);
-
+                console.log("영양성분 계산 음식", result)
                 // 각 항목의 영양성분을 총합에 추가
                 for (var key in totalNutrients) {
                     totalNutrients[key] += parseFloat(result.nutrientTotals[key]) || 0;
@@ -92,16 +92,20 @@ function loadNutrition(foodCode, foodName, category) {
         })
         .then(response => response.json())
         .then(ingredientCodes => {
+            // console.log("재료 코드", ingredientCodes) -> 이상 없음
             fetch('/get_nutrition', {
                 method: 'POST',
                 headers: {
                     'Content-Type': 'application/json'
                 },
-                body: JSON.stringify({ ingredientCodes: ingredientCodes })
+                body: JSON.stringify({
+                    foodCode: foodCode, 
+                    ingredientCodes: ingredientCodes })
             })
             .then(response => response.json())
             .then(data => {
                 if (data.length > 0) {
+                    console.log("영양성분계산", data)
                     var nutrientTotals = {
                         'Energy': 0, 'Water': 0, 'Protein': 0, 'Fat': 0, 
                         'Carbo': 0, 'Fiber': 0, 'CA': 0, 'FE': 0, 
