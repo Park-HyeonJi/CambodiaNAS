@@ -583,5 +583,5 @@ function submitChartForm() {
     document.getElementById('currentMealNA').value = dailyTotalNutrients['NA'].toFixed(2);
 
     // 폼 제출
-    // document.getElementById('chartForm').submit();
+    document.getElementById('chartForm').submit();
 }

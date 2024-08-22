@@ -660,7 +660,7 @@ def edit_ingredientDBN():
 def delete_ingredientDBN():
     try:
         data = request.get_json()
-        app.logger.debug(f"Received data: {data}")
+        # app.logger.debug(f"Received data: {data}")
 
         food_ingredient_data_path = 'data/FoodData.xlsx'
 
@@ -1200,6 +1200,7 @@ def run_python_code():
     
     gender = request.form.get('userGender')
     age = request.form.get('userAge')
+    # app.logger.debug(f"runchart 전달 데이터: {gender} {age}")
 
     result = bar(current_meal_data, gender, age) 
 
