@@ -3,7 +3,7 @@ import numpy as np
 from pyecharts import options as opts
 from pyecharts.charts import Bar
 
-def bar(current):
+def bar(current, gender, age):
     # Sample data for overall (assuming combined male and female data)
     print('### len', len(current))
     if len(current)==0:
@@ -19,8 +19,8 @@ def bar(current):
                 valuelist.append(float(value[x]))
     overall_data=valuelist; #print('### over_all=', overall_data)
     
-    gender='men'; age=0;
-    if gender == '': gender= 'men'; 
+    # gender='men'; age=0;
+    if gender == '': gender= 'men'
     if age==0: age=30
     
     recommends = pd.read_excel('data/NutritionRecommends.xlsx')
