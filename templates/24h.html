@@ -65,10 +65,8 @@
                             </table>
                         </div>
                     </div>
-                    <div class="food-data-buttons">
-                        <!-- <button type="button">Add Food</button>
-                        <button type="button">Copy Food</button> -->
-                        <button type="button">Delete Food</button>
+                    <div class="food-data-button">
+                        <button type="button" onclick="deleteFood()">Delete Food</button>
                     </div>
                 </div>
                 <!-- 2열: 입력할 Food list 및 검색 -->
@@ -111,10 +109,10 @@
                 <!-- 3열: 식사에 대한 정보 -->
                 <div class="food-details">
                     <h3>List Of Food Ingredients By Food Intake</h3>
-                    <div class="form-group">
+                    <!-- <div class="form-group">
                         <label for="foodIntake">Food Intake Rate(%):</label>
                         <input type="text" id="foodIntake" name="foodIntake" value="100">
-                    </div>
+                    </div> -->
                     <table class="food-table">
                         <thead>
                             <tr>
@@ -127,9 +125,6 @@
                             <!-- Ingredients will be dynamically added here -->
                         </tbody>
                     </table>
-                    <button type="button">Apply</button>
-                    <button type="button">Add Food Ingredient</button>
-                    <button type="button">Delete Food Ingredient</button>
                 </div>
             </div>
 

@@ -63,7 +63,7 @@
     color: white;
 }
 
-.food-data-buttons {
+.food-data-button {
     display: flex;
     justify-content: flex-end;
 }

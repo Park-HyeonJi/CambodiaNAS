@@ -81,6 +81,9 @@ function loadFoodList() {
                 var tr = document.createElement("tr");
                 tr.innerHTML = `<td>${food['FOODID']}</td><td>${food['FOODNAME']}</td>`;
 
+                tr.setAttribute('data-food-code', food['FOODID']);
+                tr.setAttribute('data-time-category', food['TIME']);
+
                 tr.onclick = function() {
                     tableBody.querySelectorAll('tr').forEach(r => r.style.backgroundColor = '');
                     tr.style.backgroundColor = 'lightgray';
@@ -92,6 +95,53 @@ function loadFoodList() {
             }
         });
         loadAllFoodList();
+    });
+}
+
+function deleteFood() {
+    var selectedRow = document.querySelector('.food-items tbody tr[style="background-color: lightgray;"]');
+    
+    if (!selectedRow) {
+        alert("Please select a food item to delete.");
+        return;
+    }
+
+    var foodCode = selectedRow.getAttribute('data-food-code');
+    var timeCategory = selectedRow.getAttribute('data-time-category');
+    var userGroup = document.getElementById('userGroup').value;
+    var userID = document.getElementById('userID').value;
+    var viewDate = document.getElementById('date').value;
+
+    // Confirm deletion
+    if (!confirm(`Are you sure you want to delete the selected food item (${selectedRow.cells[1].textContent})?`)) {
+        return;
+    }
+
+    fetch('/delete_user_data', {
+        method: 'POST',
+        headers: {
+            'Content-Type': 'application/json'
+        },
+        body: JSON.stringify({
+            foodCode: foodCode,
+            userGroup: userGroup,
+            userID: userID,
+            viewDate: viewDate,
+            timeCategory: timeCategory
+        })
+    })
+    .then(response => response.json())
+    .then(data => {
+        if (data.status === 'success') {
+            alert('Food item deleted successfully.');
+            loadFoodList(); // Reload the food list after deletion
+        } else {
+            alert('Error deleting food item: ' + data.message);
+        }
+    })
+    .catch(error => {
+        console.error('Error deleting food item:', error);
+        alert('An error occurred while deleting the food item.');
     });
 }
 
@@ -511,6 +561,7 @@ function submitChartForm() {
     fetch(`/get_user_info?userGroup=${userGroup}&userID=${userID}`)
     .then(response => response.json())
     .then(userInfo => {
+        console.log(userInfo)
         document.getElementById('userGender').value = userInfo.gender;
         document.getElementById('userAge').value = userInfo.age;
     })
@@ -532,5 +583,5 @@ function submitChartForm() {
     document.getElementById('currentMealNA').value = dailyTotalNutrients['NA'].toFixed(2);
 
     // 폼 제출
-    document.getElementById('chartForm').submit();
+    // document.getElementById('chartForm').submit();
 }

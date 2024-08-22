@@ -985,8 +985,8 @@ def add_food():
             return jsonify({'status': 'error', 'message': f"No data found for foodCode: {food_code}"}), 400
 
         # 사용자 정보 추가 (userGroup, userID, viewDate, timeCategory)
-        selected_food_data['USERID'] = user_id
         selected_food_data['USERGROUP'] = user_group
+        selected_food_data['USERID'] = user_id
         selected_food_data['DATE'] = view_date
         selected_food_data['TIME'] = time_category
 
@@ -1007,16 +1007,6 @@ def add_food():
 
 ### 유저 음식 기록 저장
 def save_user_data(updated_data):
-    # 기존 데이터 로드
-    # if os.path.exists(user_data_path):
-    #     existing_data = pd.read_excel(user_data_path)
-    # else:
-    #     existing_data = pd.DataFrame()
-
-    # 새로운 데이터와 기존 데이터 병합
-    # updated_data = pd.concat([existing_data, new_data], ignore_index=True)
-
-    # 병합된 데이터를 엑셀 파일에 저장
     updated_data.to_excel(user_data_path, index=False)
 
 ### 음식 리스트 조회
@@ -1049,6 +1039,40 @@ def load_user_data(user_group, user_id, view_date):
             user_data = pd.DataFrame()
     app.logger.debug(f"load_user_data: {user_data}")
     return user_data
+
+### 유저 음식 기록 삭제
+@app.route('/delete_user_data', methods=['POST'])
+def delete_user_data():
+    try:
+        data = request.get_json()
+        app.logger.info(f"Received data: {data}")  # 로그에 데이터를 출력
+
+        food_code = data['foodCode']
+        user_group = data['userGroup']
+        user_id = data['userID']
+        view_date = data['viewDate']
+        time_category = data['timeCategory']
+
+        user_data = pd.read_excel(user_data_path)
+
+        # 삭제할 행 필터링
+        rows_to_delete = user_data[
+            (user_data['FOODID'] == food_code) &
+            (user_data['USERGROUP'] == user_group) &
+            (user_data['USERID'].astype(str) == str(user_id)) &
+            (user_data['DATE'] == view_date) &
+            (user_data['TIME'] == time_category)]
+
+        # 필터링된 행이 있는 경우 삭제 진행
+        if not rows_to_delete.empty:
+            update_data = user_data.drop(rows_to_delete.index)
+            save_user_data(update_data)
+            return jsonify({'status': 'success', 'message': 'Record deleted successfully'}), 200
+        else:
+            return jsonify({'status': 'error', 'message': 'No matching record found'}), 404
+    except Exception as e:
+        app.logger.error(f"Error deleting user data: {e}")
+        return jsonify({'status': 'error', 'message': str(e)}), 500
 
 ### 재료 리스트 조회
 @app.route('/get_ingredients', methods=['POST'])
