@@ -842,8 +842,6 @@ def edit_ingredientDB():
         app.logger.error(f"Error in edit_ingredientDB: {e}")
         return jsonify({'status': 'error', 'message': str(e)}), 500
 
-
-
 # Delete Food
 @app.route('/delete_foodDB', methods=['POST'])
 @login_required
@@ -1052,9 +1050,6 @@ def load_user_data(user_group, user_id, view_date):
     app.logger.debug(f"load_user_data: {user_data}")
     return user_data
 
-
-
-
 ### 재료 리스트 조회
 @app.route('/get_ingredients', methods=['POST'])
 @login_required
@@ -1117,10 +1112,51 @@ def get_food_ingredients():
         app.logger.error(f"Error in get_food_ingredients: {e}")
         return jsonify({'status': 'error', 'message': str(e)}), 500
 
+@app.route('/download_nutrition', methods=['POST'])
+def download_nutrition():
+    try:
+        data = request.json.get('data', [])
+        user_name = request.json.get('userName', 'user')
+
+        if not data:
+            return jsonify({'status': 'error', 'message': 'No data provided'}), 400
+        
+        # 데이터를 DataFrame으로 변환
+        df = pd.DataFrame(data[1:], columns=data[0])
+
+        # 엑셀 파일을 메모리에 생성
+        output = io.BytesIO()
+        with pd.ExcelWriter(output, engine='xlsxwriter') as writer:
+            df.to_excel(writer, index=False)
+
+        output.seek(0)
+
+        filename = f'nutritional_information_{user_name}.xlsx'
+        # 엑셀 파일을 클라이언트로 반환
+        return send_file(output, mimetype='application/vnd.openxmlformats-officedocument.spreadsheetml.sheet', 
+                         as_attachment=True, download_name=filename)
+    except Exception as e:
+        return jsonify({'status': 'error', 'message': str(e)}), 500
+
+@app.route('/get_user_info', methods=['GET'])
+def get_user_info():
+    try:
+        user_group = request.args.get('userGroup')
+        user_id = request.args.get('userID')
+
+        _, users_df = load_excel_data()
+
+        user_info = users_df[(users_df['group'] == user_group) & (users_df['id'] == int(user_id))]
+        result = user_info.to_dict(orient='records')[0]
+
+        return jsonify(result)
+    except Exception as e:
+            app.logger.error(f"Error in get_user_info: {e}")
+            return jsonify({'status': 'error', 'message': str(e)}), 500
+
 @app.route('/runchart', methods=['POST'])
 def run_python_code():
-
-    from bar import bar; 
+    from bar import bar;
 
     current_meal_data = {
         'Energy': request.form.get('currentMealEnergy'),
@@ -1137,8 +1173,11 @@ def run_python_code():
         'VD': request.form.get('currentMealVD'),
         'NA': request.form.get('currentMealNA'),
     }
+    
+    gender = request.form.get('userGender')
+    age = request.form.get('userAge')
 
-    result = bar(current_meal_data) 
+    result = bar(current_meal_data, gender, age) 
 
     return render_template('24h_chart.html', result=result)
 

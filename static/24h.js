@@ -1,10 +1,6 @@
 document.addEventListener('DOMContentLoaded', () => {
     loadGroupsForUser();
     toggleInputFields();
-
-    // Breakfast 버튼을 디폴트로 활성화
-    const defaultCategory = document.querySelector('.time-categories button[data-category="Breakfast"]');
-    setActive(defaultCategory);
 });
 
 // 1행: 그룹 및 유저
@@ -43,7 +39,9 @@ function loadUsers() {
                 userSelect.appendChild(option);
             });
 
-            selectedUserId = null;
+            // Breakfast 버튼을 디폴트로 활성화
+            const defaultCategory = document.querySelector('.time-categories button[data-category="Breakfast"]');
+            setActive(defaultCategory);
         })
         .catch(error => console.error('Error loading users:', error));
 }
@@ -58,7 +56,7 @@ function setActive(button) {
     button.classList.add('active');
 
     // 음식 리스트 초기화
-    loadFoodList();
+    loadData();
 }
 
 // 첫 번째 컨테이너
@@ -71,7 +69,7 @@ function loadFoodList() {
     fetch(`/get_food_list?userGroup=${userGroup}&userID=${userID}&viewDate=${viewDate}`)
     .then(response => response.json())
     .then(data => {
-        console.log('Fetched data:', data); // 데이터 확인을 위해 추가
+        // console.log('Fetched data:', data); // 데이터 확인을 위해 추가
         document.querySelectorAll('.food-items tbody').forEach(tbody => tbody.innerHTML = ""); // 기존 데이터를 초기화
 
         var tableBody = document.querySelector(`.food-items tbody[data-category='${activeCategory}']`);
@@ -187,7 +185,18 @@ document.getElementById('nextPageFoodBtn').addEventListener('click', () => {
     }
 });
 
+// 음식 추가
 function addToFoodList() {
+    document.querySelectorAll("#foodTable tbody tr").forEach(row => {
+        row.addEventListener('click', function() {
+            // 모든 행의 data-selected 속성을 제거
+            document.querySelectorAll("#foodTable tbody tr").forEach(r => r.removeAttribute('data-selected'));
+            
+            // 클릭한 행에 data-selected 속성을 추가
+            this.setAttribute('data-selected', 'true');
+        });
+    });
+    
     var selectedRow = document.querySelector("#foodTable tbody tr[data-selected='true']");
     if (!selectedRow) return alert("Please select a food item to add");
 
@@ -197,6 +206,8 @@ function addToFoodList() {
     var userGroup = document.getElementById('userGroup').value;
     var userID = document.getElementById('userID').value;
     var viewDate = document.getElementById('date').value;
+
+    // console.log(foodCode, foodName, timeCategory, userGroup, userID, viewDate)
 
     fetch('/add_food', {
         method: 'POST',
@@ -288,7 +299,7 @@ function loadAllFoodList() {
 
             results.forEach(result => {
                 appendNutritionRow(result);
-                console.log("영양성분 계산 음식", result)
+                // console.log("영양성분 계산 음식", result)
                 // 각 항목의 영양성분을 총합에 추가
                 for (var key in totalNutrients) {
                     totalNutrients[key] += parseFloat(result.nutrientTotals[key]) || 0;
@@ -333,7 +344,7 @@ function loadNutrition(foodCode, foodName, category) {
             .then(response => response.json())
             .then(data => {
                 if (data.length > 0) {
-                    console.log("영양성분계산", data)
+                    // console.log("영양성분계산", data)
                     var nutrientTotals = {
                         'Energy': 0, 'Water': 0, 'Protein': 0, 'Fat': 0, 
                         'Carbo': 0, 'Fiber': 0, 'CA': 0, 'FE': 0, 
@@ -437,8 +448,54 @@ function appendTotalRow(totalNutrients) {
 
 // 엑셀로 내보내기
 function exportExcel() {
-    
+    const table = document.querySelector('.nutrition-table');
+    const data = [];
+    const headers = [];
 
+    // 헤더 행의 텍스트를 가져옵니다.
+    const headerCells = table.querySelectorAll('thead th');
+    headerCells.forEach(header => headers.push(header.textContent.trim()));
+    data.push(headers);
+
+    // 본문 행의 텍스트를 가져옵니다.
+    const rows = table.querySelectorAll('tbody tr');
+    rows.forEach(row => {
+        const rowData = [];
+        const cells = row.querySelectorAll('td');
+        cells.forEach(cell => rowData.push(cell.textContent.trim()));
+        data.push(rowData);
+    });
+
+    // 선택된 유저의 ID와 이름을 가져옵니다.
+    const selectedUserID = document.getElementById('userID').value;
+    const selectedUserName = document.getElementById('userID').options[document.getElementById('userID').selectedIndex].text;
+
+    // 서버로 데이터를 전송하여 엑셀 파일로 다운로드합니다.
+    fetch('/download_nutrition', {
+        method: 'POST',
+        headers: {
+            'Content-Type': 'application/json'
+        },
+        body: JSON.stringify({
+            data: data,
+            userName: selectedUserName
+        })
+    })
+    .then(response => response.blob())
+    .then(blob => {
+        // 파일 이름에 유저 이름을 포함
+        const fileName = `nutritional_information_${selectedUserName}.xlsx`;
+
+        // 파일을 다운로드
+        const url = window.URL.createObjectURL(blob);
+        const a = document.createElement('a');
+        a.href = url;
+        a.download = fileName;
+        document.body.appendChild(a);
+        a.click();
+        a.remove();
+    })
+    .catch(error => console.error('Error exporting to Excel:', error));
 }
 
 // 차트 생성
@@ -447,6 +504,17 @@ function submitChartForm() {
         alert('Daily total nutrients not calculated yet.');
         return;
     }
+
+    var userGroup = document.getElementById('userGroup').value;
+    var userID = document.getElementById('userID').value;
+
+    fetch(`/get_user_info?userGroup=${userGroup}&userID=${userID}`)
+    .then(response => response.json())
+    .then(userInfo => {
+        document.getElementById('userGender').value = userInfo.gender;
+        document.getElementById('userAge').value = userInfo.age;
+    })
+    .catch(error => console.error('Error loading user info:', error));
 
     // Daily total 행의 값을 가져오기
     document.getElementById('currentMealEnergy').value = dailyTotalNutrients['Energy'].toFixed(2);
@@ -466,6 +534,3 @@ function submitChartForm() {
     // 폼 제출
     document.getElementById('chartForm').submit();
 }
-
-
-
