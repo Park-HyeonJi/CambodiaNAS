@@ -4,8 +4,11 @@ from pyecharts import options as opts
 from pyecharts.charts import Bar
 
 def bar(current, gender, age):
+    # print("Received gender:", gender)
+    # print("Received age:", age)
     # Sample data for overall (assuming combined male and female data)
-    print('### len', len(current))
+    # print('### len', len(current))
+
     if len(current)==0:
         overall_data = [2600, 60, 500, 13.7, 7, 700.0, 4, 70.0, 1, 1, 15.0, 500.0, 1000] 
     else:
@@ -19,12 +22,20 @@ def bar(current, gender, age):
                 valuelist.append(float(value[x]))
     overall_data=valuelist; #print('### over_all=', overall_data)
     
+    if gender == 'male':
+        gender = 'men'
+    elif gender == 'female':
+        gender = 'women'
+    else:
+        gender = 'men'
+
     # gender='men'; age=0;
-    if gender == '': gender= 'men'
-    if age==0: age=30
-    
+    # if gender == '': gender= 'men'
+    # if age==0: age=30
+
     recommends = pd.read_excel('data/NutritionRecommends.xlsx')
-    cond = (recommends.Gender == gender) & (recommends.Age == age)
+    cond = (recommends.Gender == gender) & (recommends.Age.astype(int) == int(age))
+    print(recommends[cond])
     recom = recommends[cond].iloc[0, 2:]
     recomlist = np.array(recom); print('recomlist=', recomlist)
     
