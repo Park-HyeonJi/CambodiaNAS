@@ -3,7 +3,16 @@ html, body {
     height: 100%;
     margin: 0;
     padding: 0;
-    box-sizing: border-box;
+}
+
+body.login-page {
+    min-height: 100vh;
+    background-size: contain; /* contain으로 변경 */
+    background-position: center;
+    background-repeat: no-repeat;
+    display: flex;
+    justify-content: center; /* 컨텐츠를 가운데로 정렬 */
+    align-items: center; /* 컨텐츠를 세로로 가운데 정렬 */
 }
 
 body {
@@ -79,14 +88,15 @@ footer {
 /* login.html */
 .login-page {
     display: flex;
-    /* justify-content: center; */
-    /* align-items: center; */
+    justify-content: center; /* 컨텐츠를 가로로 가운데 정렬 */
+    align-items: center; /* 컨텐츠를 세로로 가운데 정렬 */
     min-height: 100vh;
-    /* background-image: url('{{ url_for('static', filename='images/background.png') }}');
-    background-size: cover;
-    background-position: center; */
-    /* color: white; */
-    /* text-align: center; */
+    background-image: url('{{ url_for('static', filename='images/background.png') }}');
+    background-size: contain; /* 이미지를 화면에 맞추되 비율을 유지함 */
+    background-position: center;
+    background-repeat: no-repeat;
+    color: white;
+    text-align: center;
 }
 
 .login-page .container {
@@ -94,7 +104,6 @@ footer {
     flex-direction: column;
     justify-content: center;
     align-items: flex-start;
-    /* background: rgba(0, 0, 0, 0.6); 배경을 반투명하게 */
     padding: 20px;
     border-radius: 10px;
     margin-left: 150px;
@@ -107,27 +116,18 @@ footer {
     flex-direction: row;
 }
 
-/* .login-page h1 {
-    margin: 0;
-    font-size: 2em;
-    margin-right: 50px;
-} */
-
 .login-page .login-wrapper {
     width: 300px;
     padding: 15px;
     box-sizing: border-box;
-    background: rgba(255, 255, 255, 0.9); /* 로그인 폼을 반투명하게 */
+    background: rgba(255, 255, 255, 0.9);
     border-radius: 10px;
     box-shadow: 0 0 10px rgba(0, 0, 0, 0.3);
     color: #333;
-    /* text-align: left; */
 }
 
 .login-page .login-wrapper > h2 {
-    /* font-size: 24px; */
     margin-bottom: 20px;
-    /* text-align: center; */
     color: #333;
 }
 
@@ -152,18 +152,20 @@ footer {
     justify-content: flex-end;
 }
 
-.login-page #login-form button {
-    padding: 10px 20px;
-    background-color: #FBE07E; /* 버튼의 배경 색상 */
+.start-button {
+    background: none;
     border: none;
-    border-radius: 5px;
-    font-size: 14px;
+    padding: 0; 
     cursor: pointer;
-    /* color: #fff; */
-    transition: background-color 0.3s;
-    margin-top: 10px;
+    position: absolute;
+    left: calc(40% - 50px); /* 가로 기준 오른쪽 첫 번째 라인에 맞추기 (4등분 중 75%) */
+    top: calc(65% - 20px); /* 세로 기준 하단 첫 번째 라인에 맞추기 (4등분 중 75%) */
+    transform: translate(-50%, -50%); /* 버튼을 정확한 교차점에 위치시키기 위해 중앙 이동 */
 }
 
-.login-page #login-form button:hover {
-    background-color: #FFC700; /* 버튼 호버 시 배경 색상 */
+
+.start-button img {
+    width: 100px; /* 버튼의 크기를 설정하세요 */
+    height: auto; /* 비율을 유지하면서 크기 조정 */
+    display: block;
 }
