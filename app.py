@@ -393,6 +393,34 @@ def add_foodDB():
         new_row = {col: 'N/A' for col in food_data.columns}
         new_row['FOODID'] = FOODID
         new_row['FOODNAME'] = FOODNAME
+
+        # 기본 성분 데이터를 포함
+        new_row.update({
+            'CLASS':'RUAR',
+            'INGID': 'N0025',
+            'INGNAME': 'ទឹក',
+            'INGNAME_EN': 'Water',
+            '1 person (g)': 100,
+            'Energy': 0,
+            'Water': 100,
+            'Protein': 0,
+            'Fat': 0,
+            'Carbo': 0,
+            'Fiber': 0,
+            'CA': 0,
+            'FE': 0,
+            'ZN': 0,
+            'VA': 0,
+            'VB1': 0,
+            'VB2': 0,
+            'VB3': 0,
+            'VB6': 0,
+            'Fol': 0,
+            'VB12': 0,
+            'VC': 0,
+            'VD': 0,
+            'NA': 0,
+        })
         
         # 새로운 행을 DataFrame으로 변환
         new_row_df = pd.DataFrame([new_row])
@@ -406,10 +434,11 @@ def add_foodDB():
         # 임시 파일을 실제 파일로 덮어쓰기
         os.replace(temp_food_data_path, food_data_path)
 
-        return jsonify({'status': 'success', 'message': 'Food added successfully'})
+        return jsonify({'status': 'success', 'message': 'Food added successfully with default ingredient data'})
     except Exception as e:
         app.logger.error(f"Error in add_foodDB: {e}")
         return jsonify({'status': 'error', 'message': str(e)}), 500
+
 
 @app.route('/add_ingredientDB', methods=['POST'])
 @login_required
