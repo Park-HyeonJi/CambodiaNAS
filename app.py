@@ -184,6 +184,7 @@ def delete_user():
         user_id = str(data['id'])  # ID를 문자열로 변환
         user_group = data['group']
 
+        # group_user_data에서 사용자 삭제
         groups_df, users_df = load_excel_data()
 
         # 삭제 이전 데이터 상태를 로그로 확인
@@ -197,10 +198,31 @@ def delete_user():
 
         save_excel_data(groups_df, users_df)
         app.logger.info(f"User with ID: {user_id} from group: {user_group} deleted successfully.")
-        return jsonify({'status': 'success'})
+
+        # Test_SaveUserData.xlsx 파일에서 사용자 정보를 불러옴
+        user_data = pd.read_excel(user_data_path)
+
+        # 사용자의 그룹과 ID에 맞는 행 필터링
+        rows_to_delete = user_data[
+            (user_data['USERGROUP'] == user_group) &
+            (user_data['USERID'].astype(str) == str(user_id))
+        ]
+
+        # 필터링된 행이 있을 경우 삭제 진행
+        if not rows_to_delete.empty:
+            updated_data = user_data.drop(rows_to_delete.index)
+            save_user_data(updated_data)  # 변경된 데이터 저장
+            app.logger.info(f"User data with ID: {user_id} from group: {user_group} deleted successfully from Test_SaveUserData.")
+        else:
+            app.logger.warning(f"No matching record found in Test_SaveUserData for user ID: {user_id} and group: {user_group}.")
+
+        return jsonify({'status': 'success', 'message': 'User and associated data deleted successfully.'})
+
     except Exception as e:
-        app.logger.error(f"Error in delete_user: {e}")
+        app.logger.error(f"Error deleting user and data: {e}")
         return jsonify({'status': 'error', 'message': str(e)}), 500
+
+
     
 @app.route('/download_excel', methods=['GET'])
 @login_required

@@ -269,11 +269,11 @@ function deleteUser() {
     const userGroup = document.getElementById('group-select').value;
 
     if (!userId) {
-        alert('Please select a user to delete.');
+        alert('삭제할 사용자를 선택하세요.');
         return;
     }
 
-    fetch('/delete_user', {
+    fetch('/delete_user', {  // 새로운 통합된 엔드포인트 호출
         method: 'POST',
         headers: {
             'Content-Type': 'application/json',
@@ -281,17 +281,19 @@ function deleteUser() {
         body: JSON.stringify({ id: userId, group: userGroup }),
     })
     .then(response => response.json())
-    .then(result => {
-        console.log('Delete response:', result);  // 서버 응답 로그
-        if (result.status === 'success') {
-            loadUsers();  // 삭제 후 사용자 목록 다시 로드
-            alert('User deleted successfully.');
+    .then(data => {
+        if (data.status === 'success') {
+            alert('사용자가 성공적으로 삭제되었습니다.');
+            loadUsers();  // 사용자 목록 새로고침
         } else {
-            alert('Failed to delete user: ' + result.message);
+            alert('사용자 삭제에 실패했습니다: ' + data.message);
         }
     })
-    .catch(error => console.error('Error deleting user:', error));
+    .catch(error => console.error('Error deleting user and data:', error));
 }
+
+
+
 
 function addUser() {
     // 사용자 정보 입력란을 모두 빈칸으로 초기화
