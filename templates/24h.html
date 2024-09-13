@@ -74,15 +74,15 @@
                     <h3>Food Intake Search</h3>
                     <div class="search-options">
                         <label>
-                            <input type="radio" name="searchType" value="code" checked onclick="toggleInputFields()">
-                            Food Code
-                        </label>
-                        <input type="text" id="codeInput">
-                        <label>
-                            <input type="radio" name="searchType" value="name" onclick="toggleInputFields()">
+                            <input type="radio" name="searchType" value="name" checked onclick="toggleInputFields()">
                             Food Name
                         </label>
                         <input type="text" id="nameInput" disabled>
+                        <label>
+                            <input type="radio" name="searchType" value="code" onclick="toggleInputFields()">
+                            Food Code
+                        </label>
+                        <input type="text" id="codeInput">
                         <button type="button" onclick="searchFood()">Search</button>
                     </div>
                     <div class="search-results">
@@ -136,7 +136,7 @@
                         <thead>
                             <tr style="text-align: center;">
                                 <th>Time</th>
-                                <th>Food</th>
+                                <th>Food Name</th>
                                 <th>Energy (kcal)</th>
                                 <th>Water (g)</th>
                                 <th>Protein (g)</th>
@@ -168,8 +168,6 @@
                         <option value="basic">Basic Nutrition</option>
                         <!-- Add more options as needed -->
                     </select>
-                    <button type="button" onclick="exportExcel()">Export to Excel</button>
-                    <button type="button" onclick="exportExcel()">Export to Excel (Group)</button>
                     <form id="chartForm" action="/runchart" method="post">
                         <input type="hidden" id="currentMealEnergy" name="currentMealEnergy">
                         <input type="hidden" id="currentMealProtein" name="currentMealProtein">
@@ -188,6 +186,10 @@
                         <input type="hidden" id="userAge" name="userAge">
                         <button type="button" onclick="submitChartForm()">Generate Chart</button>
                     </form>
+                </div>
+                <div class="export-excel">
+                    <button type="button" onclick="exportExcel()">Export to Excel</button>
+                    <button type="button" onclick="exportExcel()">Export to Excel (Group)</button>
                 </div>
             </div>
         </div>
