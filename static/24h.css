@@ -1,9 +1,8 @@
-button {
+button, select, input {
+    margin-top: 10px;
     padding: 5px 10px;
     border: none;
     border-radius: 5px;
-    background-color: #4CAF50;
-    color: white;
     cursor: pointer;
 }
 
@@ -11,19 +10,8 @@ button {
 .person-search {
     display: flex;
     flex-direction: row;
-    gap: 10px;
-    /* flex-wrap: wrap; */
+    gap: 20px;
     margin-bottom: 20px;
-}
-
-.form-group {
-    display: flex;
-    flex-direction: row;
-    margin-right: 10px;
-}
-
-.form-group label {
-    margin-right: 5px;
 }
 
 /* 2행 */
@@ -57,7 +45,6 @@ button {
 }
 
 .time-categories button {
-    margin-top: 10px;
     height: 40px;
 }
 
@@ -76,10 +63,6 @@ button {
     display: flex;
     justify-content: flex-end;
 }
-
-/* .search-results {
-    flex-grow: 1;
-} */
 
 .pagination {
     display: flex;
@@ -111,7 +94,7 @@ button {
 }
 
 .search-options input[type="text"] {
-    width: 70px; /* 입력 필드의 너비 조절 */
+    width: 70px;
 }
 
 .food-table {
@@ -178,15 +161,10 @@ button {
     margin-right: 10px;
 }
 
-.nutrition-controls select {
-    padding: 5px;
-    border-radius: 5px;
-    border: 1px solid #ccc;
-}
-
 .export-excel button {
     margin-top: 10px;
     background-color: #6200ff;
+    color: white;
 }
 
 .nutrition-controls button:hover {

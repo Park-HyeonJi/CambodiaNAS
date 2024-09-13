@@ -17,7 +17,7 @@
             <!-- 1행 : 그룹, 유저 설정 -->
             <div class="person-search">
                 <div class="form-group">
-                    <label for="userGroup">User Group:</label>
+                    <label for="userGroup">Group:</label>
                     <select id="userGroup" name="userGroup" onchange="loadUsers()">
                     </select>
                 </div>
@@ -26,9 +26,9 @@
                     <select id="userID" name="userID">
                     </select>
                 </div>
-                <div class="form-group">
+                <div>
                     <label for="date">View Date:</label>
-                    <input type="date" id="date" name="date" value="2024-01-30">
+                    <input type="date" id="date" name="date">
                 </div>
                 <button type="button" onclick="loadData()">Load Data</button>
             </div>
