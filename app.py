@@ -1196,21 +1196,25 @@ def download_nutrition():
         if not data:
             return jsonify({'status': 'error', 'message': 'No data provided'}), 400
         
-        # 데이터를 DataFrame으로 변환
+        # 'Food Name'에 빈 값 추가
+        for row in data:
+            if row[0] == 'Daily Total':
+                row.insert(1, '')
+
         df = pd.DataFrame(data[1:], columns=data[0])
 
-        # 엑셀 파일을 메모리에 생성
-        output = io.BytesIO()
+        output = BytesIO()
         with pd.ExcelWriter(output, engine='xlsxwriter') as writer:
             df.to_excel(writer, index=False)
 
         output.seek(0)
 
         filename = f'nutritional_information_{user_name}.xlsx'
-        # 엑셀 파일을 클라이언트로 반환
+
         return send_file(output, mimetype='application/vnd.openxmlformats-officedocument.spreadsheetml.sheet', 
                          as_attachment=True, download_name=filename)
     except Exception as e:
+        print(f"Error occurred: {e}")
         return jsonify({'status': 'error', 'message': str(e)}), 500
 
 @app.route('/get_user_info', methods=['GET'])
