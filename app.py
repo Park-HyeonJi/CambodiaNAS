@@ -184,6 +184,7 @@ def delete_user():
         user_id = str(data['id'])  # ID를 문자열로 변환
         user_group = data['group']
 
+        # group_user_data에서 사용자 삭제
         groups_df, users_df = load_excel_data()
 
         # 삭제 이전 데이터 상태를 로그로 확인
@@ -197,10 +198,31 @@ def delete_user():
 
         save_excel_data(groups_df, users_df)
         app.logger.info(f"User with ID: {user_id} from group: {user_group} deleted successfully.")
-        return jsonify({'status': 'success'})
+
+        # Test_SaveUserData.xlsx 파일에서 사용자 정보를 불러옴
+        user_data = pd.read_excel(user_data_path)
+
+        # 사용자의 그룹과 ID에 맞는 행 필터링
+        rows_to_delete = user_data[
+            (user_data['USERGROUP'] == user_group) &
+            (user_data['USERID'].astype(str) == str(user_id))
+        ]
+
+        # 필터링된 행이 있을 경우 삭제 진행
+        if not rows_to_delete.empty:
+            updated_data = user_data.drop(rows_to_delete.index)
+            save_user_data(updated_data)  # 변경된 데이터 저장
+            app.logger.info(f"User data with ID: {user_id} from group: {user_group} deleted successfully from Test_SaveUserData.")
+        else:
+            app.logger.warning(f"No matching record found in Test_SaveUserData for user ID: {user_id} and group: {user_group}.")
+
+        return jsonify({'status': 'success', 'message': 'User and associated data deleted successfully.'})
+
     except Exception as e:
-        app.logger.error(f"Error in delete_user: {e}")
+        app.logger.error(f"Error deleting user and data: {e}")
         return jsonify({'status': 'error', 'message': str(e)}), 500
+
+
     
 @app.route('/download_excel', methods=['GET'])
 @login_required
@@ -393,6 +415,34 @@ def add_foodDB():
         new_row = {col: 'N/A' for col in food_data.columns}
         new_row['FOODID'] = FOODID
         new_row['FOODNAME'] = FOODNAME
+
+        # 기본 성분 데이터를 포함
+        new_row.update({
+            'CLASS':'RUAR',
+            'INGID': 'N0025',
+            'INGNAME': 'ទឹក',
+            'INGNAME_EN': 'Water',
+            '1 person (g)': 100,
+            'Energy': 0,
+            'Water': 100,
+            'Protein': 0,
+            'Fat': 0,
+            'Carbo': 0,
+            'Fiber': 0,
+            'CA': 0,
+            'FE': 0,
+            'ZN': 0,
+            'VA': 0,
+            'VB1': 0,
+            'VB2': 0,
+            'VB3': 0,
+            'VB6': 0,
+            'Fol': 0,
+            'VB12': 0,
+            'VC': 0,
+            'VD': 0,
+            'NA': 0,
+        })
         
         # 새로운 행을 DataFrame으로 변환
         new_row_df = pd.DataFrame([new_row])
@@ -406,10 +456,11 @@ def add_foodDB():
         # 임시 파일을 실제 파일로 덮어쓰기
         os.replace(temp_food_data_path, food_data_path)
 
-        return jsonify({'status': 'success', 'message': 'Food added successfully'})
+        return jsonify({'status': 'success', 'message': 'Food added successfully with default ingredient data'})
     except Exception as e:
         app.logger.error(f"Error in add_foodDB: {e}")
         return jsonify({'status': 'error', 'message': str(e)}), 500
+
 
 @app.route('/add_ingredientDB', methods=['POST'])
 @login_required
@@ -660,7 +711,7 @@ def edit_ingredientDBN():
 def delete_ingredientDBN():
     try:
         data = request.get_json()
-        app.logger.debug(f"Received data: {data}")
+        # app.logger.debug(f"Received data: {data}")
 
         food_ingredient_data_path = 'data/FoodData.xlsx'
 
@@ -842,8 +893,6 @@ def edit_ingredientDB():
         app.logger.error(f"Error in edit_ingredientDB: {e}")
         return jsonify({'status': 'error', 'message': str(e)}), 500
 
-
-
 # Delete Food
 @app.route('/delete_foodDB', methods=['POST'])
 @login_required
@@ -987,8 +1036,8 @@ def add_food():
             return jsonify({'status': 'error', 'message': f"No data found for foodCode: {food_code}"}), 400
 
         # 사용자 정보 추가 (userGroup, userID, viewDate, timeCategory)
-        selected_food_data['USERID'] = user_id
         selected_food_data['USERGROUP'] = user_group
+        selected_food_data['USERID'] = user_id
         selected_food_data['DATE'] = view_date
         selected_food_data['TIME'] = time_category
 
@@ -1009,16 +1058,6 @@ def add_food():
 
 ### 유저 음식 기록 저장
 def save_user_data(updated_data):
-    # 기존 데이터 로드
-    # if os.path.exists(user_data_path):
-    #     existing_data = pd.read_excel(user_data_path)
-    # else:
-    #     existing_data = pd.DataFrame()
-
-    # 새로운 데이터와 기존 데이터 병합
-    # updated_data = pd.concat([existing_data, new_data], ignore_index=True)
-
-    # 병합된 데이터를 엑셀 파일에 저장
     updated_data.to_excel(user_data_path, index=False)
 
 ### 음식 리스트 조회
@@ -1052,8 +1091,39 @@ def load_user_data(user_group, user_id, view_date):
     app.logger.debug(f"load_user_data: {user_data}")
     return user_data
 
+### 유저 음식 기록 삭제
+@app.route('/delete_user_data', methods=['POST'])
+def delete_user_data():
+    try:
+        data = request.get_json()
+        app.logger.info(f"Received data: {data}")  # 로그에 데이터를 출력
 
+        food_code = data['foodCode']
+        user_group = data['userGroup']
+        user_id = data['userID']
+        view_date = data['viewDate']
+        time_category = data['timeCategory']
 
+        user_data = pd.read_excel(user_data_path)
+
+        # 삭제할 행 필터링
+        rows_to_delete = user_data[
+            (user_data['FOODID'] == food_code) &
+            (user_data['USERGROUP'] == user_group) &
+            (user_data['USERID'].astype(str) == str(user_id)) &
+            (user_data['DATE'] == view_date) &
+            (user_data['TIME'] == time_category)]
+
+        # 필터링된 행이 있는 경우 삭제 진행
+        if not rows_to_delete.empty:
+            update_data = user_data.drop(rows_to_delete.index)
+            save_user_data(update_data)
+            return jsonify({'status': 'success', 'message': 'Record deleted successfully'}), 200
+        else:
+            return jsonify({'status': 'error', 'message': 'No matching record found'}), 404
+    except Exception as e:
+        app.logger.error(f"Error deleting user data: {e}")
+        return jsonify({'status': 'error', 'message': str(e)}), 500
 
 ### 재료 리스트 조회
 @app.route('/get_ingredients', methods=['POST'])
@@ -1117,10 +1187,55 @@ def get_food_ingredients():
         app.logger.error(f"Error in get_food_ingredients: {e}")
         return jsonify({'status': 'error', 'message': str(e)}), 500
 
+@app.route('/download_nutrition', methods=['POST'])
+def download_nutrition():
+    try:
+        data = request.json.get('data', [])
+        user_name = request.json.get('userName', 'user')
+
+        if not data:
+            return jsonify({'status': 'error', 'message': 'No data provided'}), 400
+        
+        # 'Food Name'에 빈 값 추가
+        for row in data:
+            if row[0] == 'Daily Total':
+                row.insert(1, '')
+
+        df = pd.DataFrame(data[1:], columns=data[0])
+
+        output = BytesIO()
+        with pd.ExcelWriter(output, engine='xlsxwriter') as writer:
+            df.to_excel(writer, index=False)
+
+        output.seek(0)
+
+        filename = f'nutritional_information_{user_name}.xlsx'
+
+        return send_file(output, mimetype='application/vnd.openxmlformats-officedocument.spreadsheetml.sheet', 
+                         as_attachment=True, download_name=filename)
+    except Exception as e:
+        print(f"Error occurred: {e}")
+        return jsonify({'status': 'error', 'message': str(e)}), 500
+
+@app.route('/get_user_info', methods=['GET'])
+def get_user_info():
+    try:
+        user_group = request.args.get('userGroup')
+        user_id = request.args.get('userID')
+
+        _, users_df = load_excel_data()
+
+        user_info = users_df[(users_df['group'] == user_group) & (users_df['id'] == int(user_id))]
+        result = user_info.to_dict(orient='records')[0]
+
+        return jsonify(result)
+    except Exception as e:
+            app.logger.error(f"Error in get_user_info: {e}")
+            return jsonify({'status': 'error', 'message': str(e)}), 500
+
 @app.route('/runchart', methods=['POST'])
 def run_python_code():
-
-    from bar import bar; 
+    from bar import bar;
 
     current_meal_data = {
         'Energy': request.form.get('currentMealEnergy'),
@@ -1137,8 +1252,12 @@ def run_python_code():
         'VD': request.form.get('currentMealVD'),
         'NA': request.form.get('currentMealNA'),
     }
+    
+    gender = request.form.get('userGender')
+    age = request.form.get('userAge')
+    # app.logger.debug(f"runchart 전달 데이터: {gender} {age}")
 
-    result = bar(current_meal_data) 
+    result = bar(current_meal_data, gender, age) 
 
     return render_template('24h_chart.html', result=result)
 

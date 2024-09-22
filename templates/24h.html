@@ -17,7 +17,7 @@
             <!-- 1행 : 그룹, 유저 설정 -->
             <div class="person-search">
                 <div class="form-group">
-                    <label for="userGroup">User Group:</label>
+                    <label for="userGroup">Group:</label>
                     <select id="userGroup" name="userGroup" onchange="loadUsers()">
                     </select>
                 </div>
@@ -26,12 +26,11 @@
                     <select id="userID" name="userID">
                     </select>
                 </div>
-                <div class="form-group">
+                <div>
                     <label for="date">View Date:</label>
-                    <input type="date" id="date" name="date" value="2024-01-30">
+                    <input type="date" id="date" name="date">
                 </div>
                 <button type="button" onclick="loadData()">Load Data</button>
-                <!-- <button type="button" onclick="copyData()">Copy Data</button> -->
             </div>
 
             <!-- 2행 -->
@@ -66,10 +65,8 @@
                             </table>
                         </div>
                     </div>
-                    <div class="food-data-buttons">
-                        <!-- <button type="button">Add Food</button>
-                        <button type="button">Copy Food</button> -->
-                        <button type="button">Delete Food</button>
+                    <div class="food-data-button">
+                        <button type="button" onclick="deleteFood()">Delete Food</button>
                     </div>
                 </div>
                 <!-- 2열: 입력할 Food list 및 검색 -->
@@ -77,15 +74,15 @@
                     <h3>Food Intake Search</h3>
                     <div class="search-options">
                         <label>
-                            <input type="radio" name="searchType" value="code" checked onclick="toggleInputFields()">
-                            Food Code
-                        </label>
-                        <input type="text" id="codeInput">
-                        <label>
-                            <input type="radio" name="searchType" value="name" onclick="toggleInputFields()">
+                            <input type="radio" name="searchType" value="name" checked onclick="toggleInputFields()">
                             Food Name
                         </label>
                         <input type="text" id="nameInput" disabled>
+                        <label>
+                            <input type="radio" name="searchType" value="code" onclick="toggleInputFields()">
+                            Food Code
+                        </label>
+                        <input type="text" id="codeInput">
                         <button type="button" onclick="searchFood()">Search</button>
                     </div>
                     <div class="search-results">
@@ -112,10 +109,10 @@
                 <!-- 3열: 식사에 대한 정보 -->
                 <div class="food-details">
                     <h3>List Of Food Ingredients By Food Intake</h3>
-                    <div class="form-group">
+                    <!-- <div class="form-group">
                         <label for="foodIntake">Food Intake Rate(%):</label>
                         <input type="text" id="foodIntake" name="foodIntake" value="100">
-                    </div>
+                    </div> -->
                     <table class="food-table">
                         <thead>
                             <tr>
@@ -128,9 +125,6 @@
                             <!-- Ingredients will be dynamically added here -->
                         </tbody>
                     </table>
-                    <button type="button">Apply</button>
-                    <button type="button">Add Food Ingredient</button>
-                    <button type="button">Delete Food Ingredient</button>
                 </div>
             </div>
 
@@ -140,27 +134,27 @@
                 <div style="overflow-x: auto;">
                     <table class="nutrition-table">
                         <thead>
-                            <tr>
-                                <th>Category</th>
+                            <tr style="text-align: center;">
+                                <th>Time</th>
                                 <th>Food Name</th>
                                 <th>Energy (kcal)</th>
                                 <th>Water (g)</th>
                                 <th>Protein (g)</th>
                                 <th>Fat (g)</th>
-                                <th>Carbohydrate (g)</th>
+                                <th>CHO (g)</th>
                                 <th>Fiber (g)</th>
-                                <th>CA (mg)</th>
-                                <th>FE (mg)</th>
-                                <th>ZN (mg)</th>
-                                <th>Vitamin A_RAE (mcg)</th>
-                                <th>Vitamin B1 (mg)</th>
-                                <th>Vitamin B2 (mg)</th>
-                                <th>Vitamin B3 (mg)</th>
-                                <th>Vitamin B6 (mg)</th>
-                                <th>Folic Acid (mcg)</th>
-                                <th>Vitamin B12 (mcg)</th>
-                                <th>Vitamin C (mg)</th>
-                                <th>Vitamin D (mcg)</th>
+                                <th>Ca (mg)</th>
+                                <th>Fe (mg)</th>
+                                <th>Zn (mg)</th>
+                                <th>Vit.A (mcg)</th>
+                                <th>Vit.B1 (mg)</th>
+                                <th>Vit.B2 (mg)</th>
+                                <th>Vit.B3 (mg)</th>
+                                <th>Vit.B6 (mg)</th>
+                                <th>Folate (mcg)</th>
+                                <th>Vit.B12 (mcg)</th>
+                                <th>Vit.C (mg)</th>
+                                <th>Vit.D (mcg)</th>
                                 <th>Na (mg)</th>
                             </tr>
                         </thead>
@@ -174,8 +168,6 @@
                         <option value="basic">Basic Nutrition</option>
                         <!-- Add more options as needed -->
                     </select>
-                    <button type="button" onclick="exportExcel()">Export to Excel</button>
-                    <button type="button" onclick="exportExcel()">Export to Excel (Group)</button>
                     <form id="chartForm" action="/runchart" method="post">
                         <input type="hidden" id="currentMealEnergy" name="currentMealEnergy">
                         <input type="hidden" id="currentMealProtein" name="currentMealProtein">
@@ -190,8 +182,14 @@
                         <input type="hidden" id="currentMealVC" name="currentMealVC">
                         <input type="hidden" id="currentMealVD" name="currentMealVD">
                         <input type="hidden" id="currentMealNA" name="currentMealNA">
+                        <input type="hidden" id="userGender" name="userGender">
+                        <input type="hidden" id="userAge" name="userAge">
                         <button type="button" onclick="submitChartForm()">Generate Chart</button>
                     </form>
+                </div>
+                <div class="export-excel">
+                    <button type="button" onclick="exportExcel()">Export to Excel</button>
+                    <button type="button" onclick="exportExcel()">Export to Excel (Group)</button>
                 </div>
             </div>
         </div>
