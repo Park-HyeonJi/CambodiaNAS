@@ -9,7 +9,7 @@
     <link rel="stylesheet" href="{{ url_for('static', filename='db_nutri.css') }}">
 </head>
 <body>
-    <h2>Ingredient DB Editor</h2>
+    <h2>Food Ingredient DB Editor</h2>
     <div class="main-content">
         <div class="section-container">
             <!-- Food Ingredient -->
@@ -18,12 +18,12 @@
                 <div class="search-options">
                     <label>
                         <input type="radio" name="ingredientSearchType" value="ingredientCode" checked onclick="toggleIngredientInputFields()">
-                        INGID
+                        Ingrdient Code
                     </label>
                     <input type="text" id="ingredientCodeInput">
                     <label>
                         <input type="radio" name="ingredientSearchType" value="ingredientName" onclick="toggleIngredientInputFields()">
-                        INGNAME_EN
+                        Ingrdient
                     </label>
                     <input type="text" id="ingredientNameInput" disabled>
                     <button type="button" onclick="searchIngredient()">Search</button>
@@ -31,9 +31,9 @@
                 <table id="ingredientTable" class="food-table">
                     <thead>
                         <tr>
-                            <th>INGID</th>
-                            <th>INGNAME_EN</th>
-                            <th>g</th>
+                            <th>Ingrdient Code</th>
+                            <th>Ingrdient</th>
+                            <th>1 person (g)</th>
                         </tr>
                     </thead>
                     <tbody id="ingredientTableBody">
@@ -49,9 +49,11 @@
                         <option value="50">50</option>
                     </select>
                 </div>
-                <button id="editIngredientBtn" type="button">Edit Ingredient</button>
-                <button id="addIngredientBtn" type="button">Add Ingredient</button>
-                <button id="deleteIngredientBtn" type="button">Delete Ingredient</button>
+                <div class="button-group">
+                    <button id="editIngredientBtn" type="button">Edit Ingredient</button>
+                    <button id="addIngredientBtn" type="button">Add Ingredient</button>
+                    <button id="deleteIngredientBtn" type="button">Delete Ingredient</button>
+                </div>
             </div>
             <!-- Food Nutrient-->
             <div class ="section">

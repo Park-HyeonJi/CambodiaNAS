@@ -1,5 +1,6 @@
 let selectedFoodID = null;
 let selectedFoodName = null;
+let currentActiveButton = null;
 
 document.addEventListener('DOMContentLoaded', () => {
     toggleInputFields();
@@ -348,6 +349,8 @@ function handleRowClick(event) {
 function addFood() {
     var addButton = document.getElementById('addFoodBtn');
     addButton.textContent = 'Apply';
+    addButton.classList.add('apply'); // Apply 상태로 바꾸면 아랫줄로 이동
+    disableOtherButtons('addFoodBtn'); // 다른 버튼 비활성화
     addButton.removeEventListener('click', addFood);
     addButton.addEventListener('click', applyNewFood);
 
@@ -422,8 +425,8 @@ function applyNewFood() {
             newRow.removeAttribute('id');
 
              // 새로운 음식을 추가한 후, 해당 음식 자동 검색
-             document.getElementById('codeInput').value = foodID;
-             document.querySelector('input[name="searchType"][value="code"]').checked = true;
+            document.getElementById('codeInput').value = foodID;
+            document.querySelector('input[name="searchType"][value="code"]').checked = true;
              searchFood();  // 검색 함수 호출
 
         } else {
@@ -444,6 +447,8 @@ function applyNewFood() {
 function resetAddFoodButton() {
     var addButton = document.getElementById('addFoodBtn');
     addButton.textContent = 'Add Food';
+    addButton.classList.remove('apply'); // Apply 클래스 제거
+    enableAllButtons(); // 모든 버튼 다시 활성화
     addButton.removeEventListener('click', applyNewFood);
     addButton.addEventListener('click', addFood);
 }
@@ -464,6 +469,8 @@ function addIngredient() {
     // Add Ingredient 버튼을 Apply Ingredient 버튼으로 변경
     const addButton = document.getElementById('addIngredientBtn');
     addButton.textContent = 'Apply';
+    addButton.classList.add('apply'); // Apply 상태로 바꾸면 아랫줄로 이동
+    disableOtherButtons('addIngredientBtn'); // 다른 버튼 비활성화
     addButton.removeEventListener('click', addIngredient);
     addButton.addEventListener('click', applyNewIngredient);
 
@@ -676,6 +683,8 @@ function resetAddIngredientButton() {
     const addButton = document.getElementById('addIngredientBtn');
     if (addButton) {
         addButton.textContent = 'Add Ingredient';
+        addButton.classList.remove('apply'); // Apply 클래스 제거
+        enableAllButtons(); // 모든 버튼 다시 활성화
         addButton.removeEventListener('click', applyNewIngredient);
         addButton.addEventListener('click', addIngredient);
     } else {
@@ -706,6 +715,8 @@ function editFood() {
     // Edit 버튼을 Apply 버튼으로 변경
     const editButton = document.getElementById('editFoodBtn');
     editButton.textContent = 'Apply';
+    editButton.classList.add('apply'); // Apply 상태로 바꾸면 아랫줄로 이동
+    disableOtherButtons('editFoodBtn'); // 다른 버튼 비활성화
     editButton.removeEventListener('click', editFood);
     editButton.addEventListener('click', applyEditFood);
 }
@@ -775,6 +786,8 @@ function applyEditFood() {
 function resetEditFoodButton() {
     const editButton = document.getElementById('editFoodBtn');
     editButton.textContent = 'Edit Food';
+    editButton.classList.remove('apply'); // Apply 클래스 제거
+    enableAllButtons(); // 모든 버튼 다시 활성화
     editButton.removeEventListener('click', applyEditFood);
     editButton.addEventListener('click', editFood);
 }
@@ -844,6 +857,8 @@ function editIngredient() {
     // Edit Ingredient 버튼을 Apply Ingredient 버튼으로 변경
     const editButton = document.getElementById('editIngredientBtn');
     editButton.textContent = 'Apply';
+    editButton.classList.add('apply'); // Apply 상태로 바꾸면 아랫줄로 이동
+    disableOtherButtons('editIngredientBtn'); // 다른 버튼 비활성화
     editButton.removeEventListener('click', editIngredient);
     editButton.addEventListener('click', applyEditIngredient);
 }
@@ -969,6 +984,8 @@ function applyEditIngredient() {
 function resetEditIngredientButton() {
     const editButton = document.getElementById('editIngredientBtn');
     editButton.textContent = 'Edit Ingredient';
+    editButton.classList.remove('apply'); // Apply 클래스 제거
+    enableAllButtons(); // 모든 버튼 다시 활성화
     editButton.removeEventListener('click', applyEditIngredient);
     editButton.addEventListener('click', editIngredient);
 }
@@ -1048,4 +1065,22 @@ function deleteIngredient() {
             alert("Error deleting ingredients.");
         });
     }
+}
+
+// 다른 버튼 비활성화
+function disableOtherButtons(activeButtonId) {
+    const buttons = document.querySelectorAll('button');
+    buttons.forEach(button => {
+        if (button.id !== activeButtonId) {
+            button.disabled = true; // 다른 버튼 비활성화
+        }
+    });
+}
+
+// 모든 버튼 다시 활성화
+function enableAllButtons() {
+    const buttons = document.querySelectorAll('button');
+    buttons.forEach(button => {
+        button.disabled = false; // 모든 버튼 활성화
+    });
 }
