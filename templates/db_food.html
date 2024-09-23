@@ -17,13 +17,13 @@
                 <h3>Search & Edit Food</h3>
                 <div class="search-options">
                     <label>
-                        <input type="radio" name="searchType" value="code" checked onclick="toggleInputFields()">
-                        FOODID
+                        <input type="radio" name="searchType" value="code" onclick="toggleInputFields()">
+                        Food Code
                     </label>
                     <input type="text" id="codeInput">
                     <label>
-                        <input type="radio" name="searchType" value="name" onclick="toggleInputFields()">
-                        FOODNAME
+                        <input type="radio" name="searchType" value="name" checked onclick="toggleInputFields()">
+                        Food Name
                     </label>
                     <input type="text" id="nameInput" disabled>
                     <button type="button" onclick="searchFood()">Search</button>
@@ -31,8 +31,8 @@
                 <table id="foodTable" class="food-table">
                     <thead>
                         <tr>
-                            <th>FOODID</th>
-                            <th>FOODNAME</th>
+                            <th>Food Code</th>
+                            <th>Food Name</th>
                         </tr>
                     </thead>
                     <tbody>
@@ -48,9 +48,11 @@
                         <option value="50">50</option>
                     </select>
                 </div>
-                <button id="editFoodBtn" type="button">Edit Food</button>
-                <button id="addFoodBtn" type="button">Add Food</button>
-                <button id="deleteFoodBtn" type="button">Delete Food</button>
+                <div class="button-group">
+                    <button id="editFoodBtn" type="button">Edit Food</button>
+                    <button id="addFoodBtn" type="button">Add Food</button>
+                    <button id="deleteFoodBtn" type="button">Delete Food</button>
+                </div>
                 <input type="hidden" id="selectedFoodID" value="">
                 <input type="hidden" id="selectedFoodName" value="">
             </div>
@@ -60,13 +62,13 @@
                 <h3>Edit Food Ingredient</h3>
                 <div class="search-options">
                     <label>
-                        <input type="radio" name="ingredientSearchType" value="ingredientCode" checked onclick="toggleIngredientInputFields()">
-                        INGID
+                        <input type="radio" name="ingredientSearchType" value="ingredientCode" onclick="toggleIngredientInputFields()">
+                        Ingrdient Code
                     </label>
                     <input type="text" id="ingredientCodeInput">
                     <label>
-                        <input type="radio" name="ingredientSearchType" value="ingredientName" onclick="toggleIngredientInputFields()">
-                        INGNAME_EN
+                        <input type="radio" name="ingredientSearchType" value="ingredientName" checked onclick="toggleIngredientInputFields()">
+                        Ingrdient
                     </label>
                     <input type="text" id="ingredientNameInput" disabled>
                     <button type="button" onclick="searchIngredient()">Search</button>
@@ -75,8 +77,8 @@
                 <table id="ingredientTable" class="food-table">
                     <thead>
                         <tr>
-                            <th>INGID</th>
-                            <th>INGNAME_EN</th>
+                            <th>Ingrdient Code</th>
+                            <th>Ingrdient</th>
                             <th>1 person (g)</th>
                         </tr>
                     </thead>
@@ -93,9 +95,11 @@
                         <option value="50">50</option>
                     </select>
                 </div>
-                <button id="editIngredientBtn" type="button">Edit Food Ingredient</button>
-                <button id="addIngredientBtn" type="button">Add Food Ingredient</button>
-                <button id="deleteIngredientBtn" type="button">Delete Food Ingredient</button>
+                <div class="button-group">
+                    <button id="editIngredientBtn" type="button">Edit Food Ingredient</button>
+                    <button id="addIngredientBtn" type="button">Add Food Ingredient</button>
+                    <button id="deleteIngredientBtn" type="button">Delete Food Ingredient</button>
+            </div>
             </div>
         </div>
     </div>

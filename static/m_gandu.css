@@ -2,7 +2,7 @@
 h2 {
     white-space: nowrap;
     font-size: 24px;
-    margin-bottom: 50px;
+    margin-bottom: 20px;
 }
 
 .container {
@@ -11,23 +11,56 @@ h2 {
     width: 100%;
 }
 
+.button-container {
+    display: flex;
+    justify-content: flex-end;  /* 컨테이너의 끝(우측)으로 요소를 정렬 */
+    flex-wrap: wrap;
+    padding-top: 10px;  /* 위쪽에만 패딩 부여 */
+}
+
+/* 레이블과 인풋 필드를 포함하는 컨테이너에 대한 스타일 */
+.form-group {
+    display: flex;
+    align-items: flex-start; /* 상위 컨테이너의 시작점에 맞춰 정렬 */
+    margin-bottom: 10px;
+}
+
+/* 레이블에 대한 스타일 */
+.label {
+    width: 150px; /* 레이블의 너비를 고정 */
+    margin-right: 10px; /* 레이블과 인풋 필드 사이의 간격 */
+    text-align: left; /* 레이블 텍스트를 왼쪽 정렬 */
+}
+
+/* 인풋 필드에 대한 스타일 */
+.input-field {
+    flex-grow: 1; /* 인풋 필드가 남은 공간을 모두 채우도록 설정 */
+    width: 100%; /* 필드의 너비를 100%로 설정하여 컨테이너를 꽉 채움 */
+}
+
+
 /* Group Management 섹션 */
 .group-management {
     display: flex;
     width: 100%;
 }
 
-.group-list, .group-details {
-    width: 48%; /* 동일한 너비로 설정 */
+.group-list {
+    width: 33%; /* 너비 조정 */
     padding: 20px;
     border-radius: 8px;
-    margin-right: 20px;
-    background-color: #fffacd; /* Group Management 색상 */
+    background-color: #fffacd;
+    margin-right: 2%; /* 오른쪽 여백 추가 */
 }
 
 .group-details {
-    background-color: #e0ffe0; /* 세부 정보 섹션 색상 */
+    width: 33%; /* 너비 조정 */
+    padding: 20px;
+    border-radius: 8px;
+    background-color: #e0ffe0;
+    margin-right: 2%; /* 오른쪽 여백 추가 */
 }
+
 
 .group-list table {
     width: 100%;
@@ -51,25 +84,45 @@ h2 {
     background-color: #f0f8ff;
 }
 
+.group-button {
+    margin-bottom: 20px;  /* 모든 버튼에 동일하게 적용 */
+    margin-left: 10px;
+}
+
 /* User Management 섹션 */
+
+.group-selection {
+    display: flex;        /* Flexbox 레이아웃 적용 */
+    align-items: center;  /* 세로 중앙 정렬 */
+    gap: 10px;            /* 요소 사이 간격 설정 */
+}
+
+.h3-style {
+    font-weight: bold;  /* 굵은 글씨체 */
+    margin-bottom: 10px;  /* 아래쪽 마진 */
+    color: #333;  /* 글자색 */
+}
+
+
 .user-management {
     display: flex;
     width: 100%;
 }
 
-.user-list, .user-details {
-    width: 48%; /* 동일한 너비로 설정 */
+.user-list {
+    width: 33%; /* 너비 조정 */
     padding: 20px;
     border-radius: 8px;
-    margin-right: 20px;
-}
-
-.user-list {
-    background-color: #E6E6FA; /* User List 색상 */
+    background-color: #E6E6FA;
+    margin-right: 2%; /* 오른쪽 여백 추가 */
 }
 
 .user-details {
-    background-color: #FFB6C1; /* User Details 색상 */
+    width: 33%; /* 너비 조정 */
+    padding: 20px;
+    border-radius: 8px;
+    background-color: #FFB6C1;
+    margin-right: 2%; /* 오른쪽 여백 추가 */
 }
 
 .user-table-container {
@@ -95,3 +148,7 @@ h2 {
     background-color: #f0f8ff;
 }
 
+.user-button {
+    margin-bottom: 20px;  /* 모든 버튼에 동일하게 적용 */
+    margin-left: 10px;
+}
