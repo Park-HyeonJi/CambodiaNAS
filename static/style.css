@@ -27,7 +27,6 @@ header {
     display: flex;
     align-items: center;
     padding: 10px;
-    background-color: #f8f8f8;
 }
 
 header .CAM-RUA {
@@ -35,19 +34,17 @@ header .CAM-RUA {
     padding: 20px;
 }
 
-
 .container {
     display: flex;
     flex: 1;
-    width: 100%
+    width: 100%;
+    background-color: #f8f8f8;
 }
 
 .navBar {
-    width: 200px;
-    background-color: #f4f4f4;
-    padding-top: 20px;
+    width: 230px;
+    background-color: white;
     box-sizing: border-box;
-    border-right: 1px solid #ccc;
 }
 
 .navBar ul {
@@ -56,17 +53,14 @@ header .CAM-RUA {
     margin: 0;
 }
 
-.navBar ul li {
-    margin: 0;
-}
-
 .navBar ul li a {
     display: block;
-    padding: 14px 20px;
+    padding: 17px 20px;
     text-decoration: none;
-    color: #333;
+    color: black;
     border-bottom: 1px solid #ccc;
     transition: background 0.3s;
+    font-size: 16px;
 }
 
 .navBar ul li a:hover {
@@ -166,7 +160,6 @@ footer {
     top: calc(65% - 20px); /* 세로 기준 하단 첫 번째 라인에 맞추기 (4등분 중 75%) */
     transform: translate(-50%, -50%); /* 버튼을 정확한 교차점에 위치시키기 위해 중앙 이동 */
 }
-
 
 .start-button img {
     width: 100px; /* 버튼의 크기를 설정하세요 */
