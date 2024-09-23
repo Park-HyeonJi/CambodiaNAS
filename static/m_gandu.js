@@ -121,13 +121,17 @@ function deleteGroup() {
     .then(response => response.json())
     .then(result => {
         if (result.status === 'success') {
-            loadGroups();
+            loadGroups(); // 그룹 리스트를 다시 로드
+
+            // 사용자 드롭다운 리스트 업데이트
+            loadGroupsForUser(); // 사용자 그룹 선택 드롭다운 업데이트
         } else {
             console.error('Failed to delete group');
         }
     })
     .catch(error => console.error('Error deleting group:', error));
 }
+
 
 function addGroup() {
     let groupName = prompt("Enter the group name to add:");
@@ -148,6 +152,9 @@ function addGroup() {
                     .then(result => {
                         if (result.status === 'success') {
                             loadGroups();  // 그룹 리스트를 다시 로드
+
+                            // 사용자 드롭다운 리스트 업데이트
+                            loadGroupsForUser(); // 사용자 그룹 선택 드롭다운 업데이트
                         } else {
                             alert('Failed to save group.');
                         }
@@ -233,6 +240,18 @@ function showUserDetails(user) {
 }
 
 function saveUser() {
+    // 필수 입력 필드 ID 배열
+    const requiredFields = ['user-id', 'user-name', 'user-gender', 'user-age', 'user-height', 'user-weight', 'group-select'];
+
+    // 필수 입력 필드 중 하나라도 비어 있으면 경고 메시지 출력
+    for (let field of requiredFields) {
+        if (!document.getElementById(field).value.trim()) {
+            alert('모든 필드를 채워주세요.');  // 필드가 비어 있으면 경고
+            return;  // 함수 종료
+        }
+    }
+
+    // 사용자 데이터 객체 생성
     const user = {
         id: document.getElementById('user-id').value,
         name: document.getElementById('user-name').value,
@@ -243,6 +262,7 @@ function saveUser() {
         group: document.getElementById('group-select').value,
     };
 
+    // 서버에 사용자 데이터 전송
     fetch('/save_user', {
         method: 'POST',
         headers: {
@@ -256,11 +276,15 @@ function saveUser() {
         if (result.status === 'success') {
             loadUsers(); // 사용자 리스트를 다시 로드
             alert('User information updated successfully.');
+            document.getElementById('user-details').style.backgroundColor = '#FFB6C1'; // 저장 성공 시 원래 색으로 변경
         } else {
             alert('Failed to update user information: ' + result.message);
         }
     })
-    .catch(error => console.error('Error saving user:', error));
+    .catch(error => {
+        console.error('Error saving user:', error);
+        alert('서버 오류가 발생했습니다.');
+    });
 }
 
 
@@ -304,7 +328,9 @@ function addUser() {
     document.getElementById('user-height').value = '';
     document.getElementById('user-weight').value = '';
 
-    // 필요한 경우, 추가적인 동작을 여기에 작성할 수 있습니다.
+    // 오른쪽 user-information 컨테이너 배경색 변경
+    document.getElementById('user-details').style.backgroundColor = '#FFD700'; // 예: 황금색으로 변경
+    
 }
 
 
