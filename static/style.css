@@ -24,13 +24,17 @@ body {
 }
 
 header {
-    background: #333;
-    color: white;
+    display: flex;
+    align-items: center;
     padding: 10px;
-    text-align: center;
-    width: 100%;
-    box-sizing: border-box;
+    background-color: #f8f8f8;
 }
+
+header .CAM-RUA {
+    height: 40px;
+    padding: 20px;
+}
+
 
 .container {
     display: flex;
