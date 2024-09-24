@@ -1,25 +1,15 @@
-.form-group {
-    margin: 10px 0;
+button, select, input
+{
+    padding: 5px 10px;
+    border: none;
+    border-radius: 5px;
+    cursor: pointer;
 }
 
-.search-container {
-    display: flex;
-    flex-wrap: wrap;
-    justify-content: space-between;
-    align-items: center;
-    margin: 20px 0;
-    padding: 20px;
-    border: 1px solid #ccc;
-    box-shadow: 0 0 10px rgba(0, 0, 0, 0.1);
-}
-
-.search-container .form-group, 
-.search-container button {
-    margin-right: 10px;
-}
-
-.search-container button {
-    margin-top: 20px;
+label {
+    font-size: 16px;
+    font-weight: bold;
+    margin-right: 5px;
 }
 
 /* Main content styling */
@@ -29,36 +19,56 @@
 
 .section-container {
     display: flex;
-    justify-content: space-between;
-    width: 100%;
+    flex-direction: row;
+    flex-wrap: wrap;
+    gap: 10px;
+    margin-bottom: 20px;
 }
 
 .section {
     flex: 1;
     margin: 0 10px;
-    border: 1px solid #ccc;
+    background-color: white;
+    border: none;
+    border-radius: 10px;
     padding: 20px;
-    box-shadow: 0 0 10px rgba(0, 0, 0, 0.1);
+    box-shadow: 0 0 5px rgba(0, 0, 0, 0.1);
 }
 
-.section h3 {
+.search-options {
+    display: flex;
+    align-items: center;
+    gap: 15px;
+    margin-bottom: 10px;
+}
+
+.search-options label {
+    display: flex;
+    align-items: center;
+}
+
+.search-options input[type="text"] {
+    width: 100px;
+}
+
+.food-table {
+    width: 100%;
+    border-collapse: collapse;
+    table-layout: fixed; /* 테이블 레이아웃을 고정 */
+}
+
+.food-table th, .food-table td {
+    border: 1px solid #ddd;
+    padding: 8px;
     text-align: center;
 }
 
-table {
-    width: 100%;
-    border-collapse: collapse;
-    margin-top: 10px;
+.food-table th:first-child, .food-table td:first-child {
+    width: 80px; /* Food Code 열의 너비를 80px로 설정 */
 }
 
-table, th, td {
-    border: 1px solid #ddd;
-    padding: 8px;
-}
-
-th {
+.food-table th {
     background-color: #f2f2f2;
-    text-align: left;
 }
 
 td {
@@ -73,14 +83,14 @@ td {
 .pagination button {
     margin: 0 5px;
     padding: 5px 10px;
-    border: none;
-    background-color: #007bff;
-    color: white;
+    border-radius: 15px;
+    background-color: #4464cd2b;
     cursor: pointer;
 }
 
 .pagination button.active {
-    background-color: #0056b3;
+    background-color: #2F3D86;
+    color: white;
 }
 
 /* 기본값을 배경처럼 보이게 하는 CSS */
@@ -121,9 +131,21 @@ td {
     flex-wrap: wrap;
     position: relative; /* 상대 위치 설정 */
 }
+
 .button-group button {
     margin-right: 5px; /* 오른쪽 여백 추가 */
     margin-bottom: 20px;
+    background-color: #2F3D86;
+    color: white;
+    border-radius: 30px;
+    font-size: 14px;
+}
+
+.button-group button:disabled {
+    background-color: #ccc; /* 비활성화된 버튼 배경색 */
+    color: #666; /* 비활성화된 버튼 텍스트 색 */
+    cursor: not-allowed; /* 마우스 커서를 'not-allowed'로 변경 */
+    opacity: 0.7; /* 버튼을 반투명하게 */
 }
 
 .button-group button:last-child {
@@ -136,6 +158,6 @@ td {
     margin-right: 10px; /* 오른쪽 여백 추가 */
 }
 
-footer {
-    display: none; /* footer 숨기기 */
+.selected {
+    background-color: lightgray;
 }
