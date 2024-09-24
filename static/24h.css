@@ -24,15 +24,13 @@ label {
 /* 2행 */
 .section-container {
     display: flex;
-    flex-direction: row;
-    flex-wrap: wrap;
+    justify-content: space-between;
     gap: 10px;
     margin-bottom: 20px;
 }
 
 .food-data, .food-search, .food-details {
-    flex: 1;
-    /* flex-direction: column; */
+    flex-grow: 1;
     min-height: 350px;
     background-color: white;
     border: none;
@@ -97,19 +95,18 @@ label {
     margin-bottom: 10px;
 }
 
-.search-options label {
-    display: flex;
-    align-items: center;
-}
-
 .search-options input[type="text"] {
     width: 70px;
+}
+
+.search-options input:not(:disabled) {
+    background-color: #4464cd2b;
 }
 
 .food-table {
     width: 100%;
     border-collapse: collapse;
-    table-layout: fixed; /* 테이블 레이아웃을 고정 */
+    table-layout: fixed;
 }
 
 .food-table th, .food-table td {
