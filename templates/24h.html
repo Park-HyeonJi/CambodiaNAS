@@ -32,12 +32,11 @@
                 </div>
                 <button type="button" onclick="loadData()">Load Data</button>
             </div>
-
             <!-- 2행 -->
             <div class="section-container">
                 <!-- 1열: 현재 식사 전체 상태 -->
                 <div class="food-data">
-                    <h2>List of Foods Consumed</h2>
+                    <h2>Consumed Foods</h2>
                     <div class="food-data-content">
                         <div class="time-categories">
                             <b>Time</b>
@@ -71,7 +70,7 @@
                 </div>
                 <!-- 2열: 입력할 Food list 및 검색 -->
                 <div class="food-search">
-                    <h2>Food Intake Search</h2>
+                    <h2>Search Foods</h2>
                     <div class="search-options">
                         <label>
                             <input type="radio" name="searchType" value="name" checked onclick="toggleInputFields()">
@@ -108,11 +107,7 @@
                 </div>
                 <!-- 3열: 식사에 대한 정보 -->
                 <div class="food-details">
-                    <h2>List of Food Ingredients<br>By Food Intake</h2>
-                    <!-- <div class="form-group">
-                        <label for="foodIntake">Food Intake Rate(%):</label>
-                        <input type="text" id="foodIntake" name="foodIntake" value="100">
-                    </div> -->
+                    <h2>Food Ingredients per Intake</h2>
                     <table class="food-table">
                         <thead>
                             <tr>
@@ -127,8 +122,7 @@
                     </table>
                 </div>
             </div>
-
-            <!-- 3행 : 테이블 -->
+            <!-- 3행 : 영양성분 테이블 -->
             <div class="nutrition-table-container">
                 <h2>Nutritional Information of Consumed Food</h2>
                 <div style="overflow-x: auto;">
@@ -163,7 +157,7 @@
                     </table>                  
                 </div>
                 <div class="nutrition-controls">
-                    <label for="nutrition-group">Select Nutrition Group:</label>
+                    <label for="nutrition-group">Nutrition Group:</label>
                     <select id="nutrition-group" name="nutrition-group">
                         <option value="basic">Basic Nutrition</option>
                         <!-- Add more options as needed -->
