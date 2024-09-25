@@ -14,7 +14,7 @@
         <div class="section-container">
             <!-- Food List -->
             <div class="section">
-                <h2>Search & Edit Food</h2>
+                <h2>Search & Edit Foods</h2>
                 <div class="search-options">
                     <label>
                         <input type="radio" name="searchType" value="code" onclick="toggleInputFields()">
@@ -59,7 +59,7 @@
 
             <!-- Food Ingredient -->
             <div class="section">
-                <h2>Edit Food Ingredient</h2>
+                <h2>Edit Ingredient</h2>
                 <div class="search-options">
                     <label>
                         <input type="radio" name="ingredientSearchType" value="ingredientCode" onclick="toggleIngredientInputFields()">
@@ -68,7 +68,7 @@
                     <input type="text" id="ingredientCodeInput">
                     <label>
                         <input type="radio" name="ingredientSearchType" value="ingredientName" checked onclick="toggleIngredientInputFields()">
-                        Ingrdient
+                        Ingrdient Name
                     </label>
                     <input type="text" id="ingredientNameInput" disabled>
                     <button type="button" onclick="searchIngredient()">Search</button>
@@ -78,7 +78,7 @@
                     <thead>
                         <tr>
                             <th>Ingrdient Code</th>
-                            <th>Ingrdient</th>
+                            <th>Ingrdient Name</th>
                             <th>1 person (g)</th>
                         </tr>
                     </thead>
@@ -96,9 +96,9 @@
                     </select>
                 </div>
                 <div class="button-group">
-                    <button id="editIngredientBtn" type="button">Edit Food Ingredient</button>
-                    <button id="addIngredientBtn" type="button">Add Food Ingredient</button>
-                    <button id="deleteIngredientBtn" type="button">Delete Food Ingredient</button>
+                    <button id="editIngredientBtn" type="button">Edit Ingredient</button>
+                    <button id="addIngredientBtn" type="button">Add Ingredient</button>
+                    <button id="deleteIngredientBtn" type="button">Delete Ingredient</button>
             </div>
             </div>
         </div>
