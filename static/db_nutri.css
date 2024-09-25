@@ -1,18 +1,3 @@
-button, select, input
-{
-    padding: 5px 10px;
-    border: none;
-    border-radius: 5px;
-    cursor: pointer;
-}
-
-label {
-    font-size: 16px;
-    font-weight: bold;
-    margin-right: 5px;
-}
-
-/* Main content styling */
 .main-content {
     margin: 20px 0;
 }
@@ -136,24 +121,6 @@ td {
     color: white;
     border-radius: 30px;
     font-size: 14px;
-}
-
-.pagination {
-    margin-top: 10px;
-    text-align: center;
-}
-
-.pagination button {
-    margin: 0 5px;
-    padding: 5px 10px;
-    border-radius: 15px;
-    background-color: #4464cd2b;
-    cursor: pointer;
-}
-
-.pagination button.active {
-    background-color: #2F3D86;
-    color: white;
 }
 
 .button-group {

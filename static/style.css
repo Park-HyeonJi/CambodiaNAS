@@ -1,4 +1,32 @@
-/* base.html */
+button, select, input
+ {
+    padding: 5px 10px;
+    border: none;
+    border-radius: 5px;
+    cursor: pointer;
+}
+
+label {
+    font-size: 16px;
+    font-weight: bold;
+    margin-right: 5px;
+}
+
+.pagination {
+    margin-top: 10px;
+    text-align: center;
+    justify-content: center;
+
+}
+
+.search-options input:not(:disabled) {
+    background-color: #4464cd2b;
+}
+
+.selected {
+    background-color: lightgray;
+}
+
 html, body {
     height: 100%;
     margin: 0;
@@ -23,15 +51,9 @@ body {
     min-height: 100vh;
 }
 
-header {
-    display: flex;
-    align-items: center;
-    padding: 10px;
-}
-
 header .CAM-RUA {
     height: 40px;
-    padding: 20px;
+    padding: 30px;
 }
 
 .container {
