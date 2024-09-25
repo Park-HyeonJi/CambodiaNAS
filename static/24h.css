@@ -17,11 +17,6 @@
 .food-data, .food-search, .food-details {
     flex-grow: 1;
     min-height: 350px;
-    background-color: white;
-    border: none;
-    border-radius: 10px;
-    padding: 10px;
-    box-shadow: 0 0 5px rgba(0, 0, 0, 0.1);
 }
 
 .food-data-content {
@@ -97,10 +92,6 @@
 /* 3행 영양성분 테이블 */
 .nutrition-table-container {
     padding: 20px;
-    border: none;
-    border-radius: 10px;
-    background-color: white;
-    box-shadow: 0 0 5px rgba(0, 0, 0, 0.1);
 }
 
 .nutrition-table {

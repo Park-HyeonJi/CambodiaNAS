@@ -12,11 +12,24 @@ label {
     margin-right: 5px;
 }
 
+.common-style {
+    background-color: white;
+    border: none;
+    border-radius: 10px;
+    padding: 10px;
+    box-shadow: 0 0 5px rgba(0, 0, 0, 0.1);
+}
+
 .pagination {
     margin-top: 10px;
     text-align: center;
     justify-content: center;
 
+}
+
+.pagination select {
+    border: 1px solid #ddd;
+    padding: 4px;
 }
 
 .search-options input:not(:disabled) {
