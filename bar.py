@@ -28,12 +28,12 @@ def bar(current, gender, age):
         gender = 'women'
     else:
         gender = 'men'
-
-    # gender='men'; age=0;
-    # if gender == '': gender= 'men'
-    # if age==0: age=30
-
+   
     recommends = pd.read_excel('data/NutritionRecommends.xlsx')
+    print('***', type(gender), type(age))
+    # gender='men'; age=0; dafault value
+    if gender == '': gender= 'men'
+    if age=='': age=30
     cond = (recommends.Gender == gender) & (recommends.Age.astype(int) == int(age))
     print(recommends[cond])
     recom = recommends[cond].iloc[0, 2:]
