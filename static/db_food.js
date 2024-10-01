@@ -692,8 +692,6 @@ function resetAddIngredientButton() {
     }
 }
 
-
-
 function editFood() {
     if (!selectedFoodID) {
         alert("Please select a food item to edit.");
@@ -850,9 +848,11 @@ function editIngredient() {
     }
 
     // 현재 선택된 행을 편집 가능하게 만듭니다.
-    selectedRow.cells[0].setAttribute("contenteditable", "true");
-    selectedRow.cells[1].setAttribute("contenteditable", "true");
-    selectedRow.cells[2].setAttribute("contenteditable", "true");
+    selectedRow.cells[0].setAttribute("contenteditable", "false");
+    selectedRow.cells[1].setAttribute("contenteditable", "false");
+    const editableCell = selectedRow.cells[2];
+    editableCell.setAttribute("contenteditable", "true"); // "1 person (g)"
+    editableCell.classList.add('editable-cell'); // 테두리 스타일 적용
 
     // Edit Ingredient 버튼을 Apply Ingredient 버튼으로 변경
     const editButton = document.getElementById('editIngredientBtn');
@@ -878,6 +878,7 @@ function applyEditIngredient() {
 
     if (!originalINGID || !FOODID) {
         alert("Original INGID or FOODID not found. Something went wrong.");
+        resetEditIngredientButton();
         return;
     }
 
@@ -986,6 +987,14 @@ function resetEditIngredientButton() {
     editButton.textContent = 'Edit Ingredient';
     editButton.classList.remove('apply'); // Apply 클래스 제거
     enableAllButtons(); // 모든 버튼 다시 활성화
+    const tableBody = document.getElementById('ingredientTableBody');
+    const selectedRow = tableBody.querySelector("tr.selectedRow");
+    if (selectedRow) {
+        selectedRow.cells[0].setAttribute("contenteditable", "false");
+        selectedRow.cells[1].setAttribute("contenteditable", "false");
+        selectedRow.cells[2].setAttribute("contenteditable", "false");
+        selectedRow.cells[2].classList.remove('editable-cell');
+    }
     editButton.removeEventListener('click', applyEditIngredient);
     editButton.addEventListener('click', editIngredient);
 }
@@ -1083,4 +1092,13 @@ function enableAllButtons() {
     buttons.forEach(button => {
         button.disabled = false; // 모든 버튼 활성화
     });
+}
+
+function openHelpModal() {
+    document.getElementById('helpModal').style.display = 'block';
+}
+
+// Modal 닫기
+function closeHelpModal() {
+    document.getElementById('helpModal').style.display = 'none';
 }

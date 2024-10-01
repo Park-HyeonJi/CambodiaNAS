@@ -365,6 +365,10 @@ function editIngredient() {
     selectedRow.cells[0].setAttribute("contenteditable", "true");
     selectedRow.cells[1].setAttribute("contenteditable", "true");
 
+    selectedRow.cells[0].classList.add('editable-cell');
+    selectedRow.cells[1].classList.add('editable-cell');
+
+
     // Edit Ingredient 버튼을 Apply Ingredient 버튼으로 변경
     const editButton = document.getElementById('editIngredientBtn');
     editButton.textContent = 'Apply';
@@ -527,4 +531,13 @@ function enableAllButtons() {
     buttons.forEach(button => {
         button.disabled = false; // 모든 버튼 활성화
     });
+}
+
+function openHelpModal() {
+    document.getElementById('helpModal').style.display = 'block';
+}
+
+// Modal 닫기
+function closeHelpModal() {
+    document.getElementById('helpModal').style.display = 'none';
 }

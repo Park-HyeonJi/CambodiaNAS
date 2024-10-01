@@ -150,3 +150,44 @@ td {
     margin-top: 30px; /* 간격 조정 */
     margin-right: 10px; /* 오른쪽 여백 추가 */
 }
+
+/* Help 버튼 스타일 */
+.help-btn {
+    font-size: 18px;
+    padding: 5px 10px;
+    margin-left: 20px;
+    cursor: pointer;
+    display: inline-block;
+}
+
+/* 모달 창 스타일 */
+.modal {
+    display: none; /* 기본적으로 감춰둡니다 */
+    position: fixed;
+    z-index: 1;
+    left: 0;
+    top: 0;
+    width: 100%;
+    height: 100%;
+    background-color: rgba(0, 0, 0, 0.4); /* 반투명 배경 */
+}
+
+.modal-content {
+    background-color: white;
+    margin: 15% auto;
+    padding: 20px;
+    border: 1px solid #888;
+    width: 80%; /* 모달의 너비 설정 */
+    max-width: 670px; /* 최대 너비 */
+}
+
+.close {
+    font-size: 30px;
+    font-weight: bold;
+    cursor: pointer;
+    float: right; /* 닫기 버튼을 오른쪽 상단에 배치 */
+}
+
+.editable-cell {
+    background-color: #a29ff5; /* 입력 가능한 셀의 배경색 */
+}
