@@ -9,12 +9,13 @@
     <link rel="stylesheet" href="{{ url_for('static', filename='db_food.css') }}">
 </head>
 <body>
-    <h1>Food DB Editor</h1>
+    <h1 style="display: inline-block;">Food DB Editor</h1>
+    <button class="help-btn" onclick="openHelpModal()">Help</button>
     <div class="main-content">
         <div class="section-container">
             <!-- Food List -->
             <div class="section common-style">
-                <h2>Search & Edit Foods</h2>
+                <h2>Search & Edit Food</h2>
                 <div class="search-options">
                     <label>
                         <input type="radio" name="searchType" value="code" onclick="toggleInputFields()">
@@ -103,6 +104,24 @@
             </div>
         </div>
     </div>
+    <div id="helpModal" class="modal">
+        <div class="modal-content">
+            <span class="close" onclick="closeHelpModal()">&times;</span>
+            <h2>How to Use This Page</h2>
+            <p>This page allows you to edit the food database.</p>
+            <p><strong>Search & Edit Food:</strong> You can search for food by entering the food code or name.</p>
+            <p><strong>Search Button:</strong> This allows you to retrieve the entire list.</p>
+            <p><strong>Edit Food Button:</strong> This allows you to modify the selected food's code and name.</p>
+            <p><strong>Add Food Button:</strong> This allows you to add a new food item to the database.</p>
+            <p><strong>Delete Food Button:</strong> This allows you to remove the selected food from the database.</p>
+            <p><strong>Edit Ingredient:</strong> You can add, modify, or delete ingredients for a specific food.</p>
+            <p><strong>Edit Ingredient Button:</strong> This allows you to change the amount of a specific ingredient for 1 person (g).</p>
+            <p><strong>Add Ingredient Button:</strong> This allows you to add an ingredient to a specific food.</p>
+            <p><strong>Delete Ingredient Button:</strong> This allows you to remove the selected ingredient from the specific food.</p>
+        </div>
+    </div>
+    
+    
     <script src="{{ url_for('static', filename='db_food.js') }}"></script>
 </body>
 </html>

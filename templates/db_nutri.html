@@ -9,21 +9,22 @@
     <link rel="stylesheet" href="{{ url_for('static', filename='db_nutri.css') }}">
 </head>
 <body>
-    <h1>Ingredient DB Editor</h1>
+    <h1 style="display: inline-block;">Ingredient DB Editor</h1>
+    <button class="help-btn" onclick="openHelpModal()">Help</button>
     <div class="main-content">
         <div class="section-container">
             <!-- Food Ingredient -->
             <div class="section common-style">
-                <h2>Edit Ingredient</h2>
+                <h2>Search & Edit Ingredient</h2>
                 <div class="search-options">
                     <label>
                         <input type="radio" name="ingredientSearchType" value="ingredientCode" checked onclick="toggleIngredientInputFields()">
-                        Ingrdient Code
+                        Ingredient Code
                     </label>
                     <input type="text" id="ingredientCodeInput">
                     <label>
                         <input type="radio" name="ingredientSearchType" value="ingredientName" onclick="toggleIngredientInputFields()">
-                        Ingrdient Name
+                        Ingredient Name
                     </label>
                     <input type="text" id="ingredientNameInput" disabled>
                     <button type="button" onclick="searchIngredient()">Search</button>
@@ -31,8 +32,8 @@
                 <table id="ingredientTable" class="food-table">
                     <thead>
                         <tr>
-                            <th>Ingrdient Code</th>
-                            <th>Ingrdient Name</th>
+                            <th>Ingredient Code</th>
+                            <th>Ingredient Name</th>
                             <th>1 person (g)</th>
                         </tr>
                     </thead>
@@ -55,111 +56,111 @@
                     <button id="deleteIngredientBtn" type="button">Delete Ingredient</button>
                 </div>
             </div>
-            <!-- Food Nutrient-->
-            <div class ="section common-style">
+            <!-- Food Nutrient -->
+            <div class="section common-style">
                 <h2>Edit Nutrient</h2>
                 <form id="nutrientForm">
                     <div class="column-container-wrapper">
-                    <div class="column-container">
-                        <div class="form-row">
-                            <label for="energy">Energy :</label>
-                            <input type="number" id="energy" name="energy">
-                            <span class="unit">(kcal)</span>
+                        <div class="column-container">
+                            <div class="form-row">
+                                <label for="energy">Energy :</label>
+                                <input type="number" id="energy" name="energy">
+                                <span class="unit">(kcal)</span>
+                            </div>
+                            <div class="form-row">
+                                <label for="water">Water :</label>
+                                <input type="number" id="water" name="water">
+                                <span class="unit">(g)</span>
+                            </div>
+                            <div class="form-row">
+                                <label for="protein">Protein :</label>
+                                <input type="number" id="protein" name="protein">
+                                <span class="unit">(g)</span>
+                            </div>
+                            <div class="form-row">
+                                <label for="fat">Fat :</label>
+                                <input type="number" id="fat" name="fat">
+                                <span class="unit">(g)</span>
+                            </div>
+                            <div class="form-row">
+                                <label for="carbo">CHO :</label>
+                                <input type="number" id="carbo" name="carbo">
+                                <span class="unit">(g)</span>
+                            </div>
+                            <div class="form-row">
+                                <label for="fiber">Fiber :</label>
+                                <input type="number" id="fiber" name="fiber">
+                                <span class="unit">(g)</span>
+                            </div>
+                            <div class="form-row">
+                                <label for="ca">Ca :</label>
+                                <input type="number" id="ca" name="ca">
+                                <span class="unit">(mg)</span>
+                            </div>
+                            <div class="form-row">
+                                <label for="fe">Fe :</label>
+                                <input type="number" id="fe" name="fe">
+                                <span class="unit">(mg)</span>
+                            </div>
+                            <div class="form-row">
+                                <label for="zn">Zn :</label>
+                                <input type="number" id="zn" name="zn">
+                                <span class="unit">(mg)</span>
+                            </div>
                         </div>
-                        <div class="form-row">
-                            <label for="water">Water :</label>
-                            <input type="number" id="water" name="water">
-                            <span class="unit">(g)</span>
-                        </div>
-                        <div class="form-row">
-                            <label for="protein">Protein :</label>
-                            <input type="number" id="protein" name="protein">
-                            <span class="unit">(g)</span>
-                        </div>
-                        <div class="form-row">
-                            <label for="fat">Fat :</label>
-                            <input type="number" id="fat" name="fat">
-                            <span class="unit">(g)</span>
-                        </div>
-                        <div class="form-row">
-                            <label for="carbo">CHO :</label>
-                            <input type="number" id="carbo" name="carbo">
-                            <span class="unit">(g)</span>
-                        </div>
-                        <div class="form-row">
-                            <label for="fiber">Fiber :</label>
-                            <input type="number" id="fiber" name="fiber">
-                            <span class="unit">(g)</span>
-                        </div>
-                        <div class="form-row">
-                            <label for="ca">Ca :</label>
-                            <input type="number" id="ca" name="ca">
-                            <span class="unit">(mg)</span>
-                        </div>
-                        <div class="form-row">
-                            <label for="fe">Fe :</label>
-                            <input type="number" id="fe" name="fe">
-                            <span class="unit">(mg)</span>
-                        </div>
-                        <div class="form-row">
-                            <label for="zn">Zn :</label>
-                            <input type="number" id="zn" name="zn">
-                            <span class="unit">(mg)</span>
+                        <div class="column-container">
+                            <div class="form-row">
+                                <label for="va">Vit.A :</label>
+                                <input type="number" id="va" name="va">
+                                <span class="unit">(mg)</span>
+                            </div>
+                            <div class="form-row">
+                                <label for="vb1">Vit.B1 :</label>
+                                <input type="number" id="vb1" name="vb1">
+                                <span class="unit">(mg)</span>
+                            </div>
+                            <div class="form-row">
+                                <label for="vb2">Vit.B2 :</label>
+                                <input type="number" id="vb2" name="vb2">
+                                <span class="unit">(mg)</span>
+                            </div>
+                            <div class="form-row">
+                                <label for="vb3">Vit.B3 :</label>
+                                <input type="number" id="vb3" name="vb3">
+                                <span class="unit">(mg)</span>
+                            </div>
+                            <div class="form-row">
+                                <label for="vb6">Vit.B6 :</label>
+                                <input type="number" id="vb6" name="vb6">
+                                <span class="unit">(mg)</span>
+                            </div>
+                            <div class="form-row">
+                                <label for="fol">Folate :</label>
+                                <input type="number" id="fol" name="fol">
+                                <span class="unit">(mcg)</span>
+                            </div>
+                            <div class="form-row">
+                                <label for="vb12">Vit.B12 :</label>
+                                <input type="number" id="vb12" name="vb12">
+                                <span class="unit">(mcg)</span>
+                            </div>
+                            <div class="form-row">
+                                <label for="vc">Vit.C :</label>
+                                <input type="number" id="vc" name="vc">
+                                <span class="unit">(mg)</span>
+                            </div>
+                            <div class="form-row">
+                                <label for="vd">Vit.D :</label>
+                                <input type="number" id="vd" name="vd">
+                                <span class="unit">(mcg)</span>
+                            </div>
+                            <div class="form-row">
+                                <label for="na">Na :</label>
+                                <input type="number" id="na" name="na">
+                                <span class="unit">(mg)</span>
+                            </div>
                         </div>
                     </div>
-                    <div class="column-container">
-                        <div class="form-row">
-                            <label for="va">Vit.A :</label>
-                            <input type="number" id="va" name="va">
-                            <span class="unit">(mg)</span>
-                        </div>
-                        <div class="form-row">
-                            <label for="vb1">Vit.B1 :</label>
-                            <input type="number" id="vb1" name="vb1">
-                            <span class="unit">(mg)</span>
-                        </div>
-                        <div class="form-row">
-                            <label for="vb2">Vit.B2 :</label>
-                            <input type="number" id="vb2" name="vb2">
-                            <span class="unit">(mg)</span>
-                        </div>
-                        <div class="form-row">
-                            <label for="vb3">Vit.B3 :</label>
-                            <input type="number" id="vb3" name="vb3">
-                            <span class="unit">(mg)</span>
-                        </div>
-                        <div class="form-row">
-                            <label for="vb6">Vit.B6 :</label>
-                            <input type="number" id="vb6" name="vb6">
-                            <span class="unit">(mg)</span>
-                        </div>
-                        <div class="form-row">
-                            <label for="fol">Folate :</label>
-                            <input type="number" id="fol" name="fol">
-                            <span class="unit">(mcg)</span>
-                        </div>
-                        <div class="form-row">
-                            <label for="vb12">Vit.B12 :</label>
-                            <input type="number" id="vb12" name="vb12">
-                            <span class="unit">(mcg)</span>
-                        </div>
-                        <div class="form-row">
-                            <label for="vc">Vit.C :</label>
-                            <input type="number" id="vc" name="vc">
-                            <span class="unit">(mg)</span>
-                        </div>
-                        <div class="form-row">
-                            <label for="vd">Vit.D :</label>
-                            <input type="number" id="vd" name="vd">
-                            <span class="unit">(mcg)</span>
-                        </div>
-                        <div class="form-row">
-                            <label for="na">Na :</label>
-                            <input type="number" id="na" name="na">
-                            <span class="unit">(mg)</span>
-                        </div>
-                    </div>
-                </div>
                     <div class="button-container">
                         <button id="addNutrientBtn" type="button">Save Nutrient</button>
                     </div>                
@@ -167,6 +168,21 @@
             </div>
         </div>
     </div>
+    <div id="helpModal" class="modal">
+        <div class="modal-content">
+            <span class="close" onclick="closeHelpModal()">&times;</span>
+            <h2>How to Use the Page</h2>
+            <p>This page allows you to edit the food ingredient database.</p>
+            <p><strong>Search & Edit Ingredient:</strong> You can search for food ingredients by entering their codes or names.</p>
+            <p><strong>Search Button:</strong> This allows you to retrieve the entire list.</p>
+            <p><strong>Edit Ingredient Button:</strong> This allows you to modify the selected food ingredient's code and name.</p>
+            <p><strong>Add Ingredient Button:</strong> This allows you to add new food ingredient item to the database.</p>
+            <p><strong>Delete Ingredient Button:</strong> This allows you to remove the selected food ingredient from the database.</p>
+            <p><strong>Edit Nutrient:</strong> You can edit and check the nutrients of the food ingredients.</p>
+            <p><strong>Save Nutrient Button:</strong> This allows you to save the edited nutrients of the food ingredients.</p>
+        </div>
+    </div>
+    
     <script src="{{ url_for('static', filename='db_nutri.js') }}"></script>
 </body>
 </html>
