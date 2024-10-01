@@ -9,18 +9,18 @@
     <link rel="stylesheet" href="{{ url_for('static', filename='m_gandu.css') }}">
     <style>
         .selected {
-            background-color: #d3d3d3;
+            background-color: lightgray;
         }
     </style>
 </head>
 <body>
     <div>
-        <h2>Group Management</h2>
+        <h1>Group Management</h1>
     </div>
     <div class="container">
         <div class="group-management">
-            <div class="group-list">
-                <h3>Group List</h3>
+            <div class="group-list common-style">
+                <h2>Group List</h2>
                 <div class="group-table">
                     <table>
                         <thead>
@@ -40,16 +40,16 @@
 
             </div>
     
-            <div id="group-details" class="group-details">
-                <h3>Group Information</h3>
+            <div id="group-details" class="group-details common-style">
+                <h2>Group Information</h2>
                 <form id="group-form">
                     <div class="form-group">
                         <label class="label" for="group-name">Group Name:</label>
-                        <input class="intput-field" type="text" id="group-name" name="group-name">
+                        <input class="input-field" type="text" id="group-name" name="group-name">
                     </div>
                     <div class="form-group">
                         <label class="label" for="group-desc">Group Description:</label>
-                        <input class="intput-field" type="text" id="group-desc" name="group-desc">
+                        <input class="input-field" type="text" id="group-desc" name="group-desc" style="height: 50px;">
                     </div>
                     <div class="button-container">
                         <button class="group-button" type="button" onclick="saveGroup()">Save Group</button>
@@ -59,7 +59,7 @@
         </div>
     </div>    
     <div>
-        <h2>User Management</h2>
+        <h1>User Management</h1>
     </div>
     <div class="container">
         <div class="group-selection" style="display: flex; align-items: center;">
@@ -70,8 +70,8 @@
         </div>        
     </div>
     <div class="user-management">
-        <div class="user-list">
-            <h3>List Of Users In The Current Group</h3>
+        <div class="user-list common-style">
+            <h2>List Of Users In The Current Group</h2>
             <div class="search-container">
                 <label for="search-id">ID Search:</label>
                 <input type="text" id="search-id" oninput="searchUser()">
@@ -96,11 +96,11 @@
             <div class="button-container">
             <button class="user-button" onclick="addUser()">Add user</button>
             <button class="user-button" onclick="deleteUser()">Delete User</button>
-            <button class="user-button" onclick="downloadExcel()">Download Excel</button>
+            <button class="user-button" onclick="downloadExcel()" style="background-color: #4464cd2b;">Download Excel</button>
             </div>
         </div>
-        <div class="user-details" id="user-details">
-            <h3>User Information</h3>
+        <div class="user-details common-style" id="user-details">
+            <h2>User Information</h2>
             <form id="user-form">
                 <div class="form-group">
                     <label class="label" for="user-id">ID:</label>
