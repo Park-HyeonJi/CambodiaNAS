@@ -240,8 +240,16 @@ def download_excel():
     
     # 엑셀 파일로 변환
     output = BytesIO()
-    with pd.ExcelWriter(output, engine='xlsxwriter') as writer:
+    
+    # xlsxwriter 이용 방법 > 모듈에 해당 라이브러리 설치 필요
+    # pip install xlsxwriter
+    # with pd.ExcelWriter(output, engine='xlsxwriter') as writer:
+    #     group_users.to_excel(writer, index=False)
+    
+    # 'openpyxl' 이용 > test 필요
+    with pd.ExcelWriter(output, engine='openpyxl') as writer:
         group_users.to_excel(writer, index=False)
+
     
     output.seek(0)
     
