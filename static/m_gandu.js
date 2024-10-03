@@ -200,7 +200,7 @@ function searchAndSelectUser() {
     }
 
     if (!userFound) {
-        alert('해당 ID를 가진 사용자를 찾을 수 없습니다.'); // ID가 없을 경우 알림
+        alert('The user with the specified ID could not be found.'); // ID가 없을 경우 알림
     }
 }
 
@@ -281,7 +281,7 @@ function saveUser() {
     // 필수 입력 필드 중 하나라도 비어 있으면 경고 메시지 출력
     for (let field of requiredFields) {
         if (!document.getElementById(field).value.trim()) {
-            alert('모든 필드를 채워주세요.');  // 필드가 비어 있으면 경고
+            alert('Please fill in all fields.');  // 필드가 비어 있으면 경고
             return;  // 함수 종료
         }
     }
@@ -318,7 +318,7 @@ function saveUser() {
     })
     .catch(error => {
         console.error('Error saving user:', error);
-        alert('서버 오류가 발생했습니다.');
+        alert('A server error has occurred.');
     });
 }
 
@@ -328,7 +328,7 @@ function deleteUser() {
     const userGroup = document.getElementById('group-select').value;
 
     if (!userId) {
-        alert('삭제할 사용자를 선택하세요.');
+        alert('Please select a user to delete.');
         return;
     }
 
@@ -342,10 +342,10 @@ function deleteUser() {
     .then(response => response.json())
     .then(data => {
         if (data.status === 'success') {
-            alert('사용자가 성공적으로 삭제되었습니다.');
+            alert('The user and data has been successfully deleted.');
             loadUsers();  // 사용자 목록 새로고침
         } else {
-            alert('사용자 삭제에 실패했습니다: ' + data.message);
+            alert('Failed to delete the user: ' + data.message);
         }
     })
     .catch(error => console.error('Error deleting user and data:', error));
