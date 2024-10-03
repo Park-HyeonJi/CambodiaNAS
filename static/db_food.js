@@ -972,6 +972,7 @@ function applyEditIngredient() {
                 resetEditIngredientButton();
             } else {
                 alert("Error updating ingredient: " + data.message);
+                resetEditIngredientButton();
             }
         })
         .catch(error => {
