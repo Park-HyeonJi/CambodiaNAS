@@ -311,7 +311,7 @@ function saveUser() {
         if (result.status === 'success') {
             loadUsers(); // 사용자 리스트를 다시 로드
             alert('User information updated successfully.');
-            document.getElementById('user-details').style.backgroundColor = '#FFB6C1'; // 저장 성공 시 원래 색으로 변경
+            document.getElementById('user-details').style.backgroundColor = 'white'; // 저장 성공 시 원래 색으로 변경
         } else {
             alert('Failed to update user information: ' + result.message);
         }
@@ -364,7 +364,7 @@ function addUser() {
     document.getElementById('user-weight').value = '';
 
     // 오른쪽 user-information 컨테이너 배경색 변경
-    document.getElementById('user-details').style.backgroundColor = '#FFD700'; // 예: 황금색으로 변경
+    document.getElementById('user-details').style.backgroundColor = '#4464cd2b'; // 예: 황금색으로 변경
     
 }
 
