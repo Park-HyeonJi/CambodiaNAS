@@ -171,6 +171,41 @@ function addGroup() {
 
 
 // 사용자 관리 로직
+
+function searchAndSelectUser() {
+    const input = document.getElementById('search-id').value.toLowerCase(); // 입력된 ID 값 가져오기
+    const table = document.getElementById('user-list'); // 사용자 리스트 테이블
+    const rows = table.getElementsByTagName('tr'); // 테이블의 모든 행 가져오기
+    let userFound = false; // 사용자가 찾았는지 여부를 확인할 변수
+
+    // 모든 행을 순회하면서 해당 ID를 찾음
+    for (let i = 0; i < rows.length; i++) {
+        const idCell = rows[i].getElementsByTagName('td')[0]; // 첫 번째 셀(ID)
+        if (idCell) {
+            const id = idCell.textContent || idCell.innerText;
+            if (id.toLowerCase() === input) { // 입력한 ID와 일치하는지 확인
+                // 사용자 선택
+                selectUser(rows[i], {
+                    id: idCell.textContent,
+                    name: rows[i].getElementsByTagName('td')[1].textContent,
+                    gender: rows[i].getElementsByTagName('td')[2].textContent,
+                    age: rows[i].getElementsByTagName('td')[3].textContent,
+                    height: rows[i].getElementsByTagName('td')[4].textContent,
+                    weight: rows[i].getElementsByTagName('td')[5].textContent
+                });
+                userFound = true;
+                break; // 사용자를 찾으면 루프 종료
+            }
+        }
+    }
+
+    if (!userFound) {
+        alert('해당 ID를 가진 사용자를 찾을 수 없습니다.'); // ID가 없을 경우 알림
+    }
+}
+
+
+
 function loadGroupsForUser() {
     fetch('/get_groups')
         .then(response => response.json())
