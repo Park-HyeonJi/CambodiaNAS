@@ -6,6 +6,14 @@ document.addEventListener('DOMContentLoaded', () => {
     toggleInputFields();
 });
 
+function openHelpModal() {
+    document.getElementById('helpModal').style.display = 'block';
+}
+
+function closeHelpModal() {
+    document.getElementById('helpModal').style.display = 'none';
+}
+
 // 1행: 그룹 및 유저
 function loadGroupsForUser() {
     fetch('/get_groups')
