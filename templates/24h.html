@@ -1,16 +1,15 @@
 {% extends 'base.html' %}
-{% block content %}
-<!DOCTYPE html>
-<html lang="en">
-<head>
-    <meta charset="UTF-8">
-    <title>24Hour Recall Method</title>
-    <link rel="stylesheet" href="{{ url_for('static', filename='style.css') }}">
+
+{% block title %}
+    24-Hour Recall Method
+{% endblock %}
+
+{% block head %}
     <link rel="stylesheet" href="{{ url_for('static', filename='24h.css') }}">
     <script src="{{ url_for('static', filename='24h.js') }}" defer></script>
-    <script src="https://cdnjs.cloudflare.com/ajax/libs/xlsx/0.16.2/xlsx.full.min.js"></script>
-</head>
-<body>
+{% endblock %}
+
+{% block content %}
     <h1>24-Hour Recall Method</h1>
     <div class="container">
         <div class="24h-main">
@@ -188,8 +187,4 @@
             </div>
         </div>
     </div>
-</body>
-</html>
-
-
 {% endblock %}
