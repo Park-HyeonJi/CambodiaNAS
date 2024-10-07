@@ -1,16 +1,19 @@
 {% extends 'base.html' %}
-{% block content %}
-<!DOCTYPE html>
-<html lang="en">
-<head>
-    <meta charset="UTF-8">
-    <title>Edit Ingredient DB</title>
-    <link rel="stylesheet" href="{{ url_for('static', filename='style.css') }}">
+
+{% block title %}
+    Search & Edit Ingredient
+{% endblock %}
+
+{% block head %}
     <link rel="stylesheet" href="{{ url_for('static', filename='db_nutri.css') }}">
-</head>
-<body>
-    <h1 style="display: inline-block;">Ingredient DB Editor</h1>
-    <button class="help-btn" onclick="openHelpModal()">Help</button>
+    <script src="{{ url_for('static', filename='db_nutri.js') }}"></script>
+{% endblock %}
+
+{% block content %}
+    <div class="title-container">
+        <h1 style="display: inline-block;">Ingredient DB Editor</h1>
+        <button class="help-btn" onclick="openHelpModal()">Help</button>
+    </div>
     <div class="main-content">
         <div class="section-container">
             <!-- Food Ingredient -->
@@ -182,8 +185,4 @@
             <p><strong>Save Nutrient Button:</strong> This allows you to save the edited nutrients of the food ingredients.</p>
         </div>
     </div>
-    
-    <script src="{{ url_for('static', filename='db_nutri.js') }}"></script>
-</body>
-</html>
 {% endblock %}

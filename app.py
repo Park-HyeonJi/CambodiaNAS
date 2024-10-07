@@ -1212,7 +1212,7 @@ def download_nutrition():
         df = pd.DataFrame(data[1:], columns=data[0])
 
         output = BytesIO()
-        with pd.ExcelWriter(output, engine='xlsxwriter') as writer:
+        with pd.ExcelWriter(output, engine='openpyxl') as writer:
             df.to_excel(writer, index=False)
 
         output.seek(0)

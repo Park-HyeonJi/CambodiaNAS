@@ -1,17 +1,55 @@
 {% extends 'base.html' %}
-{% block content %}
-<!DOCTYPE html>
-<html lang="en">
-<head>
-    <meta charset="UTF-8">
-    <title>24Hour Recall Method</title>
-    <link rel="stylesheet" href="{{ url_for('static', filename='style.css') }}">
+
+{% block title %}
+    24-Hour Recall Method
+{% endblock %}
+
+{% block head %}
     <link rel="stylesheet" href="{{ url_for('static', filename='24h.css') }}">
     <script src="{{ url_for('static', filename='24h.js') }}" defer></script>
-    <script src="https://cdnjs.cloudflare.com/ajax/libs/xlsx/0.16.2/xlsx.full.min.js"></script>
-</head>
-<body>
-    <h1>24-Hour Recall Method</h1>
+{% endblock %}
+
+{% block content %}
+    <div class="title-container">
+        <h1>24-Hour Recall Method</h1>
+        <button class="help-btn" onclick="openHelpModal()">Help</button>
+    </div>
+    <div id="helpModal" class="modal">
+        <div class="modal-content">
+            <span class="close" onclick="closeHelpModal()">&times;</span>
+            <h2>How to Use This Page</h2>
+            <p>This page allows you to manage food consumption data using the 24-Hour Recall Method.</p>
+            
+            <p><strong>Group & User Selection:</strong> Use the dropdown menus at the top to select a group and user. The user’s food consumption data will be retrieved and displayed based on your selection.</p>
+            
+            <p><strong>Select Date & Load Data:</strong> Choose a date and click the "Load Data" button to retrieve the food records for the selected user and date.</p>
+            
+            <p><strong>Manage Food Consumption by Time:</strong> 
+                <ul>
+                    <li><strong>Time Selection:</strong> Select time categories on the left (e.g., Breakfast, Lunch) to view the food consumed during that time.</li>
+                    <li><strong>Display Food List:</strong> The middle table shows the food code and name for each time period.</li>
+                    <li><strong>Delete Food:</strong> Select a food item and click "Delete Food" to remove it from the list.</li>
+                </ul>
+            </p>
+            
+            <p><strong>Search & Add Foods:</strong> 
+                <ul>
+                    <li>You can search for foods and add them to the user’s consumption list.</li>
+                    <li><strong>Search Type:</strong> Search by food name or food code.</li>
+                    <li><strong>Add to Food List:</strong> After selecting a food item from the search results, click the "Add To Food List" button to include it in the time category.</li>
+                </ul>
+            </p>
+            
+            <p><strong>Food Ingredients:</strong> The right-hand table shows the ingredients and the amount per intake for the selected food item.</p>
+            
+            <p><strong>Nutritional Information Table:</strong> The bottom section displays the nutritional information of the selected foods, allowing you to analyze the consumed nutrients.</p>
+            
+            <p><strong>Generate Chart:</strong> Click the "Generate Chart" button to create a visual chart of the nutritional data based on the consumed foods.</p>
+            
+            <p><strong>Export to Excel:</strong> You can export the food consumption and nutritional information to an Excel file.</p>
+        </div>
+    </div>
+      
     <div class="container">
         <div class="24h-main">
             <!-- 1행 : 그룹, 유저 설정 -->
@@ -183,13 +221,9 @@
                 </div>
                 <div class="export-excel">
                     <button type="button" onclick="exportExcel()">Export to Excel</button>
-                    <button type="button" onclick="exportExcel()">Export to Excel (Group)</button>
+                    <!-- <button type="button" onclick="exportExcel()">Export to Excel (Group)</button> -->
                 </div>
             </div>
         </div>
     </div>
-</body>
-</html>
-
-
 {% endblock %}
