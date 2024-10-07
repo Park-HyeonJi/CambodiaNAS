@@ -1,19 +1,15 @@
 {% extends 'base.html' %}
-{% block content %}
-<!DOCTYPE html>
-<html lang="en">
-<head>
-    <meta charset="UTF-8">
-    <title>Group and User Management</title>
-    <link rel="stylesheet" href="{{ url_for('static', filename='style.css') }}">
+
+{% block title %}
+    Group and User Management
+{% endblock %}
+
+{% block head %}
     <link rel="stylesheet" href="{{ url_for('static', filename='m_gandu.css') }}">
-    <style>
-        .selected {
-            background-color: lightgray;
-        }
-    </style>
-</head>
-<body>
+    <script src="{{ url_for('static', filename='m_gandu.js') }}"></script>
+{% endblock %}
+
+{% block content %}
     <div>
         <h1>Group Management</h1>
     </div>
@@ -136,8 +132,4 @@
             </form>
         </div>
     </div>
-    <script src="https://cdnjs.cloudflare.com/ajax/libs/xlsx/0.17.0/xlsx.full.min.js"></script>
-    <script src="{{ url_for('static', filename='m_gandu.js') }}"></script>
-</body>
-</html>
 {% endblock %}

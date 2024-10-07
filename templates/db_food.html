@@ -1,16 +1,19 @@
 {% extends 'base.html' %}
-{% block content %}
-<!DOCTYPE html>
-<html lang="en">
-<head>
-    <meta charset="UTF-8">
-    <title>Edit Food & Food Ingredient DB</title>
-    <link rel="stylesheet" href="{{ url_for('static', filename='style.css') }}">
+
+{% block title %}
+    Search & Edit Food
+{% endblock %}
+
+{% block head %}
     <link rel="stylesheet" href="{{ url_for('static', filename='db_food.css') }}">
-</head>
-<body>
-    <h1 style="display: inline-block;">Food DB Editor</h1>
-    <button class="help-btn" onclick="openHelpModal()">Help</button>
+    <script src="{{ url_for('static', filename='db_food.js') }}"></script>
+{% endblock %}
+
+{% block content %}
+    <div class="title-container">
+        <h1 style="display: inline-block;">Food DB Editor</h1>
+        <button class="help-btn" onclick="openHelpModal()">Help</button>
+    </div>
     <div class="main-content">
         <div class="section-container">
             <!-- Food List -->
@@ -120,9 +123,4 @@
             <p><strong>Delete Ingredient Button:</strong> This allows you to remove the selected ingredient from the specific food.</p>
         </div>
     </div>
-    
-    
-    <script src="{{ url_for('static', filename='db_food.js') }}"></script>
-</body>
-</html>
 {% endblock %}
