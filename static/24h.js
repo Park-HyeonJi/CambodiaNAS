@@ -296,16 +296,44 @@ function addToFoodList() {
 }
 
 // 세 번째 컨테이너
+function saveIntakeRatio() {
+    const intakeValue = parseFloat(document.getElementById('intakeInput').value);
+    
+    // 입력 값 검증
+    if (isNaN(intakeValue) || intakeValue < 0 || intakeValue > 100) {
+        alert('Please enter a valid percentage (0-100).');
+        return;
+    }
+
+    // 현재 선택된 음식 정보 가져오기
+    const selectedFood = document.querySelector('.food-items tr[style="background-color: lightgray;"]');
+    
+    if (!selectedFood) {
+        alert('Please select a food item.');
+        return;
+    }
+
+    // 데이터 업데이트
+
+    alert('Intake ratio applied successfully!');
+}
+
 function loadIngredients(food) {
-    // ingredientTableBody를 초기화합니다.
+    console.log("재료 로드 데이터:", food)
+
+    // 테이블 초기화
     var ingredientTableBody = document.getElementById('ingredientTableBody');
     ingredientTableBody.innerHTML = "";
 
-    // 음식의 재료 정보를 가져옵니다.
+    // 섭취 비율 초기화
+    document.getElementById('intakeInput').value = food['INTAKE_RATIO'];
+
+    // 음식의 재료 정보 조회
     fetch(`/get_food_ingredients?foodCode=${food['FOODID']}`)
     .then(response => response.json())
     .then(data => {
         console.log(data)
+
         data.forEach(ingredient => {
             var tr = document.createElement("tr");
             tr.innerHTML = `<td>${ingredient['INGID']}</td>

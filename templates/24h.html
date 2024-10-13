@@ -146,6 +146,11 @@
                 <!-- 3열: 식사에 대한 정보 -->
                 <div class="food-details common-style">
                     <h2>Food Ingredients per Intake</h2>
+                    <div class="intake-input">
+                        <label for="intakeInput">Intake ratio (%):</label>
+                        <input type="number" id="intakeInput" min="0" max="100" step="1" />
+                        <button id="saveIntake" onclick="saveIntakeRatio()">Save</button>
+                    </div>
                     <table class="food-table">
                         <thead>
                             <tr>

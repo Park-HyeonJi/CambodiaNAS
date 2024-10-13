@@ -1048,6 +1048,7 @@ def add_food():
         selected_food_data['USERID'] = user_id
         selected_food_data['DATE'] = view_date
         selected_food_data['TIME'] = time_category
+        selected_food_data['INTAKE_RATIO'] = 100
 
         # 확인용 디버깅 로그 추가
         app.logger.debug(f"selected_food_data after adding user info: {selected_food_data}")
