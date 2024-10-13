@@ -297,25 +297,57 @@ function addToFoodList() {
 
 // 세 번째 컨테이너
 function saveIntakeRatio() {
-    const intakeValue = parseFloat(document.getElementById('intakeInput').value);
+    // 선택된 음식 정보 가져오기
+    var selectedRow = document.querySelector('.food-items tbody tr[style="background-color: lightgray;"]');
+    if (!selectedRow) {
+        alert("Please select a food item to update.");
+        return;
+    }
+
+    var foodCode = selectedRow.getAttribute('data-food-code');
+    var userGroup = document.getElementById('userGroup').value;
+    var userID = document.getElementById('userID').value;
+    var viewDate = document.getElementById('date').value;
+    var timeCategory = selectedRow.getAttribute('data-time-category');
+
+    // 입력된 섭취 비율
+    var intakeRatio = document.getElementById('intakeInput').value;
+    // const intakeValue = parseFloat(document.getElementById('intakeInput').value);
     
     // 입력 값 검증
-    if (isNaN(intakeValue) || intakeValue < 0 || intakeValue > 100) {
+    if (isNaN(intakeRatio) || intakeRatio < 0 || intakeRatio > 100) {
         alert('Please enter a valid percentage (0-100).');
         return;
     }
 
-    // 현재 선택된 음식 정보 가져오기
-    const selectedFood = document.querySelector('.food-items tr[style="background-color: lightgray;"]');
-    
-    if (!selectedFood) {
-        alert('Please select a food item.');
-        return;
-    }
-
     // 데이터 업데이트
-
-    alert('Intake ratio applied successfully!');
+    fetch('/update_intake_ratio', {
+        method: 'POST',
+        headers: {
+            'Content-Type': 'application/json'
+        },
+        body: JSON.stringify({
+            foodCode: foodCode,
+            userGroup: userGroup,
+            userID: userID,
+            viewDate: viewDate,
+            timeCategory: timeCategory,
+            intakeRatio: intakeRatio
+        })
+    })
+    .then(response => response.json())
+    .then(data => {
+        if (data.status === 'success') {
+            alert('Intake ratio updated successfully.');
+            // 업데이트 후 추가 로직
+        } else {
+            alert('Error updating intake ratio: ' + data.message);
+        }
+    })
+    .catch(error => {
+        console.error('Error updating intake ratio:', error);
+        alert('An error occurred while updating intake ratio.');
+    });
 }
 
 function loadIngredients(food) {

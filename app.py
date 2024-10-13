@@ -1157,6 +1157,38 @@ def get_ingredients():
         app.logger.error(f"Error in get_ingredients: {e}")
         return jsonify({'status': 'error', 'message': str(e)}), 500
 
+@app.route('/update_intake_ratio', methods=['POST'])
+def update_intake_ratio():
+    try:
+        data = request.get_json()
+
+        food_code = data['foodCode']
+        user_group = data['userGroup']
+        user_id = data['userID']
+        view_date = data['viewDate']
+        time_category = data['timeCategory']
+        intake_ratio = data['intakeRatio']
+
+        user_data = pd.read_excel(user_data_path)
+
+        # 특정 사용자의 데이터 필터링
+        rows_to_update = (
+            (user_data['FOODID'] == food_code) &
+            (user_data['USERGROUP'] == user_group) &
+            (user_data['USERID'].astype(str) == str(user_id)) &
+            (user_data['DATE'] == view_date) &
+            (user_data['TIME'] == time_category)
+        )
+
+        # 섭취 비율을 업데이트
+        user_data.loc[rows_to_update, 'INTAKE_RATIO'] = intake_ratio
+        save_user_data(user_data)
+
+        return jsonify({'status': 'success'})
+    except Exception as e:
+        app.logger.error(f"Error in update_intake_ratio: {e}")
+        return jsonify({'status': 'error', 'message': str(e)}), 500
+
 # 영양 성분
 @app.route('/get_nutrition', methods=['POST'])
 @login_required
