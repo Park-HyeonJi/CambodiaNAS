@@ -1157,6 +1157,7 @@ def get_ingredients():
         app.logger.error(f"Error in get_ingredients: {e}")
         return jsonify({'status': 'error', 'message': str(e)}), 500
 
+# 섭취 비율 업데이트
 @app.route('/update_intake_ratio', methods=['POST'])
 def update_intake_ratio():
     try:
@@ -1170,6 +1171,7 @@ def update_intake_ratio():
         intake_ratio = data['intakeRatio']
 
         user_data = pd.read_excel(user_data_path)
+        food_data = pd.read_excel(food_data_path)
 
         # 특정 사용자의 데이터 필터링
         rows_to_update = (
@@ -1180,8 +1182,22 @@ def update_intake_ratio():
             (user_data['TIME'] == time_category)
         )
 
-        # 섭취 비율을 업데이트
+        # 해당 음식의 영양 성분 조회
+        food_nutrients = food_data[food_data['FOODID'] == food_code]
+        if food_nutrients.empty:
+            return jsonify({'status': 'error', 'message': 'Food data not found'}, 404)
+
+        # 섭취 비율 업데이트
         user_data.loc[rows_to_update, 'INTAKE_RATIO'] = intake_ratio
+
+        # 영양 성분 업데이트
+        nutrient_columns = ['Energy', 'Water', 'Protein', 'Fat', 'Carbo', 'Fiber', 'CA', 'FE', 'ZN', 'VA', 'VB1', 'VB2', 'VB3', 'VB6', 'Fol', 'VB12', 'VC', 'VD', 'NA']
+        for col in nutrient_columns:
+            original_value = food_nutrients.iloc[0][col]
+            updated_value = original_value * (intake_ratio / 100)
+            user_data.loc[rows_to_update, col] = updated_value
+
+        # 데이터 저장
         save_user_data(user_data)
 
         return jsonify({'status': 'success'})
