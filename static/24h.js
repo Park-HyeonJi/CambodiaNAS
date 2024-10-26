@@ -311,7 +311,7 @@ function saveIntakeRatio() {
     var timeCategory = selectedRow.getAttribute('data-time-category');
 
     // 입력된 섭취 비율
-    var intakeRatio = document.getElementById('intakeInput').value;
+    var intakeRatio = parseFloat(document.getElementById('intakeInput').value);
     // const intakeValue = parseFloat(document.getElementById('intakeInput').value);
     
     // 입력 값 검증
@@ -339,7 +339,7 @@ function saveIntakeRatio() {
     .then(data => {
         if (data.status === 'success') {
             alert('Intake ratio updated successfully.');
-            // 업데이트 후 추가 로직
+            loadAllFoodList()
         } else {
             alert('Error updating intake ratio: ' + data.message);
         }
@@ -388,111 +388,82 @@ function loadAllFoodList() {
         if (!data || typeof data !== 'object') {
             throw new Error('Invalid data format received from server');
         }
-        // console.log("영양성분 테이블 받은 데이터", data)
+        
+        // 유저 데이터에서 값 가져옴
+        console.log("영양성분 테이블 받은 데이터", data)
 
+        // 테이블 초기화
         var mealTbody = document.getElementById('nutrition-tbody');
         mealTbody.innerHTML = '';
 
         var categories = ['Breakfast', 'Morning Snack', 'Lunch', 'Afternoon Snack', 'Dinner', 'Midnight Snack'];
         var foods = [];
-
+        
         categories.forEach(category => {
-            if (data.some(item => item['TIME'] === category)) {
-                data.filter(food => food['TIME'] === category).forEach(food => {
-                    //promises.push(loadNutrition(food['Food Code'], food['Food Name'], category));
-                    // 중복 제거 부분 수정
-                    if (!foods.some(item => item['FOODID'] === food['FOODID'] && item['TIME'] === category)) {
-                        foods.push({ ...food, 'Category': category });
-                    }
-                });
-            }
-        });
+            data.filter(food => food['TIME'] === category).forEach(food => {
+                const foodKey = `${food['FOODID']}_${category}`;
 
-        // 각 음식에 대해 loadNutrition을 호출하고 그 결과를 테이블에 추가
-        Promise.all(foods.map(food => loadNutrition(food['FOODID'], food['FOODNAME'], food['Category'])))
-        .then(results => {
-            var totalNutrients = {
-                'Energy': 0, 'Water': 0, 'Protein': 0, 'Fat': 0, 
-                'Carbo': 0, 'Fiber': 0, 'CA': 0, 'FE': 0, 
-                'ZN': 0, 'VA': 0, 'VB1': 0, 'VB2': 0, 'VB3': 0, 'VB6': 0,
-                'Fol': 0, 'VB12': 0, 'VC': 0, 'VD': 0, 'NA': 0
-            };
-
-            results.forEach(result => {
-                appendNutritionRow(result);
-                // console.log("영양성분 계산 음식", result)
-                // 각 항목의 영양성분을 총합에 추가
-                for (var key in totalNutrients) {
-                    totalNutrients[key] += parseFloat(result.nutrientTotals[key]) || 0;
+                if (!foods[foodKey]) {
+                    // 첫 번째 재료로 데이터 초기화
+                    foods[foodKey] = {
+                        category: category,
+                        foodName: food['FOODNAME'],
+                        nutrientTotals: {
+                            Energy: food['Energy'] || 0,
+                            Water: food['Water'] || 0,
+                            Protein: food['Protein'] || 0,
+                            Fat: food['Fat'] || 0,
+                            Carbo: food['Carbo'] || 0,
+                            Fiber: food['Fiber'] || 0,
+                            CA: food['CA'] || 0,
+                            FE: food['FE'] || 0,
+                            ZN: food['ZN'] || 0,
+                            VA: food['VA'] || 0,
+                            VB1: food['VB1'] || 0,
+                            VB2: food['VB2'] || 0,
+                            VB3: food['VB3'] || 0,
+                            VB6: food['VB6'] || 0,
+                            Fol: food['Fol'] || 0,
+                            VB12: food['VB12'] || 0,
+                            VC: food['VC'] || 0,
+                            VD: food['VD'] || 0,
+                            NA: food['NA'] || 0
+                        },
+                        ingredientCount: 1
+                    };
+                } else {
+                    // 기존 데이터에 영양 성분을 누적하고 재료 수 증가
+                    foods[foodKey].nutrientTotals.Energy += food['Energy'] || 0;
+                    foods[foodKey].nutrientTotals.Water += food['Water'] || 0;
+                    foods[foodKey].nutrientTotals.Protein += food['Protein'] || 0;
+                    foods[foodKey].nutrientTotals.Fat += food['Fat'] || 0;
+                    foods[foodKey].nutrientTotals.Carbo += food['Carbo'] || 0;
+                    foods[foodKey].nutrientTotals.Fiber += food['Fiber'] || 0;
+                    foods[foodKey].nutrientTotals.CA += food['CA'] || 0;
+                    foods[foodKey].nutrientTotals.FE += food['FE'] || 0;
+                    foods[foodKey].nutrientTotals.ZN += food['ZN'] || 0;
+                    foods[foodKey].nutrientTotals.VA += food['VA'] || 0;
+                    foods[foodKey].nutrientTotals.VB1 += food['VB1'] || 0;
+                    foods[foodKey].nutrientTotals.VB2 += food['VB2'] || 0;
+                    foods[foodKey].nutrientTotals.VB3 += food['VB3'] || 0;
+                    foods[foodKey].nutrientTotals.VB6 += food['VB6'] || 0;
+                    foods[foodKey].nutrientTotals.Fol += food['Fol'] || 0;
+                    foods[foodKey].nutrientTotals.VB12 += food['VB12'] || 0;
+                    foods[foodKey].nutrientTotals.VC += food['VC'] || 0;
+                    foods[foodKey].nutrientTotals.VD += food['VD'] || 0;
+                    foods[foodKey].nutrientTotals.NA += food['NA'] || 0;
+                    foods[foodKey].ingredientCount += 1;
                 }
             });
+        });
 
-            // 총합을 테이블의 마지막 행에 추가
-            appendTotalRow(totalNutrients);
-        })
-        .catch(error => {
-            console.error('Error processing nutrition data:', error);
-            // 필요시 UI에서 사용자에게 오류를 알리거나 오류 처리를 추가
+        // 누적된 영양 성분 데이터를 테이블에 추가
+        Object.values(foods).forEach(result => {
+            appendNutritionRow(result);
         });
     })
     .catch(error => {
         console.error('Error fetching food list:', error);
-    });
-}
-
-function loadNutrition(foodCode, foodName, category) {
-    return new Promise((resolve, reject) => {
-        // console.log('loadNutrition function called for:', foodCode, foodName, category);
-        fetch('/get_ingredients', {
-            method: 'POST',
-            headers: {
-                'Content-Type': 'application/json'
-            },
-            body: JSON.stringify({ foodCode: foodCode })
-        })
-        .then(response => response.json())
-        .then(ingredientCodes => {
-            // console.log("재료 코드", ingredientCodes) -> 이상 없음
-            fetch('/get_nutrition', {
-                method: 'POST',
-                headers: {
-                    'Content-Type': 'application/json'
-                },
-                body: JSON.stringify({
-                    foodCode: foodCode, 
-                    ingredientCodes: ingredientCodes })
-            })
-            .then(response => response.json())
-            .then(data => {
-                if (data.length > 0) {
-                    // console.log("영양성분계산", data)
-                    var nutrientTotals = {
-                        'Energy': 0, 'Water': 0, 'Protein': 0, 'Fat': 0, 
-                        'Carbo': 0, 'Fiber': 0, 'CA': 0, 'FE': 0, 
-                        'ZN': 0, 'VA': 0, 'VB1': 0, 'VB2': 0, 'VB3': 0, 'VB6': 0,
-                        'Fol': 0, 'VB12': 0, 'VC': 0, 'VD': 0, 'NA': 0
-                    };
-
-                    data.forEach(nutrient => {
-                        for (var key in nutrientTotals) {
-                            if (nutrient.hasOwnProperty(key)) {
-                                nutrientTotals[key] += parseFloat(nutrient[key]) || 0;
-                            }
-                        }
-                    });
-
-                    resolve({ category, foodName, nutrientTotals });
-                }
-            })
-            .catch(error => {
-                console.error('Error fetching nutrition data:', error);
-                reject(error);
-            });
-        })
-        .catch(error => {
-            console.error('Error fetching ingredient codes:', error);
-            reject(error);
-        });
     });
 }
 
