@@ -398,6 +398,11 @@ function loadAllFoodList() {
 
         var categories = ['Breakfast', 'Morning Snack', 'Lunch', 'Afternoon Snack', 'Dinner', 'Midnight Snack'];
         var foods = [];
+        var dailyTotalNutrients = {
+            Energy: 0, Water: 0, Protein: 0, Fat: 0, Carbo: 0, Fiber: 0,
+            CA: 0, FE: 0, ZN: 0, VA: 0, VB1: 0, VB2: 0, VB3: 0, VB6: 0, Fol: 0,
+            VB12: 0, VC: 0, VD: 0, NA: 0
+        };
         
         categories.forEach(category => {
             data.filter(food => food['TIME'] === category).forEach(food => {
@@ -460,7 +465,14 @@ function loadAllFoodList() {
         // 누적된 영양 성분 데이터를 테이블에 추가
         Object.values(foods).forEach(result => {
             appendNutritionRow(result);
+
+            // 하루 총 영양 성분에 누적
+            for (let key in dailyTotalNutrients) {
+                dailyTotalNutrients[key] += result.nutrientTotals[key] || 0;
+            }
         });
+
+        appendTotalRow(dailyTotalNutrients);
     })
     .catch(error => {
         console.error('Error fetching food list:', error);
