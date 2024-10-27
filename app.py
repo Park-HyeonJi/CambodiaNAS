@@ -98,7 +98,7 @@ def save_group():
             app.logger.info(f"Added new group {group_name}")
 
         save_excel_data(groups_df, users_df)
-        app.logger.info(f"Group data saved successfully for {group_name}")
+        # app.logger.info(f"Group data saved successfully for {group_name}")
         return jsonify({'status': 'success'})
     except Exception as e:
         app.logger.error(f"Error in save_group: {e}")
@@ -1097,7 +1097,7 @@ def load_user_data(user_group, user_id, view_date):
         else:
             # 시트가 없을 경우 빈 데이터프레임 반환
             user_data = pd.DataFrame()
-    app.logger.debug(f"load_user_data: {user_data}")
+    # app.logger.debug(f"load_user_data: {user_data}")
     return user_data
 
 ### 유저 음식 기록 삭제
@@ -1190,12 +1190,17 @@ def update_intake_ratio():
         # 섭취 비율 업데이트
         user_data.loc[rows_to_update, 'INTAKE_RATIO'] = intake_ratio
 
-        # 영양 성분 업데이트
-        nutrient_columns = ['Energy', 'Water', 'Protein', 'Fat', 'Carbo', 'Fiber', 'CA', 'FE', 'ZN', 'VA', 'VB1', 'VB2', 'VB3', 'VB6', 'Fol', 'VB12', 'VC', 'VD', 'NA']
-        for col in nutrient_columns:
-            original_value = food_nutrients.iloc[0][col]
-            updated_value = original_value * (intake_ratio / 100)
-            user_data.loc[rows_to_update, col] = updated_value
+        # 해당 음식의 각 재료의 영양 성분을 가져와서 개별적으로 섭취 비율 적용
+        for index, row in user_data[rows_to_update].iterrows():
+            food_nutrient = food_data[(food_data['FOODID'] == food_code) & (food_data['INGID'] == row['INGID'])]
+            
+            if not food_nutrient.empty:
+                nutrient_columns = ['Energy', 'Water', 'Protein', 'Fat', 'Carbo', 'Fiber', 'CA', 'FE', 'ZN', 'VA', 'VB1', 'VB2', 'VB3', 'VB6', 'Fol', 'VB12', 'VC', 'VD', 'NA']
+                
+                for col in nutrient_columns:
+                    original_value = food_nutrient.iloc[0][col]
+                    updated_value = original_value * (intake_ratio / 100)
+                    user_data.at[index, col] = updated_value
 
         # 데이터 저장
         save_user_data(user_data)

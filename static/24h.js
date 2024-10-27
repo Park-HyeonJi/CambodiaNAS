@@ -395,10 +395,11 @@ function loadAllFoodList() {
         // 테이블 초기화
         var mealTbody = document.getElementById('nutrition-tbody');
         mealTbody.innerHTML = '';
+        dailyTotalNutrients = {};
 
         var categories = ['Breakfast', 'Morning Snack', 'Lunch', 'Afternoon Snack', 'Dinner', 'Midnight Snack'];
         var foods = [];
-        var dailyTotalNutrients = {
+        var totalNutrients = {
             Energy: 0, Water: 0, Protein: 0, Fat: 0, Carbo: 0, Fiber: 0,
             CA: 0, FE: 0, ZN: 0, VA: 0, VB1: 0, VB2: 0, VB3: 0, VB6: 0, Fol: 0,
             VB12: 0, VC: 0, VD: 0, NA: 0
@@ -467,12 +468,12 @@ function loadAllFoodList() {
             appendNutritionRow(result);
 
             // 하루 총 영양 성분에 누적
-            for (let key in dailyTotalNutrients) {
-                dailyTotalNutrients[key] += result.nutrientTotals[key] || 0;
+            for (let key in totalNutrients) {
+                totalNutrients[key] += result.nutrientTotals[key] || 0;
             }
         });
 
-        appendTotalRow(dailyTotalNutrients);
+        appendTotalRow(totalNutrients);
     })
     .catch(error => {
         console.error('Error fetching food list:', error);
@@ -513,7 +514,6 @@ function appendNutritionRow(result) {
         console.error('Element with ID "nutrition-tbody" not found');
     }
 }
-
 
 let dailyTotalNutrients = {};
 function appendTotalRow(totalNutrients) {
@@ -604,7 +604,7 @@ function exportExcel() {
 
 // 차트 생성
 function submitChartForm() {
-    if (!dailyTotalNutrients) {
+    if (!dailyTotalNutrients || Object.values(dailyTotalNutrients).every(value => value === 0)) {
         alert('Daily total nutrients not calculated yet.');
         return;
     }

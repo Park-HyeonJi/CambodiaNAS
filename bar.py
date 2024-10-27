@@ -49,8 +49,8 @@ def bar(current, gender, age):
     
     # Categories as specified
     categories = [
-        "Energy", "Protein", "CA", "FE", "ZN", "Vit.A",
-        "Vit.B1", "Vit.B2", "Vit.B3", "Folate", "Vit.C", "Vit.D", "NA"
+        "Energy", "Protein", "Ca", "Fe", "Zn", "Vit.A",
+        "Vit.B1", "Vit.B2", "Vit.B3", "Folate", "Vit.C", "Vit.D", "Na"
     ]
     
     # Create a bar chart
