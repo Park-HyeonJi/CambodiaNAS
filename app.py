@@ -1048,6 +1048,7 @@ def add_food():
         selected_food_data['USERID'] = user_id
         selected_food_data['DATE'] = view_date
         selected_food_data['TIME'] = time_category
+        selected_food_data['INTAKE_RATIO'] = 100
 
         # 확인용 디버깅 로그 추가
         app.logger.debug(f"selected_food_data after adding user info: {selected_food_data}")
@@ -1154,6 +1155,54 @@ def get_ingredients():
         return jsonify(ingredient_codes)
     except Exception as e:
         app.logger.error(f"Error in get_ingredients: {e}")
+        return jsonify({'status': 'error', 'message': str(e)}), 500
+
+# 섭취 비율 업데이트
+@app.route('/update_intake_ratio', methods=['POST'])
+def update_intake_ratio():
+    try:
+        data = request.get_json()
+
+        food_code = data['foodCode']
+        user_group = data['userGroup']
+        user_id = data['userID']
+        view_date = data['viewDate']
+        time_category = data['timeCategory']
+        intake_ratio = data['intakeRatio']
+
+        user_data = pd.read_excel(user_data_path)
+        food_data = pd.read_excel(food_data_path)
+
+        # 특정 사용자의 데이터 필터링
+        rows_to_update = (
+            (user_data['FOODID'] == food_code) &
+            (user_data['USERGROUP'] == user_group) &
+            (user_data['USERID'].astype(str) == str(user_id)) &
+            (user_data['DATE'] == view_date) &
+            (user_data['TIME'] == time_category)
+        )
+
+        # 해당 음식의 영양 성분 조회
+        food_nutrients = food_data[food_data['FOODID'] == food_code]
+        if food_nutrients.empty:
+            return jsonify({'status': 'error', 'message': 'Food data not found'}, 404)
+
+        # 섭취 비율 업데이트
+        user_data.loc[rows_to_update, 'INTAKE_RATIO'] = intake_ratio
+
+        # 영양 성분 업데이트
+        nutrient_columns = ['Energy', 'Water', 'Protein', 'Fat', 'Carbo', 'Fiber', 'CA', 'FE', 'ZN', 'VA', 'VB1', 'VB2', 'VB3', 'VB6', 'Fol', 'VB12', 'VC', 'VD', 'NA']
+        for col in nutrient_columns:
+            original_value = food_nutrients.iloc[0][col]
+            updated_value = original_value * (intake_ratio / 100)
+            user_data.loc[rows_to_update, col] = updated_value
+
+        # 데이터 저장
+        save_user_data(user_data)
+
+        return jsonify({'status': 'success'})
+    except Exception as e:
+        app.logger.error(f"Error in update_intake_ratio: {e}")
         return jsonify({'status': 'error', 'message': str(e)}), 500
 
 # 영양 성분

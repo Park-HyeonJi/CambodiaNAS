@@ -89,6 +89,18 @@
     background-color: #f2f2f2;
 }
 
+.intake-input {
+    display: flex;
+    align-items: center;
+    gap: 10px;
+    margin-bottom: 10px;
+}
+
+.intake-input input {
+    width: 50px;
+    background-color: #4464cd2b;
+}
+
 /* 3행 영양성분 테이블 */
 .nutrition-table-container {
     padding: 20px;
