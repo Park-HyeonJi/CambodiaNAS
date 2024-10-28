@@ -356,10 +356,10 @@ function addFood() {
 
     var tableBody = document.querySelector("#foodTable tbody");
 
-    // 새로운 행 추가: 사용자가 FOODID와 FOODNAME을 모두 입력할 수 있도록 함
+    // 새로운 행 추가: 사용자가 FOODNAME을 입력할 수 있도록 함
     var newRow = document.createElement("tr");
     newRow.innerHTML = `
-        <td class="editable" data-placeholder="Enter Food ID" contenteditable="true"></td>
+        <td class="editable" data-placeholder="Auto-generated Food ID" contenteditable="false"></td>
         <td class="editable" data-placeholder="Enter Food Name" contenteditable="true"></td>`;
     newRow.id = 'newFoodRow';
     tableBody.appendChild(newRow);
@@ -373,7 +373,6 @@ function handleContentEditableDefaults() {
         const placeholder = field.getAttribute('data-placeholder');
         // 초기 상태에서 기본값을 설정합니다.
         if (!field.textContent.trim()) {
-            field.textContent = placeholder;
             field.classList.add('placeholder');
         }
 
@@ -388,7 +387,6 @@ function handleContentEditableDefaults() {
         // 입력이 없으면 기본값을 다시 표시합니다.
         field.addEventListener('blur', () => {
             if (!field.textContent.trim()) {
-                field.textContent = placeholder;
                 field.classList.add('placeholder');
             }
         });
@@ -397,12 +395,11 @@ function handleContentEditableDefaults() {
 
 function applyNewFood() {
     var newRow = document.getElementById('newFoodRow');
-    var foodID = newRow.children[0].textContent.trim();
     var foodName = newRow.children[1].textContent.trim();
 
     // 입력값이 유효한지 체크
-    if (!foodID || !foodName) {
-        alert("Please fill in both Food ID and Food Name.");
+    if (!foodName) {
+        alert("Please fill in the Food Name.");
         return;
     }
 
@@ -411,21 +408,22 @@ function applyNewFood() {
         headers: {
             'Content-Type': 'application/json'
         },
-        body: JSON.stringify({ FOODID: foodID, FOODNAME: foodName })
+        body: JSON.stringify({ FOODNAME: foodName })
     })
     .then(response => response.json())
     .then(data => {
         if (data.status === 'success') {
-            alert("Food saved successfully! Please add at least one ingredient for the new food item.");
-            foodData.push({ FOODID: foodID, FOODNAME: foodName });
+            alert("Food saved successfully! Food ID: " + data.FOODID);
+            foodData.push({ FOODID: data.foodID, FOODNAME: foodName });
             totalRowsFood = foodData.length;
             showPage(currentPageFood); // 테이블 업데이트
+            newRow.children[0].textContent = data.FOODID;
             newRow.children[0].setAttribute("contenteditable", "false");
             newRow.children[1].setAttribute("contenteditable", "false");
             newRow.removeAttribute('id');
 
              // 새로운 음식을 추가한 후, 해당 음식 자동 검색
-            document.getElementById('codeInput').value = foodID;
+            document.getElementById('codeInput').value = data.FOODID;
             document.querySelector('input[name="searchType"][value="code"]').checked = true;
              searchFood();  // 검색 함수 호출
 
@@ -459,7 +457,7 @@ function addIngredient() {
     // 새로운 행 추가: 사용자가 INGID, INGNAME_EN, 1 person (g)을 입력할 수 있도록 함
     const newRow = document.createElement("tr");
     newRow.innerHTML = `
-        <td class="editable" data-placeholder="Enter INGID" contenteditable="true"></td>
+        <td class="editable" contenteditable="true"></td>
         <td class="editable" contenteditable="false"></td>
         <td class="editable" contenteditable="true"></td>`;
     newRow.id = 'newIngredientRow';

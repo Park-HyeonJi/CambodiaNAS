@@ -185,7 +185,6 @@ function handleContentEditableDefaults() {
         const placeholder = field.getAttribute('data-placeholder');
         // 초기 상태에서 기본값을 설정합니다.
         if (!field.textContent.trim()) {
-            field.textContent = placeholder;
             field.classList.add('placeholder');
         }
         
@@ -200,7 +199,6 @@ function handleContentEditableDefaults() {
         // 입력이 없으면 기본값을 다시 표시합니다.
         field.addEventListener('blur', () => {
             if (!field.textContent.trim()) {
-                field.textContent = placeholder;
                 field.classList.add('placeholder');
             }
         });
@@ -220,7 +218,7 @@ function addIngredient() {
     // 새로운 행 추가: 사용자가 INGID와 INGNAME_EN을 모두 입력할 수 있도록 함
     var newRow = document.createElement("tr");
     newRow.innerHTML = `
-        <td class="editable" data-placeholder="Enter INGID" contenteditable="true"></td>
+        <td class="editable" data-placeholder="Auto-generated INGID" contenteditable="false"></td>
         <td class="editable" data-placeholder="Enter INGNAME_EN" contenteditable="true"></td>`;
     newRow.id = 'newIngredientRow';
     tableBody.appendChild(newRow);
@@ -234,13 +232,12 @@ function addIngredient() {
 
 function applyNewIngredient() {
     var newRow = document.getElementById('newIngredientRow');
-    var INGID = newRow.children[0].textContent.trim();
     var INGNAME_EN = newRow.children[1].textContent.trim();
 
     // 중복 체크: INGID와 INGNAME_EN의 중복 여부를 확인
-    var isDuplicate = IngredientData.some(item => item.INGID === INGID || item.INGNAME_EN === INGNAME_EN);
+    var isDuplicate = IngredientData.some(item => item.INGNAME_EN === INGNAME_EN);
     if (isDuplicate) {
-        alert("Error: Duplicate INGID or INGNAME_EN detected. Please use unique values.");
+        alert("Error: Duplicate  INGNAME_EN detected. Please use unique values.");
         // UI에서 중복된 행을 제거
         document.querySelector("#ingredientTable tbody").removeChild(newRow);
         resetAddIngredientButton();
@@ -248,8 +245,8 @@ function applyNewIngredient() {
     }
 
     // 입력값이 유효한지 체크
-    if (!INGID || !INGNAME_EN) {
-        alert("Please fill in both INGID and INGNAME_EN.");
+    if ( !INGNAME_EN ) {
+        alert("Please fill in the INGNAME_EN.");
         return;
     }
 
@@ -258,15 +255,16 @@ function applyNewIngredient() {
         headers: {
             'Content-Type': 'application/json'
         },
-        body: JSON.stringify({ INGID: INGID, INGNAME_EN: INGNAME_EN, '1 person (g)': 100 })
+        body: JSON.stringify({ INGNAME_EN: INGNAME_EN, '1 person (g)': 100 })
     })
     .then(response => response.json())
     .then(data => {
         if (data.status === 'success') {
-            alert("Ingredient saved successfully!");
-            IngredientData.push({ INGID: INGID, INGNAME_EN: INGNAME_EN, '1 person (g)': 100 });
+            alert("Ingredient saved successfully! ING ID: " + data.INGID);
+            IngredientData.push({ INGID: data.INGID, INGNAME_EN: INGNAME_EN, '1 person (g)': 100 });
             totalRowsIngredient = IngredientData.length;
             showIngredientPage(currentPageIngredient); // 테이블 업데이트
+            newRow.children[0].textContent = data.INGID;
             newRow.children[0].setAttribute("contenteditable", "false");
             newRow.children[1].setAttribute("contenteditable", "false");
             newRow.removeAttribute('id');

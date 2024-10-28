@@ -154,6 +154,25 @@ td {
     margin-right: 10px; /* 오른쪽 여백 추가 */
 }
 
+.editable {
+    position: relative;
+    min-width: 150px; /* 셀의 최소 너비 */
+    min-height: 20px; /* 셀의 최소 높이 */
+    padding: 4px; /* 내부 여백 설정 */
+    border: 1px solid #ccc; /* 선택적으로 테두리 설정 */
+    box-sizing: border-box; /* 패딩과 테두리 포함 */
+    vertical-align: top; /* 수직 정렬 */
+    background-color: #f9f9f9; /* 배경색 설정 */
+}
+
+.editable.placeholder::before {
+    display: block;
+}
+
+.editable:not(.placeholder)::before {
+    display: none;
+}
+
 .editable-cell {
     background-color: #a29ff5; /* 입력 가능한 셀의 배경색 */
 }

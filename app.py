@@ -400,7 +400,6 @@ def get_food_ingredientsDB():
 def add_foodDB():
     try:
         data = request.get_json()
-        FOODID = data['FOODID']
         FOODNAME = data['FOODNAME']
 
         # 엑셀 파일 경로 설정
@@ -414,14 +413,20 @@ def add_foodDB():
         food_data = pd.read_excel(food_data_path)
         
         # 중복 체크
-        if FOODID in food_data['FOODID'].values:
-            return jsonify({'status': 'error', 'message': 'FOODID already exists'}), 400
         if FOODNAME in food_data['FOODNAME'].values:
             return jsonify({'status': 'error', 'message': 'FOODNAME already exists'}), 400
+        
+        # FOODID 자동 생성 (기존 데이터 무시하고 'RUAFD000'부터 시작)
+        existing_ids = food_data['FOODID'].str.extract(r'RUAFD(\d{3})').dropna().astype(int) if 'FOODID' in food_data.columns else None
+        if existing_ids is not None and not existing_ids.empty:
+            last_food_id = existing_ids.max().values[0]
+            new_food_id = f"RUAFD{last_food_id + 1:03}"
+        else:
+            new_food_id = "RUAFD000"
 
         # 새로운 행을 기본값 'N/A'로 초기화
         new_row = {col: 'N/A' for col in food_data.columns}
-        new_row['FOODID'] = FOODID
+        new_row['FOODID'] = new_food_id
         new_row['FOODNAME'] = FOODNAME
 
         # 기본 성분 데이터를 포함
@@ -464,7 +469,10 @@ def add_foodDB():
         # 임시 파일을 실제 파일로 덮어쓰기
         os.replace(temp_food_data_path, food_data_path)
 
-        return jsonify({'status': 'success', 'message': 'Food added successfully with default ingredient data'})
+        return jsonify({'status': 'success',
+                        'message': 'Food added successfully with default ingredient data',
+                        'FOODID': new_food_id
+                        })
     except Exception as e:
         app.logger.error(f"Error in add_foodDB: {e}")
         return jsonify({'status': 'error', 'message': str(e)}), 500
@@ -634,7 +642,6 @@ def get_nutrientDBN():
 def add_ingredientDBN():
     try:
         data = request.get_json()
-        INGID = data['INGID']
         INGNAME_EN = data['INGNAME_EN']
         person_g = data.get('1 person (g)', 100)  # 사용자가 입력하지 않으면 기본값 100
 
@@ -645,16 +652,46 @@ def add_ingredientDBN():
         # 기존 엑셀 파일 로드
         food_ingredient_data = pd.read_excel(food_ingredient_data_path)
 
+        # 중복 체크
+        if INGNAME_EN in food_ingredient_data['INGNAME_EN'].values:
+            return jsonify({'status': 'error', 'message': 'INGNAME_EN already exists'}), 400
+
+        # INGID 자동 생성 (기존 데이터 무시하고 'RUAFI000'부터 시작)
+        existing_ids = food_ingredient_data['INGID'].str.extract(r'RUAFI(\d{3})').dropna().astype(int) if 'INGID' in food_ingredient_data.columns else None
+        if existing_ids is not None and not existing_ids.empty:
+            last_Ing_id = existing_ids.max().values[0]
+            new_Ing_id = f"RUAFI{last_Ing_id + 1:03}"
+        else:
+            new_Ing_id = "RUAFI000"
+
         # 새로운 행을 NaN이 아닌 실제 값으로 삽입
         new_row = {col: None for col in food_ingredient_data.columns}  # 기본값 None 설정
-        new_row['FOODID'] = INGID
-        new_row['CLASS'] = None  # CLASS 필드를 null로 처리
+        new_row['FOODID'] = new_Ing_id
+        new_row['CLASS'] = 'default'
         new_row['FOODNAME'] = INGNAME_EN
-        new_row['INGID'] = INGID
-        new_row['INGNAME'] = None  # INGNAME 필드를 null로 처리
+        new_row['INGID'] = new_Ing_id
+        new_row['INGNAME'] = 'default'
         new_row['INGNAME_EN'] = INGNAME_EN
-        new_row['INGNAME_SC'] = None  # INGNAME_SC 필드를 null로 처리
         new_row['1 person (g)'] = person_g
+        new_row['Energy'] = 0
+        new_row['Water'] = 0
+        new_row['Protein'] = 0
+        new_row['Fat'] = 0
+        new_row['Carbo'] = 0
+        new_row['Fiber'] = 0
+        new_row['CA'] = 0
+        new_row['FE'] = 0
+        new_row['ZN'] = 0
+        new_row['VA'] = 0
+        new_row['VB1'] = 0
+        new_row['VB2'] = 0
+        new_row['VB3'] = 0
+        new_row['VB6'] = 0
+        new_row['Fol'] = 0
+        new_row['VB12'] = 0
+        new_row['VC'] = 0
+        new_row['VD'] = 0
+        new_row['NA'] = 0
 
         # 새로운 행을 DataFrame으로 변환하고 기존 데이터에 추가
         new_ingredient_df = pd.DataFrame([new_row])
@@ -666,7 +703,10 @@ def add_ingredientDBN():
         # 임시 파일을 실제 파일로 덮어쓰기
         os.replace(temp_food_ingredient_data_path, food_ingredient_data_path)
 
-        return jsonify({'status': 'success', 'message': 'Ingredient added successfully'})
+        return jsonify({'status': 'success',
+                        'message': 'Ingredient added successfully',
+                        'INGID': new_Ing_id
+                        })
     except Exception as e:
         app.logger.error(f"Error in add_ingredientDB: {e}")
         return jsonify({'status': 'error', 'message': str(e)}), 500
