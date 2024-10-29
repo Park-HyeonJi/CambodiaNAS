@@ -459,7 +459,7 @@ function addIngredient() {
     const newRow = document.createElement("tr");
     newRow.innerHTML = `
         <td class="editable" contenteditable="true"></td>
-        <td class="editable" contenteditable="false"></td>
+        <td class="editable" contenteditable="true"></td>
         <td class="editable" contenteditable="true"></td>`;
     newRow.id = 'newIngredientRow';
 
@@ -485,9 +485,32 @@ function addIngredient() {
                     if (data.status === 'success' && data.ingredient) {
                         const ingredient = data.ingredient;
                         newRow.cells[1].textContent = ingredient.INGNAME_EN || 'N/A';  // INGNAME_EN
-                        newRow.cells[2].textContent = ingredient['1 person (g)'] || '';  // 1 person (g)
+                        newRow.cells[2].textContent = ingredient['1 person (g)'] || '100';  // 1 person (g)
                     } else {
                         alert('Ingredient not found for this FOODID.');
+                    }
+                })
+                .catch(error => {
+                    console.error('Error fetching ingredient details:', error);
+                    alert("Error fetching ingredient details.");
+                });
+        }
+    });
+
+    newRow.cells[1].addEventListener('blur', function() {
+        const ingName = this.textContent.trim();
+        const foodid = selectedFoodID;
+
+        if (ingName && foodid) {
+            fetch(`/get_ingredient_details?FOODID=${foodid}&INGNAME_EN=${ingName}`)
+                .then(response => response.json())
+                .then(data => {
+                    if (data.status === 'success' && data.ingredient) {
+                        const ingredient = data.ingredient;
+                        newRow.cells[0].textContent = ingredient.INGID || 'N/A';  // INGID
+                        newRow.cells[2].textContent = ingredient['1 person (g)'] || '100';  // 1 person (g)
+                    } else {
+                        alert('Ingredient not found for this FOODID and INGNAME_EN.');
                     }
                 })
                 .catch(error => {

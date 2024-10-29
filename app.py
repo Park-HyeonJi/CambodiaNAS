@@ -552,19 +552,26 @@ import numpy as np
 @login_required
 def get_ingredient_details():
     ingid = request.args.get('INGID')
+    ingname_en = request.args.get('INGNAME_EN')
 
-    if not ingid:
-        return jsonify({'status': 'error', 'message': 'INGID is required'}), 400
+    if not ingid and not ingname_en:
+        return jsonify({'status': 'error', 'message': 'Either INGID or INGNAME_EN is required'}), 400
 
     try:
         food_data_path = 'data/FoodData.xlsx'
         df = pd.read_excel(food_data_path)
 
-        # INGID만을 기반으로 행 필터링
-        filtered_df = df[df['INGID'] == ingid]
-
+        # INGID로 검색
+        if ingid:
+            filtered_df = df[df['INGID'] == ingid]
+        
+        # INGNAME_EN으로 검색
+        elif ingname_en:
+            filtered_df = df[df['INGNAME_EN'] == ingname_en]
+        
+        # 결과가 없을 경우 처리
         if filtered_df.empty:
-            return jsonify({'status': 'error', 'message': 'No ingredient found for the specified INGID'}), 404
+            return jsonify({'status': 'error', 'message': 'No ingredient found for the specified criteria'}), 404
 
         # 첫 번째 일치 항목을 선택
         ingredient = filtered_df.iloc[0].to_dict()
@@ -572,7 +579,7 @@ def get_ingredient_details():
         # NaN 값을 None 또는 0으로 변환
         for key, value in ingredient.items():
             if isinstance(value, float) and np.isnan(value):
-                ingredient[key] = None  # 또는 0으로 변경할 수 있습니다.
+                ingredient[key] = None  # 또는 0으로 변경 가능
 
         return jsonify({'status': 'success', 'ingredient': ingredient})
     except FileNotFoundError:
