@@ -414,10 +414,11 @@ function applyNewFood() {
     .then(data => {
         if (data.status === 'success') {
             alert("Food saved successfully! Food ID: " + data.FOODID);
-            foodData.push({ FOODID: data.foodID, FOODNAME: foodName });
+            foodData.push({ FOODID: data.FOODID, FOODNAME: data.FOODNAME });
             totalRowsFood = foodData.length;
             showPage(currentPageFood); // 테이블 업데이트
             newRow.children[0].textContent = data.FOODID;
+            newRow.children[1].textContent = data.FOODNAME;
             newRow.children[0].setAttribute("contenteditable", "false");
             newRow.children[1].setAttribute("contenteditable", "false");
             newRow.removeAttribute('id');

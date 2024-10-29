@@ -411,57 +411,73 @@ def add_foodDB():
             return jsonify({'status': 'error', 'message': 'Data file not found'}), 404
         
         food_data = pd.read_excel(food_data_path)
-        
-        # 중복 체크
+
+        # 새로운 FOODID 생성 함수
+        def generate_new_food_id():
+            existing_ids = food_data['FOODID'].str.extract(r'RUAFD(\d{3})').dropna().astype(int) if 'FOODID' in food_data.columns else None
+            if existing_ids is not None and not existing_ids.empty:
+                last_food_id = existing_ids.max().values[0]
+                return f"RUAFD{last_food_id + 1:03}"
+            else:
+                return "RUAFD000"
+
+        # 새로운 FOODID 생성 및 초기화
+        new_food_id = generate_new_food_id()
+
+        # 중복 체크 및 데이터 준비
         if FOODNAME in food_data['FOODNAME'].values:
-            return jsonify({'status': 'error', 'message': 'FOODNAME already exists'}), 400
-        
-        # FOODID 자동 생성 (기존 데이터 무시하고 'RUAFD000'부터 시작)
-        existing_ids = food_data['FOODID'].str.extract(r'RUAFD(\d{3})').dropna().astype(int) if 'FOODID' in food_data.columns else None
-        if existing_ids is not None and not existing_ids.empty:
-            last_food_id = existing_ids.max().values[0]
-            new_food_id = f"RUAFD{last_food_id + 1:03}"
+            # 중복된 FOODNAME에 해당하는 모든 행을 가져와서 새로운 FOODID와 수정된 FOODNAME으로 복사
+            matching_rows = food_data[food_data['FOODNAME'] == FOODNAME].copy()
+            
+            # FOODNAME 뒤에 _1, _2 등의 숫자를 붙여 중복 해결
+            new_food_name = FOODNAME
+            suffix = 1
+            while new_food_name in food_data['FOODNAME'].values:
+                new_food_name = f"{FOODNAME}_{suffix}"
+                suffix += 1
+            
+            # 복사된 행들에 새로운 FOODID와 FOODNAME 설정
+            matching_rows['FOODID'] = new_food_id
+            matching_rows['FOODNAME'] = new_food_name
+            new_rows = matching_rows
+
         else:
-            new_food_id = "RUAFD000"
+            # 중복이 없는 경우: 기본값으로 초기화된 새로운 행 생성
+            new_row = {col: 'N/A' for col in food_data.columns}
+            new_row['FOODID'] = new_food_id
+            new_row['FOODNAME'] = FOODNAME
+            new_row.update({
+                'CLASS': 'RUAR',
+                'INGID': 'N0025',
+                'INGNAME': 'ទឹក',
+                'INGNAME_EN': 'Water',
+                '1 person (g)': 100,
+                'Energy': 0,
+                'Water': 100,
+                'Protein': 0,
+                'Fat': 0,
+                'Carbo': 0,
+                'Fiber': 0,
+                'CA': 0,
+                'FE': 0,
+                'ZN': 0,
+                'VA': 0,
+                'VB1': 0,
+                'VB2': 0,
+                'VB3': 0,
+                'VB6': 0,
+                'Fol': 0,
+                'VB12': 0,
+                'VC': 0,
+                'VD': 0,
+                'NA': 0,
+            })
 
-        # 새로운 행을 기본값 'N/A'로 초기화
-        new_row = {col: 'N/A' for col in food_data.columns}
-        new_row['FOODID'] = new_food_id
-        new_row['FOODNAME'] = FOODNAME
+            # 새로운 행을 DataFrame으로 변환
+            new_rows = pd.DataFrame([new_row])
 
-        # 기본 성분 데이터를 포함
-        new_row.update({
-            'CLASS':'RUAR',
-            'INGID': 'N0025',
-            'INGNAME': 'ទឹក',
-            'INGNAME_EN': 'Water',
-            '1 person (g)': 100,
-            'Energy': 0,
-            'Water': 100,
-            'Protein': 0,
-            'Fat': 0,
-            'Carbo': 0,
-            'Fiber': 0,
-            'CA': 0,
-            'FE': 0,
-            'ZN': 0,
-            'VA': 0,
-            'VB1': 0,
-            'VB2': 0,
-            'VB3': 0,
-            'VB6': 0,
-            'Fol': 0,
-            'VB12': 0,
-            'VC': 0,
-            'VD': 0,
-            'NA': 0,
-        })
-        
-        # 새로운 행을 DataFrame으로 변환
-        new_row_df = pd.DataFrame([new_row])
-        
-        # DataFrame에 새로운 행 추가
-        food_data = pd.concat([food_data, new_row_df], ignore_index=True)
+        # DataFrame에 새로운 행(들) 추가
+        food_data = pd.concat([food_data, new_rows], ignore_index=True)
 
         # 엑셀 파일에 저장 (임시 파일 사용)
         food_data.to_excel(temp_food_data_path, index=False)
@@ -469,13 +485,16 @@ def add_foodDB():
         # 임시 파일을 실제 파일로 덮어쓰기
         os.replace(temp_food_data_path, food_data_path)
 
-        return jsonify({'status': 'success',
-                        'message': 'Food added successfully with default ingredient data',
-                        'FOODID': new_food_id
-                        })
+        return jsonify({
+            'status': 'success',
+            'message': 'Food added successfully',
+            'FOODID': new_food_id,
+            'FOODNAME': new_food_name if 'new_food_name' in locals() else FOODNAME
+        })
     except Exception as e:
         app.logger.error(f"Error in add_foodDB: {e}")
         return jsonify({'status': 'error', 'message': str(e)}), 500
+
 
 
 @app.route('/add_ingredientDB', methods=['POST'])
