@@ -49,9 +49,15 @@ def base():
 @app.route('/login', methods=['GET', 'POST'])
 def login():
     if request.method == 'POST':
+        user_type = request.json.get('userType')
         user = User('default_user')
         login_user(user)
-        return redirect(url_for('m_gandu'))
+        
+        # 사용자 유형에 따라 리다이렉트
+        if user_type == 'basic':
+            return redirect(url_for('tfh'))  # /24h 페이지
+        else:
+            return redirect(url_for('m_gandu'))  # /m-gandu 페이지
     
     return render_template('login.html')
 

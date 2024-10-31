@@ -1,7 +1,12 @@
 document.addEventListener('DOMContentLoaded', () => {
-    console.log('Clearing local storage...');
-    localStorage.clear();
-    console.log('Local storage cleared.');
+    console.log('Clearing specific local storage keys...');
+    for (let key in localStorage) {
+        if (key !== 'userType') {
+            localStorage.removeItem(key); // userType은 유지하고, 나머지는 삭제
+        }
+    }
+    console.log('Specific local storage keys cleared, userType preserved.');
+
     loadGroups();
     loadGroupsForUser();
     clearGroupDetails();

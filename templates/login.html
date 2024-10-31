@@ -14,12 +14,22 @@
     </style>
 </head>
 <body class="login-page">
-    <form method="POST" action="{{ url_for('login') }}">
-        <button type="submit" class="start-button">
-            <img src="{{ url_for('static', filename='images/start_button.png') }}" alt="Start">
-        </button>
-    </form>    
-</form>
+    <!-- START 버튼 클릭 시 팝업 표시 -->
+    <button type="button" class="start-button" onclick="showUserTypeModal()">
+        <img src="{{ url_for('static', filename='images/start_button.png') }}" alt="Start">
+    </button>
+
+    <!-- 사용자 유형 선택 팝업 창 -->
+    <div id="userTypeModal" class="modal">
+        <div class="modal-content">
+            <span class="close" onclick="closeModal()">&times;</span>
+            <h2>어떤 사용자 입니까?</h2>
+            <button onclick="selectUserType('basic')">기본 사용자</button>
+            <button onclick="selectUserType('advanced')">심화 사용자</button>
+        </div>
+    </div>
+
+    <!-- 메시지 출력 -->
     {% with messages = get_flashed_messages() %}
         {% if messages %}
             <ul>
@@ -29,6 +39,49 @@
             </ul>
         {% endif %}
     {% endwith %}
-</div>
+    
+    <!-- 팝업 기능을 위한 JavaScript 추가 -->
+    <script>
+        // 모달 창 열기
+        function showUserTypeModal() {
+            document.getElementById('userTypeModal').style.display = 'block';
+        }
+
+        // 모달 창 닫기
+        function closeModal() {
+            document.getElementById('userTypeModal').style.display = 'none';
+        }
+
+        // 사용자 유형 선택 시 페이지 이동
+        function selectUserType(type) {
+    localStorage.setItem('userType', type); // 사용자 유형 저장
+    
+    // 사용자 유형에 따라 자동 로그인 요청을 보냄
+    fetch('/login', {
+        method: 'POST',
+        headers: {
+            'Content-Type': 'application/json'
+        },
+        body: JSON.stringify({ userType: type })
+    })
+    .then(response => {
+        if (response.ok) {
+            // 로그인 후 올바른 페이지로 리다이렉트
+            if (type === 'basic') {
+                window.location.href = '/24h';
+            } else {
+                window.location.href = '/m-gandu';
+            }
+        } else {
+            alert('Login failed. Please try again.');
+        }
+    })
+    .catch(error => {
+        console.error('Error logging in:', error);
+        alert('An error occurred during login.');
+    });
+}
+
+    </script>
 </body>
 </html>

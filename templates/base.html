@@ -13,12 +13,8 @@
     </header>
     <div class="container">
         <nav class="navBar">
-            <ul>
-                <li><a href="{{ url_for('m_gandu') }}">Group & User Management</a></li>
-                <li><a href="{{ url_for('tfh') }}">24-Hour Recall Method</a></li>
-                <li><a href="{{ url_for('db_food') }}">Food DB Editor</a></li>
-                <li><a href="{{ url_for('db_nutri') }}">Ingredient DB Editor</a></li>
-            </ul>
+            <!-- JavaScript에 의해 동적으로 생성될 메뉴 -->
+            <ul id="nav-menu"></ul>
             <ul>
                 <li><a href="{{ url_for('logout') }}">Out</a></li>
             </ul>
@@ -31,5 +27,34 @@
     <footer>
         ©️ 2024 Nutrition Assessment Software. All rights reserved. Developed by Park Uchang, Park Hyeonji, Kim Suyoun, Seon Kayeon, Kang Eunjin, Cho Sunduk, Jung Hyunna, Kong Thong.
     </footer>
+
+    <script>
+        // 사용자 유형에 따라 메뉴를 동적으로 설정
+        document.addEventListener('DOMContentLoaded', () => {
+            const userType = localStorage.getItem('userType'); 
+            const navMenu = document.getElementById('nav-menu');
+            
+            console.log("Loaded user type:", userType); // userType 값 확인용 로그
+
+            // 사용자 유형에 따라 메뉴 설정
+            if (userType === 'basic') {
+                navMenu.innerHTML = `
+                    <li><a href="{{ url_for('tfh') }}">24-Hour Recall Method</a></li>
+                `;
+            } else if (userType === 'advanced') {
+                navMenu.innerHTML = `
+                    <li><a href="{{ url_for('m_gandu') }}">Group & User Management</a></li>
+                    <li><a href="{{ url_for('tfh') }}">24-Hour Recall Method</a></li>
+                    <li><a href="{{ url_for('db_food') }}">Food DB Editor</a></li>
+                    <li><a href="{{ url_for('db_nutri') }}">Ingredient DB Editor</a></li>
+                `;
+            } else {
+                console.warn("User type is not set. Defaulting to basic menu.");
+                navMenu.innerHTML = `
+                    <li><a href="{{ url_for('tfh') }}">24-Hour Recall Method</a></li>
+                `;
+            }
+        });
+    </script>
 </body>
 </html>
