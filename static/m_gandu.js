@@ -319,8 +319,8 @@ function saveUser() {
     // 필수 입력 필드 중 하나라도 비어 있으면 경고 메시지 출력
     for (let field of requiredFields) {
         if (!document.getElementById(field).value.trim()) {
-            alert('Please fill in all fields.');  // 필드가 비어 있으면 경고
-            return;  // 함수 종료
+            alert('Please fill in all fields.');
+            return;
         }
     }
 
@@ -345,13 +345,13 @@ function saveUser() {
     })
     .then(response => response.json())
     .then(result => {
-        console.log('Server response:', result); // 서버 응답 로그
+        console.log('Server response:', result);
         if (result.status === 'success') {
-            loadUsers(); // 사용자 리스트를 다시 로드
-            alert('User information updated successfully.');
-            document.getElementById('user-details').style.backgroundColor = 'white'; // 저장 성공 시 원래 색으로 변경
-        } else {
-            alert('Failed to update user information: ' + result.message);
+            loadUsers();
+            alert('User information saved successfully.');
+            document.getElementById('user-details').style.backgroundColor = 'white';
+        } else if (result.status === 'error') {
+            alert('Failed to save user information: ' + result.message);
         }
     })
     .catch(error => {
@@ -359,6 +359,47 @@ function saveUser() {
         alert('A server error has occurred.');
     });
 }
+
+// 새로운 사용자 추가 시 ID 필드를 빈 값으로 설정
+function addUser() {
+    document.getElementById('user-id').value = '';  // ID 필드를 빈 값으로 설정하여 새 사용자 추가로 인식
+    document.getElementById('user-name').value = '';
+    document.getElementById('user-gender').value = 'male';
+    document.getElementById('user-age').value = '';
+    document.getElementById('user-height').value = '';
+    document.getElementById('user-weight').value = '';
+
+    document.getElementById('user-details').style.backgroundColor = '#4464cd2b';
+}
+
+
+// 새로운 사용자 추가 시 update 플래그를 false로 설정
+function addUser() {
+    // 사용자 정보 입력란 초기화
+    document.getElementById('user-id').value = '';
+    document.getElementById('user-id').dataset.update = false;  // 새 사용자 추가임을 표시
+    document.getElementById('user-name').value = '';
+    document.getElementById('user-gender').value = 'male';
+    document.getElementById('user-age').value = '';
+    document.getElementById('user-height').value = '';
+    document.getElementById('user-weight').value = '';
+
+    document.getElementById('user-details').style.backgroundColor = '#4464cd2b'; // 배경색 변경
+}
+
+// 기존 사용자 선택 시 update 플래그를 true로 설정
+function selectUser(row, user) {
+    if (selectedRow) {
+        selectedRow.classList.remove('selected');
+    }
+
+    selectedRow = row;
+    selectedRow.classList.add('selected');
+    
+    showUserDetails(user);
+    document.getElementById('user-id').dataset.update = true; // 기존 사용자임을 표시
+}
+
 
 
 function deleteUser() {

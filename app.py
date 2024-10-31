@@ -181,15 +181,17 @@ def save_user():
         user_id = str(data['id'])  # ID를 문자열로 변환
         user_group = data['group']
 
-        # 그룹과 아이디를 함께 사용하여 사용자 식별
-        existing_user = users_df[(users_df['id'].astype(str) == user_id) & (users_df['group'] == user_group)]
-
-        if not existing_user.empty:
-            # 기존 사용자의 정보 업데이트
-            app.logger.info(f"Updating existing user with ID: {user_id} in group: {user_group}")
-            users_df.loc[(users_df['id'].astype(str) == user_id) & (users_df['group'] == user_group),
-                        ['name', 'gender', 'age', 'height', 'weight']] = \
-                [data['name'], data['gender'], data['age'], data['height'], data['weight']]
+        # 동일한 그룹 내 ID 중복 여부 확인
+        if not users_df[(users_df['id'].astype(str) == user_id) & (users_df['group'] == user_group)].empty:
+            # 새 사용자를 추가하려는 경우 (선택된 행이 없는 경우) 중복 오류 반환
+            if not data.get('update', False):
+                return jsonify({'status': 'error', 'message': 'User ID already exists in the group.'}), 400
+            else:
+                # 기존 사용자의 정보 업데이트
+                app.logger.info(f"Updating existing user with ID: {user_id} in group: {user_group}")
+                users_df.loc[(users_df['id'].astype(str) == user_id) & (users_df['group'] == user_group),
+                            ['name', 'gender', 'age', 'height', 'weight']] = \
+                    [data['name'], data['gender'], data['age'], data['height'], data['weight']]
         else:
             app.logger.info(f"Adding new user with ID: {user_id} in group: {user_group}")
             # 새 사용자 추가
@@ -202,6 +204,7 @@ def save_user():
     except Exception as e:
         app.logger.error(f"Error in save_user: {e}")
         return jsonify({'status': 'error', 'message': str(e)}), 500
+
 
 
 @app.route('/delete_user', methods=['POST'])
