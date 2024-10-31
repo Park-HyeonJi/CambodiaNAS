@@ -268,6 +268,10 @@ footer {
     text-align: center;
 }
 
+.modal-content h2 {
+    color: #2F3D86; /* h2 글씨 색상 변경 */
+}
+
 .modal .close {
     position: absolute;
     top: 10px;

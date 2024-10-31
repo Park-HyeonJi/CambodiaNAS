@@ -12,76 +12,44 @@
             background-position: center;
         }
     </style>
+    <script src="{{ url_for('static', filename='login.js') }}"></script> <!-- Link to login.js -->
 </head>
+
 <body class="login-page">
-    <!-- START 버튼 클릭 시 팝업 표시 -->
+    <!-- START button to show user type modal -->
     <button type="button" class="start-button" onclick="showUserTypeModal()">
         <img src="{{ url_for('static', filename='images/start_button.png') }}" alt="Start">
     </button>
 
-    <!-- 사용자 유형 선택 팝업 창 -->
+    <!-- User type selection modal -->
     <div id="userTypeModal" class="modal">
         <div class="modal-content">
             <span class="close" onclick="closeModal()">&times;</span>
-            <h2>어떤 사용자 입니까?</h2>
-            <button onclick="selectUserType('basic')">기본 사용자</button>
-            <button onclick="selectUserType('advanced')">심화 사용자</button>
+            <h2>Select User Type</h2>
+            <button onclick="selectUserType('basic')">Student</button>
+            <button onclick="showAdvancedAuthModal()">Professional</button>
         </div>
     </div>
 
-    <!-- 메시지 출력 -->
+    <!-- Professional user code input modal -->
+    <div id="advancedAuthModal" class="modal">
+        <div class="modal-content">
+            <span class="close" onclick="closeAdvancedAuthModal()">&times;</span>
+            <h2>Enter Professional Code</h2>
+            <input type="password" id="authCode" placeholder="Enter Professional Code">
+            <button onclick="validateAuthCode()">Confirm</button>
+        </div>
+    </div>
+
+    <!-- Message display -->
     {% with messages = get_flashed_messages() %}
-        {% if messages %}
-            <ul>
-                {% for message in messages %}
-                    <li>{{ message }}</li>
-                {% endfor %}
-            </ul>
-        {% endif %}
+    {% if messages %}
+    <ul>
+        {% for message in messages %}
+        <li>{{ message }}</li>
+        {% endfor %}
+    </ul>
+    {% endif %}
     {% endwith %}
-    
-    <!-- 팝업 기능을 위한 JavaScript 추가 -->
-    <script>
-        // 모달 창 열기
-        function showUserTypeModal() {
-            document.getElementById('userTypeModal').style.display = 'block';
-        }
-
-        // 모달 창 닫기
-        function closeModal() {
-            document.getElementById('userTypeModal').style.display = 'none';
-        }
-
-        // 사용자 유형 선택 시 페이지 이동
-        function selectUserType(type) {
-    localStorage.setItem('userType', type); // 사용자 유형 저장
-    
-    // 사용자 유형에 따라 자동 로그인 요청을 보냄
-    fetch('/login', {
-        method: 'POST',
-        headers: {
-            'Content-Type': 'application/json'
-        },
-        body: JSON.stringify({ userType: type })
-    })
-    .then(response => {
-        if (response.ok) {
-            // 로그인 후 올바른 페이지로 리다이렉트
-            if (type === 'basic') {
-                window.location.href = '/24h';
-            } else {
-                window.location.href = '/m-gandu';
-            }
-        } else {
-            alert('Login failed. Please try again.');
-        }
-    })
-    .catch(error => {
-        console.error('Error logging in:', error);
-        alert('An error occurred during login.');
-    });
-}
-
-    </script>
 </body>
 </html>

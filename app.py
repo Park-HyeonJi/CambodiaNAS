@@ -1,10 +1,9 @@
 from flask import Flask, render_template, redirect, url_for, request, jsonify, send_file, session
-from flask_login import LoginManager, UserMixin, login_user, login_required, logout_user, current_user
+from flask_login import LoginManager, UserMixin, login_required, logout_user, current_user
+from functools import wraps
 import pandas as pd
 import numpy as np
 import os
-import logging
-from logging.handlers import RotatingFileHandler
 from io import BytesIO
 import random
 import string
@@ -46,25 +45,48 @@ def base():
         return redirect(url_for('m_gandu'))
     return redirect(url_for('login'))
 
+from flask import request, redirect, url_for, session
+
+from flask import request, session, redirect, url_for, jsonify
+
 @app.route('/login', methods=['GET', 'POST'])
 def login():
     if request.method == 'POST':
         user_type = request.json.get('userType')
-        user = User('default_user')
-        login_user(user)
         
-        # 사용자 유형에 따라 리다이렉트
-        if user_type == 'basic':
-            return redirect(url_for('tfh'))  # /24h 페이지
-        else:
-            return redirect(url_for('m_gandu'))  # /m-gandu 페이지
+        if user_type in ['basic', 'advanced']:
+            session['logged_in'] = True
+            session['user_type'] = user_type
+            session.permanent = True  # 세션을 영구적으로 설정
+            return jsonify({"status": "success"}), 200
+        return jsonify({"status": "failed"}), 401
     
     return render_template('login.html')
+
+
+
+def login_required(f):
+    @wraps(f)
+    def decorated_function(*args, **kwargs):
+        if not session.get("logged_in"):
+            return redirect(url_for("login", next=request.url))
+        return f(*args, **kwargs)
+    return decorated_function
+
+
 
 @app.route('/m-gandu')
 @login_required
 def m_gandu():
     return render_template('m_gandu.html')
+
+# 세션 상태 확인을 위한 경로
+@app.route('/check-session')
+def check_session():
+    return jsonify({
+        "logged_in": session.get("logged_in", False),
+        "user_type": session.get("user_type", None)
+    })
 
 @app.route('/get_groups', methods=['GET'])
 @login_required
