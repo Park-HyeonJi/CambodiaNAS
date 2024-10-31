@@ -10,11 +10,24 @@ document.addEventListener('DOMContentLoaded', () => {
     loadGroups();
     loadGroupsForUser();
     clearGroupDetails();
+
+    // 사용자 리스트나 그룹을 선택할 때 색상을 초기화
+    document.getElementById('user-list').addEventListener('click', resetUserDetailsBackground);
+    document.getElementById('group-select').addEventListener('change', resetUserDetailsBackground);
 });
+
+// 색상을 원래대로 초기화하는 함수 추가
+function resetUserDetailsBackground() {
+    document.getElementById('user-details').style.backgroundColor = 'white';
+}
 
 let selectedRow = null; // 선택된 행을 추적하기 위한 변수
 let selectedGroup = null;
 let selectedUserId = null;
+
+let groupCurrentPage = 1;
+const groupRowsPerPage = 5;
+let groupTotalPages = 1;
 
 // 그룹 관리 로직
 function loadGroups() {
@@ -178,37 +191,32 @@ function addGroup() {
 // 사용자 관리 로직
 
 function searchAndSelectUser() {
-    const input = document.getElementById('search-id').value.toLowerCase(); // 입력된 ID 값 가져오기
-    const table = document.getElementById('user-list'); // 사용자 리스트 테이블
-    const rows = table.getElementsByTagName('tr'); // 테이블의 모든 행 가져오기
-    let userFound = false; // 사용자가 찾았는지 여부를 확인할 변수
+    const input = document.getElementById('search-id').value.toLowerCase();
+    const selectedGroup = document.getElementById('group-select').value;
 
-    // 모든 행을 순회하면서 해당 ID를 찾음
-    for (let i = 0; i < rows.length; i++) {
-        const idCell = rows[i].getElementsByTagName('td')[0]; // 첫 번째 셀(ID)
-        if (idCell) {
-            const id = idCell.textContent || idCell.innerText;
-            if (id.toLowerCase() === input) { // 입력한 ID와 일치하는지 확인
-                // 사용자 선택
-                selectUser(rows[i], {
-                    id: idCell.textContent,
-                    name: rows[i].getElementsByTagName('td')[1].textContent,
-                    gender: rows[i].getElementsByTagName('td')[2].textContent,
-                    age: rows[i].getElementsByTagName('td')[3].textContent,
-                    height: rows[i].getElementsByTagName('td')[4].textContent,
-                    weight: rows[i].getElementsByTagName('td')[5].textContent
-                });
-                userFound = true;
-                break; // 사용자를 찾으면 루프 종료
+    fetch(`/get_users?group=${selectedGroup}`)
+        .then(response => response.json())
+        .then(users => {
+            // ID를 문자열로 변환 후 검색
+            const user = users.find(u => u.id.toString().toLowerCase() === input);
+            if (user) {
+                const userIndex = users.findIndex(u => u.id.toString().toLowerCase() === input);
+                const pageToDisplay = Math.floor(userIndex / rowsPerPage) + 1;
+
+                currentPage = pageToDisplay;
+                displayUsers(users);
+
+                const userList = document.getElementById('user-list');
+                const rows = userList.getElementsByTagName('tr');
+                const rowIndex = userIndex % rowsPerPage;
+                selectUser(rows[rowIndex], user);
+            } else {
+                alert('The user with the specified ID could not be found.');
             }
-        }
-    }
-
-    if (!userFound) {
-        alert('The user with the specified ID could not be found.'); // ID가 없을 경우 알림
-    }
+        })
+        .catch(error => console.error('Error searching user:', error));
+        resetUserDetailsBackground();
 }
-
 
 
 function loadGroupsForUser() {
@@ -290,6 +298,7 @@ function nextPage() {
 // function updatePageInfo() {
 //     document.getElementById('page-info').textContent = `Page ${currentPage} of ${totalPages}`;
 // }
+
 
 function selectUser(row, user) {
     if (selectedRow) {
@@ -428,6 +437,7 @@ function deleteUser() {
         }
     })
     .catch(error => console.error('Error deleting user and data:', error));
+    resetUserDetailsBackground();
 }
 
 

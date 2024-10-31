@@ -70,7 +70,7 @@
 
 .group-table {
     background-color: white;
-    max-height: 340px;
+    max-height: 200px;
     overflow-y: auto;
     margin-bottom: 10px;
 }
