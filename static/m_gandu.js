@@ -230,33 +230,66 @@ function loadGroupsForUser() {
         .catch(error => console.error('Error loading groups for users:', error));
 }
 
+let currentPage = 1;
+const rowsPerPage = 8;
+let totalPages = 1;
+
+// 페이징을 위해 사용자를 로드하고 페이지를 계산
 function loadUsers() {
     const selectedGroup = document.getElementById('group-select').value;
 
     fetch(`/get_users?group=${selectedGroup}`)
         .then(response => response.json())
         .then(users => {
-            const userList = document.getElementById('user-list');
-            userList.innerHTML = '';
-
-            users.forEach(user => {
-                const row = document.createElement('tr');
-                row.addEventListener('click', () => selectUser(row, user));
-                row.innerHTML = `
-                    <td>${user.id}</td>
-                    <td>${user.name}</td>
-                    <td>${user.gender}</td>
-                    <td>${user.age}</td>
-                    <td>${user.height}</td>
-                    <td>${user.weight}</td>
-                `;
-                userList.appendChild(row);
-            });
-
-            selectedUserId = null;
+            totalPages = Math.ceil(users.length / rowsPerPage);
+            displayUsers(users);
+            updatePageInfo();
         })
         .catch(error => console.error('Error loading users:', error));
 }
+
+// 현재 페이지에 따라 사용자 목록 표시
+function displayUsers(users) {
+    const userList = document.getElementById('user-list');
+    userList.innerHTML = '';
+    const start = (currentPage - 1) * rowsPerPage;
+    const end = start + rowsPerPage;
+
+    users.slice(start, end).forEach(user => {
+        const row = document.createElement('tr');
+        row.addEventListener('click', () => selectUser(row, user));
+        row.innerHTML = `
+            <td>${user.id}</td>
+            <td>${user.name}</td>
+            <td>${user.gender}</td>
+            <td>${user.age}</td>
+            <td>${user.height}</td>
+            <td>${user.weight}</td>
+        `;
+        userList.appendChild(row);
+    });
+}
+
+// 이전 페이지로 이동
+function prevPage() {
+    if (currentPage > 1) {
+        currentPage--;
+        loadUsers();
+    }
+}
+
+// 다음 페이지로 이동
+function nextPage() {
+    if (currentPage < totalPages) {
+        currentPage++;
+        loadUsers();
+    }
+}
+
+// 현재 페이지 정보를 업데이트
+// function updatePageInfo() {
+//     document.getElementById('page-info').textContent = `Page ${currentPage} of ${totalPages}`;
+// }
 
 function selectUser(row, user) {
     if (selectedRow) {

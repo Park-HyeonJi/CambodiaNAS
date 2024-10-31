@@ -166,3 +166,11 @@
     margin-bottom: 20px;  /* 모든 버튼에 동일하게 적용 */
     margin-left: 10px;
 }
+
+.pagination-controls {
+    display: flex;
+    justify-content: center; /* 버튼들을 가운데로 정렬 */
+    align-items: center;
+    margin-top: 10px; /* 상단 여백 추가 */
+    gap: 10px; /* 버튼 사이 간격 추가 */
+}
