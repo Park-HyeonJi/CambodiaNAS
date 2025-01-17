@@ -724,10 +724,10 @@ def add_ingredientDBN():
         # 새로운 행을 NaN이 아닌 실제 값으로 삽입
         new_row = {col: None for col in food_ingredient_data.columns}  # 기본값 None 설정
         new_row['FOODID'] = new_Ing_id
-        new_row['CLASS'] = 'default'
+        new_row['CLASS'] = 'RUAING'
         new_row['FOODNAME'] = INGNAME_EN
         new_row['INGID'] = new_Ing_id
-        new_row['INGNAME'] = 'default'
+        new_row['INGNAME'] = 'blank'
         new_row['INGNAME_EN'] = INGNAME_EN
         new_row['1 person (g)'] = person_g
         new_row['Energy'] = 0
