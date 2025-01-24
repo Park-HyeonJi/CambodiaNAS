@@ -561,7 +561,7 @@ function applyNewIngredient() {
                     '1 person (g)': inputPersonG,
                     FOODID: FOODID,  // 새로운 FOODID에 맞게 업데이트
                     FOODNAME: FOODNAME, // 현재 선택된 FOODNAME 추가
-                    INGID : ingredient['INGID'],
+                    INGNAME : ingredient['INGNAME'],
                     Energy: ingredient['Energy'],
                     Water: ingredient['Water'],
                     Protein: ingredient['Protein'],
