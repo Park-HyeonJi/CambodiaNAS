@@ -300,48 +300,33 @@ function addNutrient() {
         return;
     }
 
-    const nutrientData = {
-        energy: document.getElementById('energy').value,
-        water: document.getElementById('water').value,
-        protein: document.getElementById('protein').value,
-        fat: document.getElementById('fat').value,
-        carbo: document.getElementById('carbo').value,
-        fiber: document.getElementById('fiber').value,
-        ca: document.getElementById('ca').value,
-        fe: document.getElementById('fe').value,
-        zn: document.getElementById('zn').value,
-        va: document.getElementById('va').value,
-        vb1: document.getElementById('vb1').value,
-        vb2: document.getElementById('vb2').value,
-        vb3: document.getElementById('vb3').value,
-        vb6: document.getElementById('vb6').value,
-        fol: document.getElementById('fol').value,
-        vb12: document.getElementById('vb12').value,
-        vc: document.getElementById('vc').value,
-        vd: document.getElementById('vd').value,
-        na: document.getElementById('na').value
-    };
+    const nutrientFields = [
+        'energy', 'water', 'protein', 'fat', 'carbo', 'fiber',
+        'ca', 'fe', 'zn', 'va', 'vb1', 'vb2', 'vb3',
+        'vb6', 'fol', 'vb12', 'vc', 'vd', 'na'
+    ];
+
+    const nutrientData = {};
+    nutrientFields.forEach(field => {
+        const value = document.getElementById(field).value.trim();
+        nutrientData[field] = value === '' ? 0 : parseFloat(value); // 빈 값은 0으로 처리
+    });
 
     fetch(`/update_nutrient/${selectedINGID}`, {
         method: 'POST',
-        headers: {
-            'Content-Type': 'application/json',
-        },
+        headers: { 'Content-Type': 'application/json' },
         body: JSON.stringify(nutrientData),
     })
     .then(response => response.json())
     .then(data => {
         if (data.status === 'success') {
             alert('Nutrient data updated successfully!');
-            loadNutrientData(selectedINGID);  // 업데이트 후 데이터 다시 로드
+            loadNutrientData(selectedINGID); // 업데이트 후 데이터 다시 로드
         } else {
             alert('Failed to update nutrient data: ' + data.message);
         }
-        selectedINGID=null;
     })
-    .catch(error => {
-        console.error('Error updating nutrient data:', error);
-    });
+    .catch(error => console.error('Error updating nutrient data:', error));
 }
 
 function editIngredient() {
