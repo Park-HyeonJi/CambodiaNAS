@@ -542,6 +542,8 @@ def add_ingredientDB():
             'FOODID': FOODID,
             'FOODNAME': FOODNAME,  # 데이터베이스에 FOODNAME 추가
             'INGID': INGID,
+            'INGNAME': data.get('INGNAME', 'blank'),  # 기본값 설정
+            'CLASS': 'RUAR', 
             'INGNAME_EN': data.get('INGNAME_EN'),
             '1 person (g)': data.get('1 person (g)'),
             'Energy': data.get('Energy'),
