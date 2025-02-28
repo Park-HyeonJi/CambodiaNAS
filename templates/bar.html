@@ -5,13 +5,14 @@
     <title>Awesome-pyecharts</title>
                 <script type="text/javascript" src="https://assets.pyecharts.org/assets/v5/echarts.min.js"></script>
 
+    
 </head>
 <body >
-    <div id="1cf01bd63b794def9c320aee5c29c292" class="chart-container" style="width:900px; height:500px; "></div>
+    <div id="a758f1b8f46c496a8064ed0a99ceb499" class="chart-container" style="width:900px; height:500px; "></div>
     <script>
-        var chart_1cf01bd63b794def9c320aee5c29c292 = echarts.init(
-            document.getElementById('1cf01bd63b794def9c320aee5c29c292'), 'white', {renderer: 'canvas'});
-        var option_1cf01bd63b794def9c320aee5c29c292 = {
+        var chart_a758f1b8f46c496a8064ed0a99ceb499 = echarts.init(
+            document.getElementById('a758f1b8f46c496a8064ed0a99ceb499'), 'white', {renderer: 'canvas'});
+        var option_a758f1b8f46c496a8064ed0a99ceb499 = {
     "animation": true,
     "animationThreshold": 2000,
     "animationDuration": 1000,
@@ -70,7 +71,8 @@
             "z": 2,
             "label": {
                 "show": false,
-                "margin": 8
+                "margin": 8,
+                "valueAnimation": false
             },
             "itemStyle": {
                 "color": "#FFC0CB"
@@ -111,7 +113,8 @@
             "z": 2,
             "label": {
                 "show": false,
-                "margin": 8
+                "margin": 8,
+                "valueAnimation": false
             },
             "itemStyle": {
                 "color": "#ADD8E6"
@@ -122,31 +125,31 @@
             "legendHoverLink": true,
             "data": [
                 {
-                    "value": 6,
+                    "value": 4,
                     "itemStyle": {
                         "color": "#FFC0CB"
                     }
                 },
                 {
-                    "value": 9,
+                    "value": 4,
                     "itemStyle": {
                         "color": "#FFC0CB"
                     }
                 },
                 {
-                    "value": 9,
+                    "value": 11,
                     "itemStyle": {
                         "color": "#FFC0CB"
                     }
                 },
                 {
-                    "value": 13,
+                    "value": 21,
                     "itemStyle": {
                         "color": "#FFC0CB"
                     }
                 },
                 {
-                    "value": 36,
+                    "value": 10,
                     "itemStyle": {
                         "color": "#FFC0CB"
                     }
@@ -158,7 +161,7 @@
                     }
                 },
                 {
-                    "value": 5,
+                    "value": 9,
                     "itemStyle": {
                         "color": "#FFC0CB"
                     }
@@ -182,7 +185,7 @@
                     }
                 },
                 {
-                    "value": 110,
+                    "value": 106,
                     "itemStyle": {
                         "color": "#ADD8E6"
                     }
@@ -217,14 +220,16 @@
             "z": 2,
             "label": {
                 "show": true,
-                "margin": 8
+                "margin": 8,
+                "valueAnimation": false
             },
             "markLine": {
                 "silent": false,
                 "precision": 2,
                 "label": {
                     "show": true,
-                    "margin": 8
+                    "margin": 8,
+                    "valueAnimation": false
                 },
                 "lineStyle": {
                     "show": true,
@@ -306,7 +311,8 @@
             "axisLabel": {
                 "show": true,
                 "rotate": 0,
-                "margin": 8
+                "margin": 8,
+                "valueAnimation": false
             },
             "inverse": false,
             "offset": 0,
@@ -323,6 +329,14 @@
                     "type": "solid"
                 }
             },
+            "animation": true,
+            "animationThreshold": 2000,
+            "animationDuration": 1000,
+            "animationEasing": "cubicOut",
+            "animationDelay": 0,
+            "animationDurationUpdate": 300,
+            "animationEasingUpdate": "cubicOut",
+            "animationDelayUpdate": 0,
             "data": [
                 "Energy",
                 "Protein",
@@ -362,7 +376,15 @@
                     "curveness": 0,
                     "type": "solid"
                 }
-            }
+            },
+            "animation": true,
+            "animationThreshold": 2000,
+            "animationDuration": 1000,
+            "animationEasing": "cubicOut",
+            "animationDelay": 0,
+            "animationDurationUpdate": 300,
+            "animationEasingUpdate": "cubicOut",
+            "animationDelayUpdate": 0
         }
     ],
     "title": [
@@ -382,7 +404,7 @@
         }
     ]
 };
-        chart_1cf01bd63b794def9c320aee5c29c292.setOption(option_1cf01bd63b794def9c320aee5c29c292);
+        chart_a758f1b8f46c496a8064ed0a99ceb499.setOption(option_a758f1b8f46c496a8064ed0a99ceb499);
     </script>
 </body>
 </html>
